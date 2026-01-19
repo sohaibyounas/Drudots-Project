@@ -37,7 +37,7 @@ import {
 } from "react-icons/fa";
 import style from "../../assets/css/adminDashboardStyle.js";
 import { IoIosSearch } from "react-icons/io";
-import AppSearchField from "../../component/DesignSystem/AppSearchField.jsx";
+import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
 import { darkDataGridSx } from "../../theme/surface,js";
 import Adminform from "../../component/AdminForm/AdminForm.jsx";
 import { IoWarningOutline } from "react-icons/io5";
