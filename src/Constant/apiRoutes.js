@@ -1,6 +1,6 @@
 import api from "../Constant/api.js";
 
-// auth apis
+// auth apis routes
 
 // login user
 export const loginUser = (data) => api.post("/login", data);
@@ -17,7 +17,7 @@ export const verifyOtp = (data) => api.post("/verify-otp", data);
 // resend otp
 export const resendOtp = (data) => api.post("/resend-otp", data);
 
-// Admin apis
+// Admin dashboard api routes
 
 // get/fetch admin list
 export const fetchAdminsApi = () => api.get("/users");

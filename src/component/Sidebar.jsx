@@ -39,25 +39,25 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   // logout api
-  const handleLogout = async () => {
-    setLoading(true);
-    setErrors({});
+  // const handleLogout = async () => {
+  //   setLoading(true);
+  //   setErrors({});
 
-    try {
-      const res = await logoutUser();
-      console.log("Logout response:", res.data);
+  //   try {
+  //     const res = await logoutUser();
+  //     console.log("Logout response:", res.data);
 
-      // Optional: redirect to login page
-      navigate("/login");
-      // Or clear local storage / auth token
-      localStorage.removeItem("token");
-    } catch (err) {
-      setErrors({ email: "Logout failed. Please try again." });
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     // Optional: redirect to login page
+  //     navigate("/login");
+  //     // Or clear local storage / auth token
+  //     localStorage.removeItem("token");
+  //   } catch (err) {
+  //     setErrors({ email: "Logout failed. Please try again." });
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // logout dialog open & close
   const handleOpen = () => setOpen(true);
@@ -261,17 +261,17 @@ const Sidebar = () => {
               </Button>
               <Button
                 disableRipple
-                variant="contained" 
-                onClick={handleLogout}
+                variant="contained"
+                // logout api calls
+                // onClick={handleLogout}
+                onClick={() => navigate(LOGIN)}
                 disabled={loading}
                 sx={style.deleteButon}
               >
                 {loading ? (
                   <Box sx={style.loader}>
                     <CircularProgress size={20} sx={{ color: "#fff" }} />
-                    <span style={{ color: "#fff" }}>
-                      Deleting...
-                    </span>
+                    <span style={{ color: "#fff" }}>Deleting...</span>
                   </Box>
                 ) : (
                   "Logout"

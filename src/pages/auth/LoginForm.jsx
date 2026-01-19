@@ -176,7 +176,7 @@ const LoginForm = () => {
           </Typography>
         </Box>
 
-        {/* Form Error Alert */}
+        {/* Form error alert */}
         {errors.length > 0 && (
           <Box sx={{ mb: 2 }}>
             <Alert severity="error" sx={style.formAlertbox}>

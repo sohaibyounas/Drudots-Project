@@ -148,7 +148,7 @@ const DataGridShimmer = () => (
       </Box>
     ))}
   </Paper>
-);
+);    
 
 // Mobile Accordion Shimmer - Matches actual accordion structure
 const AccordionShimmer = () => (

@@ -1,15 +1,6 @@
 import React from "react";
 import Login from "../../pages/auth/Login";
-import {
-  DASHBOARD,
-  EMPLOYEEDASHBOARD,
-  FORGETPASSWORD,
-  LOGIN,
-  OTP_ROUTE,
-  POLICIES,
-} from "./RouterUrl";
-import OTP from "../../pages/auth/Otp";
-import ForgotPassword from "../../pages/auth/ForgetPassword";
+import { DASHBOARD, EMPLOYEEDASHBOARD, LOGIN, POLICIES } from "./RouterUrl";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AdminDashboard from "../../pages/Admin/Dashboard";
 import EmployeeDashboard from "../../pages/Admin/Employee";
@@ -22,23 +13,10 @@ const ProtectedRoute = ({ children }) => {
 };
 
 // public routes
-const PublicRoute = ({ children }) => {
-  return !isAuthenticated() ? children : <Navigate to="/employee" />;
-};
-
-// public routes
 const publicRoutes = [
   {
     path: LOGIN,
     Component: Login,
-  },
-  {
-    path: OTP_ROUTE,
-    Component: OTP,
-  },
-  {
-    path: FORGETPASSWORD,
-    Component: ForgotPassword,
   },
 ];
 
