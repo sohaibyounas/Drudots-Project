@@ -1,0 +1,71 @@
+import React, { useState } from "react";
+import { Box, Drawer } from "@mui/material";
+import style from "../assets/css/style.js";
+import { IoMdReorder } from "react-icons/io";
+import logowhite from "../assets/Images/Logo.svg";
+import Sidebar from "./Sidebar.jsx";
+import { useNavigate } from "react-router-dom";
+import { LOGIN } from "./Routes/RouterUrl.js";
+
+const Header = ({ onMenuClick }) => {
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const sidemenuOpen = () => setSidebarOpen(true);
+  const sidemenuClose = () => setSidebarOpen(false);
+
+  return (
+    <Box sx={style.headerMain}>
+      {/* logo */}
+      <Box
+        sx={{ ...style.heaederLogoMain, cursor: "pointer" }}
+        onClick={() => navigate(LOGIN)}
+      >
+        <img
+          src={logowhite}
+          alt="Logo White"
+          style={style.headerLogoImg}
+        />
+      </Box>
+
+      {/* sidebar */}
+      <Box onClick={onMenuClick} sx={style.headerHumberger}>
+        {/* icon */}
+        <IoMdReorder size={40} onClick={sidemenuOpen} />
+      </Box>
+
+      {/* Drawer for sidebar*/}
+      <Drawer
+        anchor="left"
+        open={sidebarOpen}
+        onClose={sidemenuClose}
+        variant="temporary"
+        slotProps={{
+          backdrop: {
+            sx: {
+              backgroundColor: "rgba(0, 0, 0, 0.6)",
+              backdropFilter: "blur(8px)",
+            },
+          },
+        }}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            backgroundColor: "#000",
+            backdropFilter: "none",
+            border: "none",
+            boxShadow: "none",
+            overflow: "visible",
+            width: "auto",
+            p: 0,
+            paddingTop: "env(safe-area-inset-top, 0px)",
+            paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          },
+        }}
+      >
+        <Sidebar />
+      </Drawer>
+    </Box>
+  );
+};
+
+export default Header;

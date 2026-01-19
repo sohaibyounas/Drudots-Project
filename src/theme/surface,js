@@ -1,0 +1,98 @@
+export const darkDataGridSx = {
+  backgroundColor: "#121620",
+  border: "1px solid #3e3f40",
+  borderTop: "none",
+  color: "#E5E7EB",
+  "--DataGrid-containerBackground": "rgba(17, 23, 34, 0.94)",
+  "--DataGrid-rowBorderColor": "rgba(148, 163, 184, 0.12)",
+  "--DataGrid-overlayBackground": "rgba(11, 15, 24, 0.92)",
+  "--DataGrid-cellOffsetMultiplier": "0",
+  "& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within":
+    {
+      outline: "none",
+    },
+
+  "& .MuiDataGrid-columnHeaders": {
+    backgroundColor: "#000",
+    color: "#F8FAFC",
+  },
+  "& .MuiDataGrid-columnHeadersInner": {
+    backgroundColor: "transparent !important",
+  },
+  "& .MuiDataGrid-columnHeader": {
+    backgroundColor: "#000",
+    border: "1px solid #3e3f40",
+    borderBottom: "none",
+    color: "#F8FAFC",
+  },
+  "& .MuiDataGrid-columnSeparator": {
+    color: "#1F2024",
+  },
+  "& .MuiDataGrid-iconSeparator": {
+    display: "none",
+  },
+  "& .MuiDataGrid-columnHeaderTitle": {
+    fontWeight: 600,
+    letterSpacing: 0.2,
+  },
+  "& .MuiDataGrid-cell": {
+    border: "1px solid #3e3f40",
+    borderBottom: "none",
+    backgroundColor: "#000",
+    fontSize: 14,
+    color: "#F8FAFC",
+    paddingTop: 1,
+    paddingBottom: 1,
+    display: "block",
+    whiteSpace: "normal",
+    lineHeight: 1.45,
+  },
+  "& .MuiDataGrid-cell > *": {
+    display: "block",
+  },
+  "& .MuiDataGrid-row:hover": {
+    backgroundColor: "rgba(59, 130, 246, 0.16)",
+  },
+  "& .MuiDataGrid-row:nth-of-type(odd)": {
+    backgroundColor: "#1F2024",
+  },
+  "& .MuiDataGrid-row:nth-of-type(even)": {
+    backgroundColor: "#1F2024",
+  },
+  "& .MuiDataGrid-row.Mui-selected, & .MuiDataGrid-row.Mui-selected:hover": {
+    backgroundColor: "#1F2024",
+  },
+  "& .MuiDataGrid-footerContainer": {
+    borderTop: "1px solid rgba(148, 163, 184, 0.26)",
+    color: "#E2E8F0",
+    backgroundColor: "#1F2024",
+  },
+  "& .MuiTablePagination-toolbar": {
+    color: "#CBD5F5",
+  },
+  "& .MuiButtonBase-root": {
+    color: "#A3BFFA",
+  },
+  "& .MuiDataGrid-row": {
+    borderBottom: "1px solid rgba(71, 85, 105, 0.35)",
+  },
+  "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+    outline: "none",
+  },
+  "& .MuiLinearProgress-root": { display: "none" },
+  "& ::-webkit-scrollbar": {
+    width: "10px",
+    height: "10px",
+  },
+  "& ::-webkit-scrollbar-track": {
+    background: "#0F172A",
+    borderRadius: "6px",
+  },
+  "& ::-webkit-scrollbar-thumb": {
+    background: "#3e3f40",
+    borderRadius: "6px",
+  },
+  "& ::-webkit-scrollbar-corner": {
+    background: "#0F172A",
+  },
+};
