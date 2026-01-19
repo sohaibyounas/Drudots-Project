@@ -39,23 +39,17 @@ const LoginForm = () => {
   };
 
   // verify otp
-  const handleVerifyotp = async () => {
-    const otpCode = otp.join("");
+  const handleVerifyotp = () => {
+    const isAllFilled = otp.every((digit) => digit !== "");
 
-    // check otp length
-    if (otpCode.length !== 6) {
-      setOtpError(["Please enter complete 6-digit OTP"]);
+    // check otp completion
+    if (!isAllFilled) {
+      setOtpError(["Please fill all 6-digit OTP fields"]);
       return;
     }
-    setOtpLoader(true);
-    try {
-      await verifyOtp({ email: formData.email, otp: otpCode });
-      navigate(DASHBOARD);
-    } catch (error) {
-      console.error("OTP verification failed:", error);
-    } finally {
-      setOtpLoader(false);
-    }
+
+    // Directly navigate to dashboard after filling all fields
+    navigate(DASHBOARD);
   };
 
   // resend otp api
@@ -70,15 +64,13 @@ const LoginForm = () => {
     }
   };
 
-  // clear opt & err message on reopen OTP dialog
-  // useEffect(() => {
-  //   if (open) {
-  //     setOtp(new Array(6).fill(""));
-  //     setOtpError([]);
-  //     // send otp automatically
-  //     handleOtpApi();
-  //   }
-  // }, [open]);
+  // clear otp & err message on reopen OTP dialog
+  useEffect(() => {
+    if (open) {
+      setOtp(new Array(6).fill(""));
+      setOtpError([]);
+    }
+  }, [open]);
 
   // check input changes
   const handleChange = (e) => {
@@ -330,7 +322,7 @@ const LoginForm = () => {
               color="primary"
               sx={style.otpConfirmButton}
               // send otp api 1st time
-              // onClick={handleVerifyotp}
+              onClick={handleVerifyotp}
               disabled={otpLoader}
             >
               {otpLoader ? (
@@ -353,7 +345,7 @@ const LoginForm = () => {
             disableRipple
             sx={style.dialogSendButton}
             // resend api
-            // onClick={handleResendOtp}
+            onClick={handleResendOtp}
             disabled={otpSendLoader}
           >
             {otpSendLoader ? (

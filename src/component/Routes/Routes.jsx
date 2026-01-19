@@ -7,11 +7,6 @@ import EmployeeDashboard from "../../pages/Admin/Employee";
 import Policies from "../../pages/Admin/Policies";
 import Layout from "../Layout/Layout";
 
-// Protected Routes
-const ProtectedRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/login" />;
-};
-
 // public routes
 const publicRoutes = [
   {
@@ -20,12 +15,7 @@ const publicRoutes = [
   },
 ];
 
-// authentication check function
-const isAuthenticated = () => {
-  return !!localStorage.getItem("token");
-};
-
-// protected routes
+// protected routes (now just normal routes)
 const protectedRoutes = [
   {
     path: DASHBOARD,
@@ -55,15 +45,13 @@ const routeConfig = [
     element: <Component />,
   })),
 
-  // Protected routes → wrapped with ProtectedRoute
+  // Protected routes → now just wrapped with Layout, no auth check
   ...protectedRoutes.map(({ path, Component }) => ({
     path,
     element: (
-      <ProtectedRoute>
-        <Layout>
-          <Component />
-        </Layout>
-      </ProtectedRoute>
+      <Layout>
+        <Component />
+      </Layout>
     ),
   })),
 
@@ -74,6 +62,6 @@ const routeConfig = [
   },
 ];
 
-const Routes = createBrowserRouter(routeConfig.map((route) => ({ ...route })));
+const Routes = createBrowserRouter(routeConfig);
 
 export default Routes;
