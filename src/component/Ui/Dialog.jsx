@@ -33,6 +33,8 @@ const Dialog = ({
     boxShadow: "0 42px 120px rgba(2,6,23,0.65)",
     color: "#f8fafc",
     overflow: "hidden",
+    padding: "22px 20px 26px 20px",
+    minWidth: { xs: "280px", sm: "400px" },
   };
 
   // Handle sx prop: merge any non-selector keys and any nested "& .MuiDialog-paper" into PaperProps.sx

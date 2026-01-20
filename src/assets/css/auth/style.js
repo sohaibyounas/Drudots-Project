@@ -204,18 +204,33 @@ const style = {
     alignItems: "flex-start",
   },
 
+  otpAlertbox: {
+    mt: 2,
+    backgroundColor: "rgba(235, 87, 87, 0.12)",
+    color: "#ff6b6b",
+    border: "1px solid rgba(235, 87, 87, 0.25)",
+    borderRadius: "14px",
+    px: 2,
+    py: 0.5,
+    textAlign: "left",
+    "& .MuiAlert-icon": {
+      display: "none",
+    },
+  },
+
   // OTP Dialog Styles
   dialog: {
     textAlign: "center",
     padding: "20px",
     width: { sm: "450px", xs: "350px" },
     "& .MuiDialog-container": {
-      alignItems: "center", // ← center vertically
+      alignItems: "center",
       paddingTop: 0,
+      overflow: "hidden",
       "&::-webkit-scrollbar": {
         display: "none",
-      }, // Hide scrollbar for Chrome, Safari and Opera
-      scrollbarWidth: "none", // Hide scrollbar for Firefox
+      },
+      scrollbarWidth: "none",
     },
     "& .MuiPaper-root": {
       background: "linear-gradient(180deg, #0A0E1A 0%, #05070D 100%)",
@@ -224,6 +239,7 @@ const style = {
       boxShadow: "0 35px 60px rgba(0,0,0,0.55)",
       color: "#fff",
       padding: { sm: "38px 40px", xs: "28px 24px" },
+      maxHeight: "90vh",
     },
   },
 
@@ -232,6 +248,11 @@ const style = {
     fontSize: { sm: "22px", xs: "20px" },
     lineHeight: { sm: "28px", xs: "24px" },
     color: "#fff",
+    overflow: "hidden",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+    scrollbarWidth: "none",
   },
 
   dialogSubText: {

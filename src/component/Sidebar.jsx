@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import logowhite from "../assets/images/Logo.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import style from "../assets/css/style.js";
-import ChevronRight from "@mui/icons-material/ChevronRight";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import {
@@ -17,26 +15,23 @@ import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
   DialogContent,
   List,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
-  Menu,
-  MenuItem,
   Typography,
 } from "@mui/material";
 import { IoWarningOutline } from "react-icons/io5";
 import { IoIosLogOut } from "react-icons/io";
-import { logoutUser } from "../Constant/apiRoutes.js";
+// import { logoutUser } from "../Constant/apiRoutes.js";
+import Dialog from "../component/Ui/Dialog.jsx";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState({});
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // for current active path if neededs
 
   // logout api
   // const handleLogout = async () => {
@@ -60,22 +55,11 @@ const Sidebar = () => {
   // };
 
   // logout dialog open & close
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setErrors({});
-  };
-
-  // stored user data
-  const storedData = JSON.parse(localStorage.getItem("formData"));
-  const userRole = storedData?.data?.admin?.role;
-
-  // Toggle section expansion
-  const toggleSection = (key) => {
-    setExpanded((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
   };
 
   // Sidebar Menu
@@ -128,7 +112,7 @@ const Sidebar = () => {
           />
         </Box>
 
-        {/* Menu Items (Scrollable) */}
+        {/* Menu Items */}
         <Box
           sx={{
             ...style.sidebarMenu,
@@ -138,18 +122,24 @@ const Sidebar = () => {
           }}
         >
           {sidebarMenu?.map((section) => {
-            const isOpen = !!expanded[section.key];
+            const isActive = location.pathname === section.to;
             return (
               <List key={section.key} disablePadding sx={{ mb: 1 }}>
                 {/* Section Header */}
                 <ListItemButton
-                  onClick={() => toggleSection(section.key)}
+                  onClick={() => navigate(section.to)}
                   sx={{
                     borderRadius: "12px",
                     color: "#fff",
                     mb: 0.5,
                     px: 1,
-                    "&:hover": { backgroundColor: "rgba(255,255,255,0.06)" },
+                    backgroundColor: isActive ? "#2563eb" : "transparent",
+                    transition: "background-color 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: isActive
+                        ? "#1d4ed8"
+                        : "rgba(255,255,255,0.06)",
+                    },
                   }}
                 >
                   <ListItemText
@@ -159,11 +149,6 @@ const Sidebar = () => {
                       </Typography>
                     }
                   />
-                  {isOpen ? (
-                    <ExpandMore sx={{ color: "#fff" }} />
-                  ) : (
-                    <ChevronRight sx={{ color: "#fff" }} />
-                  )}
                 </ListItemButton>
               </List>
             );
@@ -199,8 +184,9 @@ const Sidebar = () => {
           <Button
             sx={{
               color: "#fff",
-              fontSize: 14,
-              fontWeight: 500,
+              fontSize: 13,
+              fontWeight: 600,
+              lineHeight: "24px",
               textTransform: "none",
               padding: 0,
               minWidth: 0,
@@ -271,7 +257,7 @@ const Sidebar = () => {
                 {loading ? (
                   <Box sx={style.loader}>
                     <CircularProgress size={20} sx={{ color: "#fff" }} />
-                    <span style={{ color: "#fff" }}>Deleting...</span>
+                    <span style={{ color: "#fff" }}>Logout...</span>
                   </Box>
                 ) : (
                   "Logout"

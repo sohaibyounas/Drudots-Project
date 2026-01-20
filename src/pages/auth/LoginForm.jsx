@@ -13,7 +13,7 @@ import Dialog from "../../component/Ui/Dialog";
 import style from "../../assets/css/auth/style.js";
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD } from "../../component/Routes/RouterUrl";
-import { resendOtp, sendOtp, verifyOtp } from "../../Constant/apiRoutes.js";
+import { resendOtp, sendOtp } from "../../Constant/apiRoutes.js";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -229,8 +229,7 @@ const LoginForm = () => {
           if (reason === "backdropClick" || reason === "escapeKeyDown") {
             return;
           }
-          // Reset otp states on close
-          setOpen(false);
+          setOpen(false); //Reset otp states on close
           setOtp(new Array(6).fill(""));
           setOtpError([]);
           setOtpLoader(false);

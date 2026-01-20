@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Dialog from "../../component/Ui/Dialog.jsx";
 import {
   Box,
   Typography,
@@ -17,7 +18,6 @@ import {
   Skeleton,
   Button,
   CircularProgress,
-  Dialog,
   DialogTitle,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -47,7 +47,7 @@ import {
   searchAdminApi,
 } from "../../Constant/apiRoutes.js";
 
-// Desktop DataGrid Shimmer - Matches actual DataGrid structure
+// Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
   <Paper
     sx={{
@@ -64,6 +64,7 @@ const DataGridShimmer = () => (
       sx={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-between",
         p: 2,
         borderBottom: "1px solid #333",
         bgcolor: "#1a1b1e",
@@ -72,17 +73,27 @@ const DataGridShimmer = () => (
       {/* Name Header */}
       <Skeleton
         variant="text"
-        width={200}
+        width={100}
         height={24}
         sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
       />
+
       {/* Email Header */}
       <Skeleton
         variant="text"
-        width={250}
+        width={100}
         height={24}
-        sx={{ ml: "auto", mr: 2, bgcolor: "rgba(255,255,255,0.1)" }}
+        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
       />
+
+      {/* Role Header */}
+      <Skeleton
+        variant="text"
+        width={60}
+        height={24}
+        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+      />
+
       {/* Action Header */}
       <Skeleton
         variant="text"
@@ -136,6 +147,16 @@ const DataGridShimmer = () => (
           />
         </Box>
 
+        {/* Role Column */}
+        <Box sx={{ flex: 0.5, minWidth: 100, ml: 2 }}>
+          <Skeleton
+            variant="text"
+            width={100}
+            height={20}
+            sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+          />
+        </Box>
+
         {/* Action Column */}
         <Box sx={{ width: 100, display: "flex", justifyContent: "center" }}>
           <Skeleton
@@ -148,9 +169,9 @@ const DataGridShimmer = () => (
       </Box>
     ))}
   </Paper>
-);    
+);
 
-// Mobile Accordion Shimmer - Matches actual accordion structure
+// Mobile Accordion Shimmer
 const AccordionShimmer = () => (
   <Box sx={{ width: "100%" }}>
     {Array.from({ length: 5 }, (_, index) => (
@@ -176,7 +197,7 @@ const AccordionShimmer = () => (
             sx={{
               display: "flex",
               alignItems: "center",
-              width: "100%",
+              width: "50%",
               gap: 2,
             }}
           >
@@ -199,58 +220,6 @@ const AccordionShimmer = () => (
             </Box>
           </Box>
         </AccordionSummary>
-
-        <AccordionDetails
-          sx={{
-            p: "8px 20px 16px",
-            bgcolor: "#1F2024",
-          }}
-        >
-          {/* Email Row */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 1.5,
-            }}
-          >
-            <Skeleton
-              variant="text"
-              width={60}
-              height={20}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-            />
-            <Skeleton
-              variant="text"
-              width="50%"
-              height={20}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-            />
-          </Box>
-
-          {/* Role Row */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Skeleton
-              variant="text"
-              width={50}
-              height={20}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-            />
-            <Skeleton
-              variant="text"
-              width={80}
-              height={20}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-            />
-          </Box>
-        </AccordionDetails>
       </Accordion>
     ))}
   </Box>
@@ -263,7 +232,7 @@ const AdminManagement = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [admins, setAdmins] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -290,9 +259,12 @@ const AdminManagement = () => {
   };
 
   // Fetch admins calls
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
+  // useEffect(() => {
+  //   fetchAdmins();
+  // }, []);
+
+  // initial loading effect
+
 
   // search admin api locally
   const searchAdmins = async (query) => {
@@ -368,7 +340,7 @@ const AdminManagement = () => {
   // Close delete confirmation dialog
   const handleCloseDialog = () => setOpenDialog(null);
 
-  // row data
+  // datagrid rows data
   const rows = [
     { id: 1, fullName: "Jon Snow", email: "jon.snow@example.com" },
     {
@@ -401,7 +373,7 @@ const AdminManagement = () => {
     { id: 9, fullName: "Harvey Roxie", email: "harvey.roxie@example.com" },
   ];
 
-  // DataGrid columns
+  // DataGrid columns data
   const columns = [
     // user details
     {
@@ -423,7 +395,10 @@ const AdminManagement = () => {
           <Avatar
             sx={{
               bgcolor: "primary.main",
+              color: "#fff",
               fontSize: "14px",
+              width: 40,
+              height: 40,
             }}
           >
             {/* initials from fullName */}
@@ -457,6 +432,24 @@ const AdminManagement = () => {
       ),
     },
 
+    // role
+    {
+      field: "role",
+      headerName: "Role",
+      flex: 0.5,
+      minWidth: 100,
+      renderCell: (params) => (
+        <Box>
+          <Typography
+            variant="body2"
+            sx={{ textTransform: "capitalize", color: "#fff" }}
+          >
+            {params.row.role || "Admin"}
+          </Typography>
+        </Box>
+      ),
+    },
+
     // actions
     {
       field: "actions",
@@ -468,6 +461,7 @@ const AdminManagement = () => {
       headerAlign: "center",
       renderCell: (params) => (
         <IconButton
+          disableRipple
           size="small"
           onClick={(e) => handleMenuClick(e, params.row)}
           sx={{
@@ -497,6 +491,12 @@ const AdminManagement = () => {
       </Box>
     );
   }
+
+  // mobile accordion view controlled
+  const [expanded, setExpanded] = useState(false);
+  const handleAccordionChange = (panelId) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panelId : false);
+  };
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: 1400, mx: "auto" }}>
@@ -548,7 +548,7 @@ const AdminManagement = () => {
           </Button>
         </Box>
 
-        {/* add role form */}
+        {/* Admin form */}
         <Adminform
           setShowForm={setShowForm}
           showForm={showForm}
@@ -598,6 +598,8 @@ const AdminManagement = () => {
                 getRowHeight={() => "auto"}
                 rows={rows}
                 columns={columns}
+                pageSizeOptions={[]}
+                hideFooter
                 pageSize={10}
                 rowsPerPageOptions={[5, 10, 25]}
                 sortingMode="server"
@@ -613,76 +615,102 @@ const AdminManagement = () => {
           ) : (
             /* Mobile View - Accordion */
             <Box sx={{ width: "100%" }}>
-              {rows.map((admin) => (
-                <Accordion key={admin.id} sx={{ mb: 2 }}>
-                  <AccordionSummary
-                    expandIcon={<FaChevronDown color="#fff" />}
-                    sx={{ bgcolor: "#1F2024", color: "#fff" }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <Avatar
-                        sx={{
-                          bgcolor:
-                            admin.role === "admin"
-                              ? "warning.main"
-                              : "primary.main",
-                          mr: 2,
-                        }}
-                      >
-                        {admin.initials}
-                      </Avatar>
-                      <Box sx={{ flexGrow: 1, color: "#fff" }}>
-                        <Typography fontWeight="medium">
-                          {admin.name || "Admin Name"}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails
+              {rows.map((admin) => {
+                const panelId = `panel-${admin.id}`;
+
+                return (
+                  <Accordion
+                    key={admin.id}
+                    expanded={expanded === panelId}
+                    onChange={handleAccordionChange(panelId)}
                     sx={{
-                      p: "8px 20px 16px",
+                      mb: 2,
                       bgcolor: "#1F2024",
-                      color: "#fff",
+                      borderRadius: 1,
+                      "&:before": { display: "none" },
+                      boxShadow: "none",
                     }}
                   >
-                    {/* email */}
-                    <Box
+                    <AccordionSummary
+                      expandIcon={<FaChevronDown color="#fff" />}
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mb: 1,
-                        justifyContent: "space-between",
+                        bgcolor: "#1F2024",
+                        borderRadius: 1,
+                        "&:hover": { bgcolor: "#2a2b30" },
+                        color: "#fff",
                       }}
                     >
-                      <Typography>Email</Typography>
-                      <Typography>{admin.email}</Typography>
-                    </Box>
-
-                    {/* role */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mb: 1,
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Typography>Role</Typography>
-                      <Typography
-                        sx={{ textTransform: "capitalize", color: "#fff" }}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
                       >
-                        {admin.role || "Admin"}
-                      </Typography>
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
+                        <Avatar
+                          sx={{
+                            bgcolor:
+                              admin.role === "admin"
+                                ? "warning.main"
+                                : "primary.main",
+                            mr: 2,
+                            color: "#fff",
+                          }}
+                        >
+                          {/* initials banao */}
+                          {admin.fullName
+                            ?.split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase() || "AD"}
+                        </Avatar>
+                        <Box sx={{ flexGrow: 1 }}>
+                          <Typography fontWeight="medium">
+                            {admin.fullName || "Admin Name"}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </AccordionSummary>
+
+                    <AccordionDetails
+                      sx={{
+                        p: "8px 20px 16px",
+                        bgcolor: "#1F2024",
+                        color: "#fff",
+                      }}
+                    >
+                      {/* Additional info  */}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          mb: 1,
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography>Email</Typography>
+                        <Typography>{admin.email}</Typography>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          mb: 1,
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography>Role</Typography>
+                        <Typography
+                          sx={{ textTransform: "capitalize", color: "#fff" }}
+                        >
+                          {admin.role || "Admin"}
+                        </Typography>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
             </Box>
           )}
 
@@ -746,15 +774,11 @@ const AdminManagement = () => {
       )}
 
       {/* Delete confirmation dialog */}
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        keepMounted
-        sx={style.deleteConfirmDialog}
-      >
-        <DialogTitle sx={style.deletTitle}>
-          Confirm Deletion <IoWarningOutline color="red" />
-        </DialogTitle>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <IoWarningOutline color="red" size={28} />
+        </Box>
+        <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
         <Typography sx={style.deletSubTitle}>
           Are you sure you want to delete this admin?
         </Typography>

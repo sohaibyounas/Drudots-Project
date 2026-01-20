@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import style from "../../assets/css/style.js";
 import { Toaster } from "react-hot-toast";
 import Sidebar from "../Sidebar.jsx";
+import Header from "../Header.jsx";
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -13,6 +14,13 @@ const Layout = ({ children }) => {
 
   return (
     <>
+      {/* header */}
+      <Header
+        onMenuClick={handleSidebarToggle}
+        isSidebarOpen={isSidebarOpen}
+        sx={{ position: "fixed", top: 0 }}
+      />
+
       {/* layout */}
       <Box sx={style.layout}>
         {/* sidebar */}
@@ -34,7 +42,8 @@ const Layout = ({ children }) => {
       {/* set toast for all pages */}
       <Toaster position="top-center" reverseOrder={false} />
     </>
-  );j
+  );
+  j;
 };
 
 export default Layout;

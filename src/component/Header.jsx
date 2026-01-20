@@ -3,9 +3,9 @@ import { Box, Drawer } from "@mui/material";
 import style from "../assets/css/style.js";
 import { IoMdReorder } from "react-icons/io";
 import logowhite from "../assets/Images/Logo.svg";
-import Sidebar from "./Sidebar.jsx";
 import { useNavigate } from "react-router-dom";
-import { LOGIN } from "./Routes/RouterUrl.js";
+import { DASHBOARD } from "./Routes/RouterUrl.js";
+import Sidebar from "./Sidebar.jsx";
 
 const Header = ({ onMenuClick }) => {
   const navigate = useNavigate();
@@ -18,11 +18,11 @@ const Header = ({ onMenuClick }) => {
       {/* logo */}
       <Box
         sx={{ ...style.heaederLogoMain, cursor: "pointer" }}
-        onClick={() => navigate(LOGIN)}
+        onClick={() => navigate(DASHBOARD)}
       >
         <img
           src={logowhite}
-          alt="Logo White"
+          alt={"Logo white"}
           style={style.headerLogoImg}
         />
       </Box>

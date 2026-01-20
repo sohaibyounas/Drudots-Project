@@ -20,7 +20,7 @@ export const darkDataGridSx = {
     backgroundColor: "transparent !important",
   },
   "& .MuiDataGrid-columnHeader": {
-    backgroundColor: "#000",
+    backgroundColor: "#1F2024",
     border: "1px solid #3e3f40",
     borderBottom: "none",
     color: "#F8FAFC",
@@ -38,7 +38,7 @@ export const darkDataGridSx = {
   "& .MuiDataGrid-cell": {
     border: "1px solid #3e3f40",
     borderBottom: "none",
-    backgroundColor: "#000",
+    backgroundColor: "#1F2024",
     fontSize: 14,
     color: "#F8FAFC",
     paddingTop: 1,

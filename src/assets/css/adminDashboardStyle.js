@@ -10,14 +10,6 @@ const style = {
     color: "#fff",
   },
 
-  // pageHeader: {
-  //   display: "flex",
-  //   flexWrap: "wrap",
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  //   gap: 1.5,
-  // },
-
   pageHeaderContent: {
     display: "flex",
     flexDirection: "column",
@@ -79,17 +71,7 @@ const style = {
     justifyContent: "center",
   },
 
-  // delete confirmation dialog
-  deleteConfirmDialog: {
-    "& .MuiDialog-paper": {
-      minWidth: { xs: "280px", sm: "420px" },
-      backgroundColor: "#1a1a1a",
-      borderRadius: "12px",
-      padding: "22px 26px 28px 26px",
-      boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
-    },
-  },
-
+  // delete confirmation dialog styles
   deletTitle: {
     display: "flex",
     alignItems: "center",
@@ -97,7 +79,6 @@ const style = {
     fontSize: "1.5rem",
     fontWeight: 600,
     color: "#fff",
-    pl: 2,
   },
 
   warningIcon: {
