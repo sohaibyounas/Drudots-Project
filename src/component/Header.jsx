@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Drawer } from "@mui/material";
 import style from "../assets/css/style.js";
 import { IoMdReorder } from "react-icons/io";
-import logowhite from "../assets/Images/Logo.svg";
+import logowhite from "../assets/images/Logo.svg";
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD } from "./Routes/RouterUrl.js";
 import Sidebar from "./Sidebar.jsx";
