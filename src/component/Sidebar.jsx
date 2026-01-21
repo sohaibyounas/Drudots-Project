@@ -129,25 +129,64 @@ const Sidebar = () => {
                 <ListItemButton
                   onClick={() => navigate(section.to)}
                   sx={{
-                    borderRadius: "12px",
-                    color: "#fff",
-                    mb: 0.5,
-                    px: 1,
-                    backgroundColor: isActive ? "#2563eb" : "transparent",
-                    transition: "background-color 0.3s ease",
+                    minHeight: 48,                   
+                    borderRadius: "10px",             
+                    margin: "2px",  
+                    color: "#e0e0e0",               
+                    backgroundColor: isActive ? "rgba(10, 132, 255, 0.18)" : "transparent",
+                    transition: "all 0.2s ease",
+                    justifyContent: "flex-start",     
+                    gap: 1.5,                         
+
                     "&:hover": {
                       backgroundColor: isActive
-                        ? "#1d4ed8"
-                        : "rgba(255,255,255,0.06)",
+                        ? "rgba(10, 132, 255, 0.28)"
+                        : "rgba(255, 255, 255, 0.08)",
+                    },
+
+                    "&.Mui-selected": {               // sometimes better than relying only on isActive
+                      backgroundColor: "#0A84FF !important",
+                      color: "#ffffff",
+                      "&:hover": {
+                        backgroundColor: "#1a94ff !important",
+                      },
                     },
                   }}
+                  selected={isActive}                 
                 >
+                  {/* Icon */}
+                  <Box
+                    sx={{
+                      minWidth: 24,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: isActive ? "#ffffff" : "inherit",
+                      fontSize: "1.4rem",
+                    }}
+                  >
+                    {section.icon}
+                  </Box>
+
+                  {/* Text */}
                   <ListItemText
                     primary={
-                      <Typography sx={{ ...style.sidebarListHeading }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize:" 14px",
+                          fontWeight: isActive ? 600 : 500,
+                          color: "inherit",
+                          whiteSpace: "wrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          textTransform: "capitalize",
+                        }}
+                      >
                         {section.label}
                       </Typography>
                     }
+                    sx={{ my: 0 }}
                   />
                 </ListItemButton>
               </List>

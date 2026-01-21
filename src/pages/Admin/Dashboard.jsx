@@ -533,7 +533,6 @@ const AdminManagement = () => {
           sx={{
             display: "flex",
             gap: { xs: 0.6, sm: 1 },
-            // flexWrap: { xs: "wrap", md: "nowrap" },
             alignItems: "start",
             justifyContent: { xs: "flex-start", md: "flex-end" },
           }}
@@ -600,8 +599,6 @@ const AdminManagement = () => {
                 columns={columns}
                 pageSizeOptions={[]}
                 hideFooter
-                pageSize={10}
-                rowsPerPageOptions={[5, 10, 25]}
                 sortingMode="server"
                 disableCheckboxSelection
                 disableColumnMenu
@@ -774,6 +771,7 @@ const AdminManagement = () => {
       )}
 
       {/* Delete confirmation dialog */}
+      
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <IoWarningOutline color="red" size={28} />
