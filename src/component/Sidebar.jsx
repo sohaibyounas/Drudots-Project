@@ -5,10 +5,9 @@ import style from "../assets/css/style.js";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import {
-  LOGIN,
-  DASHBOARD,
   POLICIES,
   EMPLOYEEDASHBOARD,
+  ADMINDASHBOARD,
 } from "./Routes/RouterUrl.js";
 import {
   Alert,
@@ -23,39 +22,38 @@ import {
 } from "@mui/material";
 import { IoWarningOutline } from "react-icons/io5";
 import { IoIosLogOut } from "react-icons/io";
-// import { logoutUser } from "../Constant/apiRoutes.js";
 import Dialog from "../component/Ui/Dialog.jsx";
+import { logoutUser } from "../Constant/apiRoutes.js";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // for current active path if neededs
+  const location = useLocation(); 
 
   // logout api
-  // const handleLogout = async () => {
-  //   setLoading(true);
-  //   setErrors({});
+  const handleLogout = async () => {
+    setLoading(true);
+    setErrors({});
 
-  //   try {
-  //     const res = await logoutUser();
-  //     console.log("Logout response:", res.data);
+    try {
+      const res = await logoutUser();
+      console.log("Logout response:", res.data);
 
-  //     // Optional: redirect to login page
-  //     navigate("/login");
-  //     // Or clear local storage / auth token
-  //     localStorage.removeItem("token");
-  //   } catch (err) {
-  //     setErrors({ email: "Logout failed. Please try again." });
-  //     console.error(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      // Optional: redirect to login page
+      navigate("/login");
+      // Or clear local storage / auth token
+      localStorage.removeItem("token");
+    } catch (err) {
+      setErrors({ email: "Logout failed. Please try again." });
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // logout dialog open & close
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -64,18 +62,23 @@ const Sidebar = () => {
 
   // Sidebar Menu
   const sidebarMenu = [
+    // admin dashboard
     {
       key: "adminDashboard",
       label: "Admin dashboard",
-      to: DASHBOARD,
+      to: ADMINDASHBOARD,
       icon: <DashboardOutlinedIcon fontSize="small" />,
     },
+
+    // employee dashboard
     {
       key: "EmployeeDashboard",
       label: "Employee Dashboard",
       to: EMPLOYEEDASHBOARD,
       icon: <DashboardOutlinedIcon fontSize="small" />,
     },
+
+    // policies
     {
       key: "policies",
       label: "Policies",
@@ -98,7 +101,7 @@ const Sidebar = () => {
         {/* Logo Section */}
         <Box
           sx={style.logomain}
-          onClick={() => navigate(DASHBOARD)}
+          onClick={() => navigate(ADMINDASHBOARD)}
           style={{ cursor: "pointer" }}
         >
           <img
@@ -284,14 +287,14 @@ const Sidebar = () => {
               >
                 Cancel
               </Button>
+              
               <Button
                 disableRipple
                 variant="contained"
-                // logout api calls
-                // onClick={handleLogout}
-                onClick={() => navigate(LOGIN)}
                 disabled={loading}
                 sx={style.deleteButon}
+                // logout api calls
+                onClick={handleLogout}
               >
                 {loading ? (
                   <Box sx={style.loader}>

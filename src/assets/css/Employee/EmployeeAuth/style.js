@@ -1,75 +1,4 @@
 const style = {
-  // Login Page Layout
-  loginPage: {
-    display: "flex",
-    flexDirection: { xs: "column", md: "row" },
-    minHeight: "100vh",
-    width: "100%",
-    background:
-      "linear-gradient(180deg, #010103 0%, #040506 55%, #010103 100%)",
-    position: "relative",
-    overflow: "hidden",
-    color: "#fff",
-    "&:before": {
-      content: "''",
-      position: "absolute",
-      inset: 0,
-      background:
-        "radial-gradient(circle at 30% 20%, rgba(0,122,255,0.2), transparent 55%)",
-      filter: "blur(120px)",
-      opacity: 0.9,
-      pointerEvents: "none",
-    },
-  },
-
-  // Logo Section
-  logoSection: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: {
-      xs: "32px 20px 24px",
-      sm: "40px 24px 32px",
-      md: "60px 30px",
-    },
-    width: { xs: "100%", md: "45%" },
-    position: "relative",
-    zIndex: 1,
-  },
-
-  LoginPageLogo: {
-    width: { xs: "110px", sm: "150px", md: "180px" },
-    height: "200px",
-    filter: "brightness(0) saturate(100%) invert(1)",
-  },
-
-  logoText: {
-    color: "#fff",
-    fontSize: { xs: "36px", sm: "44px", md: "52px" },
-    fontWeight: 700,
-    letterSpacing: "-0.5px",
-  },
-
-  logoSubText: {
-    fontWeight: 400,
-    opacity: 0.9,
-  },
-
-  // Login Form Section
-  loginFormSection: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    padding: {
-      xs: "0 16px 40px",
-      sm: "0 24px 48px",
-      md: "50px",
-    },
-    position: "relative",
-    zIndex: 1,
-  },
-
   // Login Form Card
   loginFormMain: {
     padding: { xs: "28px 24px", sm: "36px 32px", md: "40px 34px" },
@@ -123,6 +52,48 @@ const style = {
     letterSpacing: { xs: 0.6, sm: 0.8 },
     fontWeight: 600,
     textTransform: "uppercase",
+  },
+
+  loginFormInputPassword: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "14px",
+      fontSize: "14px",
+      fontWeight: 400,
+      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      height: "48px",
+      backdropFilter: "blur(20px)",
+      WebkitBackdropFilter: "blur(20px)",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+      transition: "all 0.2s ease",
+      "& .MuiInputBase-input": {
+        padding: {
+          xs: "12px 16px",
+          sm: "12px 18px",
+        },
+        "&::placeholder": {
+          color: "#999",
+          opacity: 1,
+        },
+      },
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "transparent",
+        borderWidth: "0px",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: "transparent",
+      },
+      "&.Mui-focused": {
+        backgroundColor: "rgba(255, 255, 255, 0.98)",
+        boxShadow:
+          "0 0 0 2px rgba(0, 122, 255, 0.2), 0 4px 12px rgba(0, 122, 255, 0.3), inset 0 1px 2px rgba(0, 0, 0, 0.05)",
+        border: "2px solid rgba(0, 122, 255, 0.8)",
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: "transparent",
+          borderWidth: "0px",
+        },
+      },
+    },
   },
 
   loginFormInput: {
@@ -409,6 +380,56 @@ const style = {
       textDecoration: "underline",
       background: "transparent",
       color: "#0067CC",
+    },
+  },
+
+  // Forgot Password Page
+  forgotPasswordSection: {
+    textAlign: "center",
+    marginTop: { xs: 1, sm: 1.2 },
+  },
+
+  forgotPassword: {
+    fontSize: { xs: 13, sm: 14 },
+    fontWeight: 400,
+    color: "rgba(255,255,255,0.6)",
+  },
+
+  ResetPasswordButton: {
+    color: "#0A84FF",
+    textTransform: "none",
+    textDecoration: "underline",
+    fontSize: { xs: 13, sm: 14 },
+    fontWeight: 500,
+    padding: "0 4px",
+    minWidth: "auto",
+    "&:hover": {
+      textDecoration: "underline",
+      backgroundColor: "transparent",
+      color: "#80b8ff",
+    },
+  },
+
+  signInButton: {
+    marginBottom: "10px",
+    marginTop: "8px",
+    height: "44px",
+    textTransform: "none",
+    background: "#0A84FF",
+    color: "#fff",
+    borderRadius: "18px",
+    fontSize: "15px",
+    fontWeight: 500,
+    boxShadow: "none",
+    border: "1px solid rgba(255,255,255,0.08)",
+    transition: "background-color 0.2s ease",
+    "&:hover": {
+      background: "#006fdd",
+      boxShadow: "none",
+    },
+    "&:active": {
+      transform: "none",
+      boxShadow: "none",
     },
   },
 };

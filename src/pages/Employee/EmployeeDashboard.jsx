@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Dialog from "../../component/Ui/Dialog.jsx";
 import {
   Box,
@@ -25,27 +25,17 @@ import {
   FaSearch,
   FaEllipsisV,
   FaChevronDown,
-  FaUser,
-  FaEnvelope,
-  FaPhone,
-  FaCalendarAlt,
   FaEdit,
   FaTrash,
-  FaBan,
   FaUserShield,
   FaPlus,
 } from "react-icons/fa";
-import style from "../../assets/css/adminDashboardStyle.js";
+import style from "../../assets/css/Admin/AdminDashboard.js";
 import { IoIosSearch } from "react-icons/io";
 import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
 import { darkDataGridSx } from "../../theme/surface,js";
-import Adminform from "../../component/AdminForm/AdminForm.jsx";
 import { IoWarningOutline } from "react-icons/io5";
-import {
-  deleteAdminApi,
-  fetchAdminsApi,
-  searchAdminApi,
-} from "../../Constant/apiRoutes.js";
+import Employeeform from "../../component/EmployeeForm/EmployeeForm.jsx";
 
 // Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
@@ -225,106 +215,60 @@ const AccordionShimmer = () => (
   </Box>
 );
 
-const AdminManagement = () => {
+const EmployeeDashboard = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [search, setSearch] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedAdmin, setSelectedAdmin] = useState(null);
-  const [admins, setAdmins] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [success, setSuccess] = useState(null);
-  const [selectedAdminId, setSelectedAdminId] = useState(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [loader, setLoader] = useState(false);
   const open = Boolean(anchorEl);
 
-  // fetch admins
-  const fetchAdmins = async () => {
-    setLoading(true);
-    setError(null);
+  // fetch employee
+  // const fetchEmployees = async () => {
+  //   setLoading(true);
+  //   setError(null);
 
-    try {
-      const res = await fetchAdminsApi();
-      setAdmins(res.data || []);
-    } catch (err) {
-      setError("Failed to load admins. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     const res = await fetchAdminsApi();
+  //     setAdmins(res.data || []);
+  //   } catch (err) {
+  //     setError("Failed to load emplpoyee. Please try again.");
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  // Fetch admins calls
+  // fetch employee calls
   // useEffect(() => {
-  //   fetchAdmins();
+  //   fetchEmployees();
   // }, []);
 
-  // initial loading effect
-
-
-  // search admin api locally
-  const searchAdmins = async (query) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await searchAdminApi(query);
-
-      // Make sure res.data is an array
-      const adminsArray = Array.isArray(res.data)
-        ? res.data
-        : Array.isArray(res.data?.data)
-          ? res.data.data
-          : []; // fallback to empty array
-
-      const filteredAdmins = adminsArray.filter(
-        (admin) =>
-          admin.fullName.toLowerCase().includes(query.toLowerCase()) ||
-          admin.email.toLowerCase().includes(query.toLowerCase()),
-      );
-      setAdmins(filteredAdmins);
-    } catch (err) {
-      setError("Search failed. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Delete admin api
-  const handleDeleteAdmin = async () => {
-    if (!selectedAdmin) return;
-
-    try {
-      setLoader(true);
-      await deleteAdminApi(selectedAdmin.id);
-      setOpenDialog(false);
-      fetchAdmins();
-    } catch (error) {
-      console.error("Delete admin failed:", error);
-    } finally {
-      setLoader(false);
-    }
-  };
-
   // popover open
-  const handleMenuClick = (e, admin) => {
+  const handleMenuClick = (e, employee) => {
     setAnchorEl(e.currentTarget);
-    setSelectedAdmin(admin);
+    setSelectedEmployee(employee);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
+  //   open popover
   const handleAction = async (action) => {
-    if (!selectedAdmin) return;
+    if (!selectedEmployee) return;
 
     if (action === "edit") {
-      setSelectedAdminId(selectedAdmin.id);
+      setSelectedEmployeeId(selectedEmployee.id);
       setShowEdit(true);
       setShowForm(true);
     }
@@ -340,40 +284,59 @@ const AdminManagement = () => {
   // Close delete confirmation dialog
   const handleCloseDialog = () => setOpenDialog(null);
 
-  // datagrid rows data
+  // datagrid rows dummy data
   const rows = [
-    { id: 1, fullName: "Jon Snow", email: "jon.snow@example.com" },
+    {
+      id: 1, fullName: "Jon Snow", email: "jon.snow@example.com", phone: "23129371209",
+      gender: "Male"
+    },
     {
       id: 2,
       fullName: "Cersei Lannister",
-      email: "cersei.lannister@example.com",
+      email: "cersei.lannister@example.com", phone: "23129371209",
+      gender: "Female"
     },
     {
       id: 3,
       fullName: "Jaime Lannister",
       email: "jaime.lannister@example.com",
+      phone: "23129371209",
+      gender: "Male"
     },
-    { id: 4, fullName: "Arya Stark", email: "arya.stark@example.com" },
+    {
+      id: 4, fullName: "Arya Stark", email: "arya.stark@example.com", phone: "23129371209",
+      gender: "Female"
+    },
     {
       id: 5,
       fullName: "Daenerys Targaryen",
       email: "daenerys.targaryen@example.com",
+      phone: "23129371209",
+      gender: "Male"
     },
-    { id: 6, fullName: "Melisandre", email: "melisandre@example.com" },
+    {
+      id: 6, fullName: "Melisandre", email: "melisandre@example.com", phone: "23129371209",
+      gender: "Female"
+    },
     {
       id: 7,
       fullName: "Ferrara Clifford",
-      email: "ferrara.clifford@example.com",
+      email: "ferrara.clifford@example.com", phone: "23129371209",
+      gender: "Female"
     },
     {
       id: 8,
       fullName: "Rossini Frances",
-      email: "rossini.frances@example.com",
+      email: "rossini.frances@example.com", phone: "23129371209",
+      gender: "Female"
     },
-    { id: 9, fullName: "Harvey Roxie", email: "harvey.roxie@example.com" },
+    {
+      id: 9, fullName: "Harvey Roxie", email: "harvey.roxie@example.com", phone: "23129371209",
+      gender: "Male"
+    },
   ];
 
-  // DataGrid columns data
+  // DataGrid columns dummy data
   const columns = [
     // user details
     {
@@ -432,10 +395,10 @@ const AdminManagement = () => {
       ),
     },
 
-    // role
+    // phone
     {
-      field: "role",
-      headerName: "Role",
+      field: "phone",
+      headerName: "Phone",
       flex: 0.5,
       minWidth: 100,
       renderCell: (params) => (
@@ -444,7 +407,25 @@ const AdminManagement = () => {
             variant="body2"
             sx={{ textTransform: "capitalize", color: "#fff" }}
           >
-            {params.row.role || "Admin"}
+            {params.row.phone || "Phone"}
+          </Typography>
+        </Box>
+      ),
+    },
+
+    // gender
+    {
+      field: "gender",
+      headerName: "Gender",
+      flex: 0.5,
+      minWidth: 100,
+      renderCell: (params) => (
+        <Box>
+          <Typography
+            variant="body2"
+            sx={{ textTransform: "capitalize", color: "#fff" }}
+          >
+            {params.row.gender || "Gender"}
           </Typography>
         </Box>
       ),
@@ -485,7 +466,9 @@ const AdminManagement = () => {
         <Typography color="error" gutterBottom>
           {error}
         </Typography>
-        <IconButton onClick={fetchAdmins} color="primary">
+        <IconButton
+          // onClick={fetchEmployees}
+          color="primary">
           <FaSearch /> Retry
         </IconButton>
       </Box>
@@ -521,14 +504,14 @@ const AdminManagement = () => {
                 color: "#fff",
               }}
             />
-            Admins
+            Employee
           </Typography>
           <Typography sx={{ fontSize: "14px", color: "rgba(255,255,255,0.7)" }}>
-            Manage your admins here
+            Manage your employees here
           </Typography>
         </Box>
 
-        {/* Add admin */}
+        {/* Add employee */}
         <Box
           sx={{
             display: "flex",
@@ -543,33 +526,33 @@ const AdminManagement = () => {
             onClick={() => setShowForm(true)}
             sx={style.PAGE_STYLES.addButton}
           >
-            Add New Role
+            Add New Employee
           </Button>
         </Box>
-
-        {/* Admin form */}
-        <Adminform
-          setShowForm={setShowForm}
-          showForm={showForm}
-          admins={admins}
-          fetchAdmins={fetchAdmins}
-          adminId={selectedAdminId}
-          showEdit={showEdit}
-          setShowEdit={setShowEdit}
-          setSuccess={setSuccess}
-          selectedAdminData={selectedAdmin}
-        />
       </Box>
+
+      {/* Employee form */}
+      <Employeeform
+        setShowForm={setShowForm}
+        showForm={showForm}
+        employees={employees}
+        // fetchEmployees={fetchEmployees}
+        employeeId={selectedEmployeeId}
+        showEdit={showEdit}
+        setShowEdit={setShowEdit}
+        setSuccess={setSuccess}
+        selectedEmployeeData={selectedEmployee}
+      />
 
       {/* Search field */}
       <Box>
         <AppSearchField
           fullWidth
-          placeholder="Search admin by name, email or phone..."
+          placeholder="Search employee by name, email or phone..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
-            searchAdmins(e.target.value);
+            searchEmployees(e.target.value);
           }}
           sx={{ width: "100%" }}
           InputProps={{
@@ -585,7 +568,7 @@ const AdminManagement = () => {
       {/* divider */}
       <Divider sx={{ mb: 3, color: "rgba(255,255,255,0.7)" }} />
 
-      {/* Loading State */}
+      {/* Loading datagrid or accordion */}
       {loading ? (
         <>{!isMobile ? <DataGridShimmer /> : <AccordionShimmer />}</>
       ) : (
@@ -612,12 +595,12 @@ const AdminManagement = () => {
           ) : (
             /* Mobile View - Accordion */
             <Box sx={{ width: "100%" }}>
-              {rows.map((admin) => {
-                const panelId = `panel-${admin.id}`;
+              {rows.map((employee) => {
+                const panelId = `panel-${employee.id}`;
 
                 return (
                   <Accordion
-                    key={admin.id}
+                    key={employee.id}
                     expanded={expanded === panelId}
                     onChange={handleAccordionChange(panelId)}
                     sx={{
@@ -647,15 +630,15 @@ const AdminManagement = () => {
                         <Avatar
                           sx={{
                             bgcolor:
-                              admin.role === "admin"
+                              employee.role === "admin"
                                 ? "warning.main"
                                 : "primary.main",
                             mr: 2,
                             color: "#fff",
                           }}
                         >
-                          {/* initials banao */}
-                          {admin.fullName
+                          {/* initials from name */}
+                          {employee.fullName
                             ?.split(" ")
                             .map((n) => n[0])
                             .join("")
@@ -663,7 +646,7 @@ const AdminManagement = () => {
                         </Avatar>
                         <Box sx={{ flexGrow: 1 }}>
                           <Typography fontWeight="medium">
-                            {admin.fullName || "Admin Name"}
+                            {employee.fullName || "Employee Name"}
                           </Typography>
                         </Box>
                       </Box>
@@ -686,7 +669,7 @@ const AdminManagement = () => {
                         }}
                       >
                         <Typography>Email</Typography>
-                        <Typography>{admin.email}</Typography>
+                        <Typography>{employee.email}</Typography>
                       </Box>
 
                       <Box
@@ -701,7 +684,7 @@ const AdminManagement = () => {
                         <Typography
                           sx={{ textTransform: "capitalize", color: "#fff" }}
                         >
-                          {admin.role || "Admin"}
+                          {employee.role || "Employee"}
                         </Typography>
                       </Box>
                     </AccordionDetails>
@@ -747,23 +730,23 @@ const AdminManagement = () => {
             }}
           >
             <Box>
-              {/* edit admin */}
+              {/* edit employee */}
               <MenuItem onClick={() => handleAction("edit")}>
                 <FaEdit style={{ marginRight: 12 }} />
-                Edit Admin
+                Edit Employee
               </MenuItem>
 
-              {/* delete admin */}
+              {/* delete employee */}
               <MenuItem
                 onClick={() => {
                   setOpenDialog(true);
                   handlePopClose();
-                  handleDeleteAdmin();
+                  // handleDeleteEmployee();
                 }}
                 sx={{ color: "error.main" }}
               >
                 <FaTrash style={{ marginRight: 12, color: "red" }} />
-                Delete Admin
+                Delete Employee
               </MenuItem>
             </Box>
           </Popover>
@@ -771,14 +754,14 @@ const AdminManagement = () => {
       )}
 
       {/* Delete confirmation dialog */}
-      
+
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <IoWarningOutline color="red" size={28} />
         </Box>
         <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
         <Typography sx={style.deletSubTitle}>
-          Are you sure you want to delete this admin?
+          Are you sure you want to delete this employee?
         </Typography>
 
         {/* cancel, submit button */}
@@ -796,7 +779,7 @@ const AdminManagement = () => {
             sx={style.deleteButton}
             disabled={loader}
             disableRipple
-            onClick={handleDeleteAdmin}
+          // onClick={handleDeleteEmployee}
           >
             {loader ? <CircularProgress size="20px" color="#fff" /> : "Delete"}
           </Button>
@@ -806,4 +789,4 @@ const AdminManagement = () => {
   );
 };
 
-export default AdminManagement;
+export default EmployeeDashboard;

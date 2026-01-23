@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import style from "../../assets/css/style";
 import { RxCross2 } from "react-icons/rx";
-import { addAdminApi, updateAdminApi } from "../../Constant/apiRoutes";
 
 const Adminform = ({
   showForm,
@@ -47,7 +46,7 @@ const Adminform = ({
   const handleAddAdmin = async (payload) => {
     try {
       setLoader(true);
-      await addAdminApi(payload);
+      // await AddAdminApi(payload);
       fetchAdmins();
       setSuccess("Admin added successfully");
     } catch (err) {
@@ -61,7 +60,7 @@ const Adminform = ({
   const handleUpdateAdmin = async (id, payload) => {
     try {
       setLoader(true);
-      await updateAdminApi(id, payload);
+      // await UpdateAdminApi(id, payload);
       fetchAdmins();
       setSuccess("Admin updated successfully");
     } catch (err) {

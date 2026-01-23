@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-const EmployeeDashboard = () => {
+const EmployeeView = () => {
   return (
     <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: 1400, mx: "auto" }}>
       <Typography variant="h4" fontWeight="bold" mb={4} sx={{ color: "#fff" }}>
@@ -15,4 +15,4 @@ const EmployeeDashboard = () => {
   );
 };
 
-export default EmployeeDashboard;
+export default EmployeeView;

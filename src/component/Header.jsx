@@ -4,8 +4,9 @@ import style from "../assets/css/style.js";
 import { IoMdReorder } from "react-icons/io";
 import logowhite from "../assets/images/Logo.svg";
 import { useNavigate } from "react-router-dom";
-import { DASHBOARD } from "./Routes/RouterUrl.js";
+import { EMPLOYEEDASHBOARD } from "./Routes/RouterUrl.js";
 import Sidebar from "./Sidebar.jsx";
+import toast from "react-hot-toast";
 
 const Header = ({ onMenuClick }) => {
   const navigate = useNavigate();
@@ -18,7 +19,10 @@ const Header = ({ onMenuClick }) => {
       {/* logo */}
       <Box
         sx={{ ...style.heaederLogoMain, cursor: "pointer" }}
-        onClick={() => navigate(DASHBOARD)}
+        onClick={() => {
+          navigate(EMPLOYEEDASHBOARD);
+          toast.success("Welcome to Dashboard!");
+        }}
       >
         <img
           src={logowhite}

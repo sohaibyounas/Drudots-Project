@@ -1,40 +1,19 @@
 import api from "../Constant/api.js";
 
-// auth apis routes
+// employee login api
+export const LoginApi = (data) => api.post("/user/auth/login", data);
 
-// login user
-export const loginUser = (data) => api.post("/login", data);
-
-// logout user
-export const logoutUser = () => api.post("/logout");
+// admin login api
+export const adminLoginApi = (data) => api.post("/user/auth/verify", data);
 
 // opt api
-export const sendOtp = (data) => api.post("/send-otp", data);
+// export const sendOtp = (data) => api.post("/user/auth/send-otp", data);
 
 // verify otp
-export const verifyOtp = (data) => api.post("/verify-otp", data);
+// export const verifyOtp = (data) => api.post("/user/auth/verify/otp", data);
 
 // resend otp
-export const resendOtp = (data) => api.post("/resend-otp", data);
+// export const resendOtp = (data) => api.post("/resend-otp", data);
 
-// Admin dashboard api routes
-
-// get/fetch admin list
-export const fetchAdminsApi = () => api.get("/users");
-
-// search admin
-export const searchAdminApi = (query) =>
-  api.get(`/users/search?query=${query}`);
-
-// add admin
-export const addAdminApi = (payload) => {
-  return api.post("/admins", payload);
-};
-
-// Edit/update admin user
-export const updateAdminApi = (id, payload) => {
-  return api.put(`/admins/${id}`, payload);
-};
-
-// delete admin
-export const deleteAdminApi = (id) => api.delete(`/admins/${id}`);
+// logout user api
+export const logoutUser = () => api.post("/user/auth/logout");

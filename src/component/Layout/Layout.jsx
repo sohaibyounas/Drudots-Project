@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
 import style from "../../assets/css/style.js";
-import { Toaster } from "react-hot-toast";
 import Sidebar from "../Sidebar.jsx";
 import Header from "../Header.jsx";
+import { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -37,13 +37,32 @@ const Layout = ({ children }) => {
         >
           {children}
         </Box>
+        {/* Toast Container */}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+            success: {
+              iconTheme: {
+                primary: "#10b981",
+                secondary: "#fff",
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: "#ef4444",
+                secondary: "#fff",
+              },
+            },
+          }}
+        />
       </Box>
-
-      {/* set toast for all pages */}
-      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
-  j;
 };
 
 export default Layout;

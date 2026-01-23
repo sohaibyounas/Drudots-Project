@@ -8,14 +8,18 @@ import {
   Alert,
   DialogContent,
   CircularProgress,
-} from "@mui/material";
-import Dialog from "../../component/Ui/Dialog";
-import style from "../../assets/css/auth/style.js";
+} from "@mui/material"; 
+import Dialog from "../../../component/Ui/Dialog.jsx";
+import style from "../../../assets/css/Admin/AdminAuth/admin.js";
 import { useNavigate } from "react-router-dom";
-import { DASHBOARD } from "../../component/Routes/RouterUrl";
-import { resendOtp, sendOtp } from "../../Constant/apiRoutes.js";
+import { adminLoginApi } from "../../../Constant/apiRoutes.js";
+import {
+  ADMINDASHBOARD
+} from "../../../component/Routes/RouterUrl.js";
+import toast from "react-hot-toast";
 
-const LoginForm = () => {
+// admin login form component
+const AdminLoginForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "" });
   const [errors, setErrors] = useState([]);
@@ -26,30 +30,68 @@ const LoginForm = () => {
   const [otpLoader, setOtpLoader] = useState(false);
   const [otpSendLoader, setOtpSendLoader] = useState(false);
 
-  // send otp api
-  const handleOtpApi = async () => {
-    setOtpSendLoader(true);
+  // login admin
+  const AdminLogin = async () => {
+    setLoading(true);
+    setErrors([]);
+
     try {
-      await sendOtp({ email: formData.email });
+      const response = await adminLoginApi({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("Admin login response:", response);
+
+      // API success case
+      if (response.data?.status === true) {
+        setOpen(true);
+        toast.success("OTP sent successfully to your email!");
+        console.log(response.data?.data.token);
+        localStorage.setItem("authToken", response.data?.data?.token); // store token
+        localStorage.setItem("data", response.data?.data); // store data
+      } else {
+        const errors = response.data?.errors || ["Something went wrong"];
+        setErrors(errors);
+        toast.error(errors[0]);
+      }
     } catch (error) {
-      console.error("OTP sending failed:", error);
+      console.error("Failed to login", error);
+
+      const errors = error.response?.data?.errors || [
+        "Server error. Please try again.",
+      ];
+
+      setErrors(errors);
+      toast.error(errors[0]);
     } finally {
-      setOtpSendLoader(false);
+      setLoading(false);
+    }
+  };
+
+  // verify otp function
+  const verifyOtp = async (data) => {
+    try {
+      // Call API to verify OTP
+      console.log("Verifying OTP", data);
+      // On success, navigate to dashboard
+      navigate(ADMINDASHBOARD);
+    } catch (error) {
+      console.error("OTP verification failed:", error);
+      setOtpError(["Invalid OTP. Please try again."]);
     }
   };
 
   // verify otp
-  const handleVerifyotp = () => {
-    const isAllFilled = otp.every((digit) => digit !== "");
-
-    // check otp completion
-    if (!isAllFilled) {
-      setOtpError(["Please fill all 6-digit OTP fields"]);
-      return;
+  const handleVerifyotp = async () => {
+    setOtpLoader(true);
+    try {
+      await verifyOtp({ email: formData.email });
+    } catch (error) {
+      console.error("OTP verification failed", error);
+    } finally {
+      setOtpLoader(false);
     }
-
-    // Directly navigate to dashboard after filling all fields
-    navigate(DASHBOARD);
   };
 
   // resend otp api
@@ -135,8 +177,9 @@ const LoginForm = () => {
   const validateForm = () => {
     const newErrors = [];
 
+    // email validation
     if (!formData.email.trim()) {
-      newErrors.push("Email address is required");
+      newErrors.push("Email is required");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       newErrors.push("Please enter a valid email address");
     }
@@ -145,7 +188,7 @@ const LoginForm = () => {
   };
 
   // form submit handler
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event?.preventDefault();
 
     const validationErrors = validateForm();
@@ -153,12 +196,12 @@ const LoginForm = () => {
       setErrors(validationErrors);
       return;
     }
-    setErrors([]);
-    setOpen(true);
+    await AdminLogin();
   };
 
   return (
     <>
+      {/* admin form */}
       <Paper sx={style.loginFormMain} elevation={0}>
         {/* Login Form Header */}
         <Box sx={style.loginFormHeader}>
@@ -189,7 +232,10 @@ const LoginForm = () => {
         >
           {/* email input */}
           <Box sx={style.inputGroup}>
-            <Typography sx={style.loginFormLabel}>Email Address</Typography>
+            <Box sx={style.fieldErrorMessage}>
+              <Typography sx={style.loginFormLabel}>Email Address</Typography>
+            </Box>
+
             <TextField
               name="email"
               type="email"
@@ -198,7 +244,7 @@ const LoginForm = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email address"
-              sx={style.loginFormInput}
+              sx={style.loginFormInputPassword}
             />
           </Box>
 
@@ -321,7 +367,7 @@ const LoginForm = () => {
               color="primary"
               sx={style.otpConfirmButton}
               // send otp api 1st time
-              onClick={handleVerifyotp}
+              // onClick={handleVerifyotp}
               disabled={otpLoader}
             >
               {otpLoader ? (
@@ -334,7 +380,7 @@ const LoginForm = () => {
 
           {/* OTP Spam Warning */}
           <Box>
-            <Typography sx={style.otpSpamText}>
+            <Typography sx={style.dialogSpamText}>
               Didn't receive the code? Check your spam folder
             </Typography>
           </Box>
@@ -344,7 +390,7 @@ const LoginForm = () => {
             disableRipple
             sx={style.dialogSendButton}
             // resend api
-            onClick={handleResendOtp}
+            // onClick={handleResendOtp}
             disabled={otpSendLoader}
           >
             {otpSendLoader ? (
@@ -363,4 +409,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default AdminLoginForm;
