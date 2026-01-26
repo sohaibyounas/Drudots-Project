@@ -128,7 +128,7 @@ const style = {
 
   loginFormInputPassword: {
     "& .MuiOutlinedInput-root": {
-      borderRadius: "24px",
+      borderRadius: "14px",
       fontSize: "14px",
       fontWeight: 400,
       backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -312,8 +312,10 @@ const style = {
     },
   },
 
+  // OTP Dialog Buttons
   dialogButtons: {
     mt: "28px",
+    mb: "22px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -322,22 +324,22 @@ const style = {
     width: "100%",
   },
 
-  dialogCancelButton: {
+  otpCancelButton: {
     flex: 1,
     maxWidth: "230px",
     height: "44px",
-    background: "rgba(255,255,255,0.12)",
+    backgroundColor: "rgba(255,255,255,0.12)",
     color: "#fff",
     textTransform: "none",
-    borderRadius: "12px",
     fontSize: "15px",
     fontWeight: 500,
     lineHeight: "24px",
     border: "1px solid rgba(255,255,255,0.15)",
     boxShadow: "none",
     transition: "all 0.2s ease",
+    borderColor: "rgba(255,255,255,0.15)",
     "&:hover": {
-      background: "rgba(255,255,255,0.18)",
+      backgroundColor: "rgba(255,255,255,0.18)",
       borderColor: "rgba(255,255,255,0.25)",
     },
   },
@@ -347,23 +349,17 @@ const style = {
     color: "#fff",
   },
 
-  dialofConfirmButton: {
+  otpConfirmButton: {
     flex: 1,
     maxWidth: "230px",
     height: "44px",
-    background: "#0A84FF",
-    color: "#fff",
     textTransform: "none",
-    borderRadius: "12px",
     fontSize: "15px",
     fontWeight: 600,
     lineHeight: "24px",
     boxShadow: "none",
     border: "none",
     transition: "all 0.2s ease",
-    "&:hover": {
-      background: "#0067CC",
-    },
     "&:active": {
       transform: "translateY(1px)",
     },
@@ -562,7 +558,7 @@ const style = {
 
   otpEmailInput: {
     "& .MuiOutlinedInput-root": {
-      borderRadius: "24px",
+      borderRadius: "14px",
       fontSize: "14px",
       fontWeight: 400,
       backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -604,24 +600,27 @@ const style = {
     alignItems: "center",
   },
 
-  // Semd OTP button
+  // Send OTP button
   sendOtp: {
-    marginTop: "6px",
+    marginBottom: "10px",
+    marginTop: "8px",
+    height: "44px",
     textTransform: "none",
-    backgroundColor: "#0A84FF",
+    background: "#0A84FF",
     color: "#fff",
     borderRadius: "18px",
     fontSize: "15px",
     fontWeight: 500,
-    lineHeight: { sm: "22px", md: "26px" },
-    height: "46px",
     boxShadow: "none",
+    border: "1px solid rgba(255,255,255,0.08)",
+    transition: "background-color 0.2s ease",
     "&:hover": {
-      backgroundColor: "#006fdd",
+      background: "#006fdd",
       boxShadow: "none",
     },
     "&:active": {
       transform: "none",
+      boxShadow: "none",
     },
   },
 

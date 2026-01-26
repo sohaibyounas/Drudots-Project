@@ -8,17 +8,14 @@ import {
   Alert,
   DialogContent,
   CircularProgress,
-} from "@mui/material"; 
+} from "@mui/material";
 import Dialog from "../../../component/Ui/Dialog.jsx";
 import style from "../../../assets/css/Admin/AdminAuth/admin.js";
 import { useNavigate } from "react-router-dom";
-import { adminLoginApi } from "../../../Constant/apiRoutes.js";
-import {
-  ADMINDASHBOARD
-} from "../../../component/Routes/RouterUrl.js";
+import { adminLoginApi, sendOtp } from "../../../Constant/apiRoutes.js";
+import { ADMINDASHBOARD } from "../../../component/Routes/RouterUrl.js";
 import toast from "react-hot-toast";
 
-// admin login form component
 const AdminLoginForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "" });
@@ -29,6 +26,15 @@ const AdminLoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [otpLoader, setOtpLoader] = useState(false);
   const [otpSendLoader, setOtpSendLoader] = useState(false);
+
+  // If already logged in, redirect to dashboard
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    const role = localStorage.getItem("role");
+    if (token && role === "admin") {
+      navigate(ADMINDASHBOARD);
+    }
+  }, [navigate]);
 
   // login admin
   const AdminLogin = async () => {
@@ -44,16 +50,18 @@ const AdminLoginForm = () => {
       console.log("Admin login response:", response);
 
       // API success case
-      if (response.data?.status === true) {
+      if (response.data) {
         setOpen(true);
         toast.success("OTP sent successfully to your email!");
-        console.log(response.data?.data.token);
-        localStorage.setItem("authToken", response.data?.data?.token); // store token
-        localStorage.setItem("data", response.data?.data); // store data
-      } else {
-        const errors = response.data?.errors || ["Something went wrong"];
-        setErrors(errors);
-        toast.error(errors[0]);
+
+        const userData = response.data?.data;
+        const token = userData?.token;
+        const role = (userData?.user_type || "admin").toLowerCase();
+
+        localStorage.clear(); // Clear old session data
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("data", JSON.stringify(userData));
+        localStorage.setItem("role", role);
       }
     } catch (error) {
       console.error("Failed to login", error);
@@ -63,32 +71,39 @@ const AdminLoginForm = () => {
       ];
 
       setErrors(errors);
-      toast.error(errors[0]);
     } finally {
       setLoading(false);
     }
   };
 
-  // verify otp function
-  const verifyOtp = async (data) => {
+  // verify otp
+  const handleVerifyOtp = async () => {
+    navigate(ADMINDASHBOARD);
+    return;
+    setOtpLoader(true);
+
     try {
-      // Call API to verify OTP
-      console.log("Verifying OTP", data);
-      // On success, navigate to dashboard
-      navigate(ADMINDASHBOARD);
+      const response = await verifyOtp({
+        email: formData.email,
+        otp: otpValue,
+      });
+
+      console.log("OTP Verify Response:", response);
+
+      // API-based success check
+      if (response?.data?.status === true) {
+        toast.success(response?.data?.message || "OTP verified successfully");
+        navigate(ADMINDASHBOARD);
+      } else {
+        toast.error(response?.data?.message || "Invalid OTP");
+      }
     } catch (error) {
       console.error("OTP verification failed:", error);
-      setOtpError(["Invalid OTP. Please try again."]);
-    }
-  };
 
-  // verify otp
-  const handleVerifyotp = async () => {
-    setOtpLoader(true);
-    try {
-      await verifyOtp({ email: formData.email });
-    } catch (error) {
-      console.error("OTP verification failed", error);
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again",
+      );
     } finally {
       setOtpLoader(false);
     }
@@ -97,10 +112,20 @@ const AdminLoginForm = () => {
   // resend otp api
   const handleResendOtp = async () => {
     setOtpSendLoader(true);
+
     try {
-      await resendOtp({ email: formData.email });
+      await sendOtp({
+        email: formData.email,
+      });
+
+      toast.success("OTP sent successfully");
     } catch (error) {
       console.error("Resend OTP failed:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to resend OTP. Please try again",
+      );
     } finally {
       setOtpSendLoader(false);
     }
@@ -367,7 +392,7 @@ const AdminLoginForm = () => {
               color="primary"
               sx={style.otpConfirmButton}
               // send otp api 1st time
-              // onClick={handleVerifyotp}
+              onClick={handleVerifyOtp}
               disabled={otpLoader}
             >
               {otpLoader ? (

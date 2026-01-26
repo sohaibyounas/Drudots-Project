@@ -64,7 +64,7 @@ const style = {
     padding: {
       xs: "0 16px 40px",
       sm: "0 24px 48px",
-      md: "20px",
+      md: "10px 20px 0px 20px",
     },
     position: "relative",
     zIndex: 1,

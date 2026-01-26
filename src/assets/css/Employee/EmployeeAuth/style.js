@@ -139,22 +139,6 @@ const style = {
     },
   },
 
-  signInButton: {
-    marginTop: { xs: "4px", sm: "6px", md: "8px" },
-    height: { xs: "48px", sm: "50px", md: "52px" },
-    fontSize: { xs: "15px", sm: "16px" },
-    fontWeight: 600,
-    textTransform: "none",
-    borderRadius: { xs: "14px", sm: "16px" },
-    boxShadow: "none",
-    "&:hover": {
-      boxShadow: "0 2px 8px rgba(10, 132, 255, 0.3)",
-    },
-    "&:active": {
-      transform: "translateY(1px)",
-    },
-  },
-
   formAlertbox: {
     backgroundColor: "rgba(239, 68, 68, 0.15)",
     color: "#ff6b6b",
@@ -334,10 +318,6 @@ const style = {
       backgroundColor: "rgba(255,255,255,0.18)",
       borderColor: "rgba(255,255,255,0.25)",
     },
-    borderRadius: "14px",
-    "&:active": {
-      transform: "translateY(1px)",
-    },
   },
 
   otpConfirmButton: {
@@ -351,7 +331,6 @@ const style = {
     boxShadow: "none",
     border: "none",
     transition: "all 0.2s ease",
-    borderRadius: "14px",
     "&:active": {
       transform: "translateY(1px)",
     },

@@ -25,12 +25,16 @@ import { IoIosLogOut } from "react-icons/io";
 import Dialog from "../component/Ui/Dialog.jsx";
 import { logoutUser } from "../Constant/apiRoutes.js";
 
-const Sidebar = () => {
+const Sidebar = ({ role: propRole }) => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
+
+  // Get role from props first, fallback to localStorage
+  const rawRole = propRole || localStorage.getItem("role");
+  const role = rawRole ? rawRole.toLowerCase() : "";
 
   // logout api
   const handleLogout = async () => {
@@ -41,10 +45,15 @@ const Sidebar = () => {
       const res = await logoutUser();
       console.log("Logout response:", res.data);
 
-      // Optional: redirect to login page
-      navigate("/login");
-      // Or clear local storage / auth token
-      localStorage.removeItem("token");
+      // Clear local storage first
+      localStorage.clear();
+
+      // Redirect based on role
+      if (role === "admin") {
+        navigate("/admin/login", { replace: true });
+      } else {
+        navigate("/employee/login", { replace: true });
+      }
     } catch (err) {
       setErrors({ email: "Logout failed. Please try again." });
       console.error(err);
@@ -60,32 +69,38 @@ const Sidebar = () => {
     setErrors({});
   };
 
-  // Sidebar Menu
+  // Sidebar Menu with role-based visibility
   const sidebarMenu = [
-    // admin dashboard
+    // admin dashboard - ONLY FOR ADMIN
     {
       key: "adminDashboard",
-      label: "Admin dashboard",
+      label: "Admin Dashboard",
       to: ADMINDASHBOARD,
       icon: <DashboardOutlinedIcon fontSize="small" />,
+      roles: ["admin"], // Only admin can see this
     },
 
-    // employee dashboard
+    // employee dashboard - FOR BOTH ADMIN AND EMPLOYEE
     {
       key: "EmployeeDashboard",
       label: "Employee Dashboard",
       to: EMPLOYEEDASHBOARD,
       icon: <DashboardOutlinedIcon fontSize="small" />,
+      roles: ["employee", "admin"], // Both can see this
     },
 
-    // policies
+    // policies - FOR BOTH
     {
       key: "policies",
       label: "Policies",
       to: POLICIES,
       icon: <DescriptionOutlinedIcon fontSize="small" />,
+      roles: ["admin", "employee"], // Both can see this
     },
   ];
+
+  // Filter menu items based on user role
+  const filteredMenu = sidebarMenu.filter((item) => item.roles?.includes(role));
 
   return (
     <>
@@ -101,7 +116,14 @@ const Sidebar = () => {
         {/* Logo Section */}
         <Box
           sx={style.logomain}
-          onClick={() => navigate(ADMINDASHBOARD)}
+          // role based navigation
+          onClick={() => {
+            if (role === "admin") {
+              navigate(ADMINDASHBOARD);
+            } else {
+              navigate(EMPLOYEEDASHBOARD);
+            }
+          }}
           style={{ cursor: "pointer" }}
         >
           <img
@@ -115,7 +137,7 @@ const Sidebar = () => {
           />
         </Box>
 
-        {/* Menu Items */}
+        {/* Menu Items - Only show filtered items based on role */}
         <Box
           sx={{
             ...style.sidebarMenu,
@@ -124,77 +146,85 @@ const Sidebar = () => {
             overflowX: "hidden",
           }}
         >
-          {sidebarMenu?.map((section) => {
-            const isActive = location.pathname === section.to;
-            return (
-              <List key={section.key} disablePadding sx={{ mb: 1 }}>
-                {/* Section Header */}
-                <ListItemButton
-                  onClick={() => navigate(section.to)}
-                  sx={{
-                    minHeight: 48,                   
-                    borderRadius: "10px",             
-                    margin: "2px",  
-                    color: "#e0e0e0",               
-                    backgroundColor: isActive ? "rgba(10, 132, 255, 0.18)" : "transparent",
-                    transition: "all 0.2s ease",
-                    justifyContent: "flex-start",     
-                    gap: 1.5,                         
-
-                    "&:hover": {
-                      backgroundColor: isActive
-                        ? "rgba(10, 132, 255, 0.28)"
-                        : "rgba(255, 255, 255, 0.08)",
-                    },
-
-                    "&.Mui-selected": {               // sometimes better than relying only on isActive
-                      backgroundColor: "#0A84FF !important",
-                      color: "#ffffff",
-                      "&:hover": {
-                        backgroundColor: "#1a94ff !important",
-                      },
-                    },
-                  }}
-                  selected={isActive}                 
-                >
-                  {/* Icon */}
-                  <Box
+          {filteredMenu.length > 0 ? (
+            filteredMenu.map((section) => {
+              const isActive = location.pathname === section.to;
+              return (
+                <List key={section.key} disablePadding sx={{ mb: 1 }}>
+                  {/* Section Header */}
+                  <ListItemButton
+                    onClick={() => navigate(section.to)}
                     sx={{
-                      minWidth: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: isActive ? "#ffffff" : "inherit",
-                      fontSize: "1.4rem",
-                    }}
-                  >
-                    {section.icon}
-                  </Box>
+                      minHeight: 48,
+                      borderRadius: "10px",
+                      margin: "2px",
+                      color: "#e0e0e0",
+                      backgroundColor: isActive
+                        ? "rgba(10, 132, 255, 0.18)"
+                        : "transparent",
+                      transition: "all 0.2s ease",
+                      justifyContent: "flex-start",
+                      gap: 1.5,
 
-                  {/* Text */}
-                  <ListItemText
-                    primary={
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontSize:" 14px",
-                          fontWeight: isActive ? 600 : 500,
-                          color: "inherit",
-                          whiteSpace: "wrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          textTransform: "capitalize",
-                        }}
-                      >
-                        {section.label}
-                      </Typography>
-                    }
-                    sx={{ my: 0 }}
-                  />
-                </ListItemButton>
-              </List>
-            );
-          })}
+                      "&:hover": {
+                        backgroundColor: isActive
+                          ? "rgba(10, 132, 255, 0.28)"
+                          : "rgba(255, 255, 255, 0.08)",
+                      },
+
+                      "&.Mui-selected": {
+                        backgroundColor: "#0A84FF !important",
+                        color: "#ffffff",
+                        "&:hover": {
+                          backgroundColor: "#1a94ff !important",
+                        },
+                      },
+                    }}
+                    selected={isActive}
+                  >
+                    {/* Icon */}
+                    <Box
+                      sx={{
+                        minWidth: 24,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: isActive ? "#ffffff" : "inherit",
+                        fontSize: "1.4rem",
+                      }}
+                    >
+                      {section.icon}
+                    </Box>
+
+                    {/* Text */}
+                    <ListItemText
+                      primary={
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontSize: "14px",
+                            fontWeight: isActive ? 600 : 500,
+                            color: "inherit",
+                            whiteSpace: "wrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {section.label}
+                        </Typography>
+                      }
+                      sx={{ my: 0 }}
+                    />
+                  </ListItemButton>
+                </List>
+              );
+            })
+          ) : (
+            <Box sx={{ p: 2, color: "#888" }}>
+              <Typography variant="body2">No menu items available</Typography>
+            </Box>
+          )}
         </Box>
 
         {/* Logout button - fixed at bottom of sidebar */}
@@ -287,7 +317,7 @@ const Sidebar = () => {
               >
                 Cancel
               </Button>
-              
+
               <Button
                 disableRipple
                 variant="contained"

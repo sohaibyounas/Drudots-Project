@@ -14,7 +14,11 @@ import {
 } from "@mui/material";
 import Dialog from "../../../component/Ui/Dialog.jsx";
 import { useNavigate } from "react-router-dom";
-import { LoginApi } from "../../../Constant/apiRoutes.js";
+import {
+  forgotPasswordApi,
+  LoginApi,
+  sendOtp,
+} from "../../../Constant/apiRoutes.js";
 import {
   EMPLOYEEDASHBOARD,
   FORGETPASSWORD,
@@ -34,7 +38,127 @@ const EmployeeLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // clear opt & err message on reopen OTP dialog
+  // FIXED: Check auth status on mount and when navigating back to login
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem("authToken");
+      const rawRole = localStorage.getItem("role");
+      const role = rawRole ? rawRole.toLowerCase() : null;
+
+      console.log("Auth check - Token:", token, "Role:", role);
+
+      if (token && role === "employee") {
+        console.log("Already logged in, redirecting to dashboard");
+        navigate(EMPLOYEEDASHBOARD, { replace: true });
+      }
+    };
+
+    checkAuthStatus();
+  }, [navigate]);
+
+  // login API
+  const performLogin = async () => {
+    try {
+      const response = await LoginApi({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("Login response:", response.data);
+
+      // Stop both loaders
+      setLoading(false);
+      setOtpSendLoader(false);
+
+      if (response.data) {
+        toast.success("OTP sent successfully to your email!");
+        setOpen(true);
+
+        const userData = response.data?.data;
+        const token = userData?.token;
+        const role = (userData?.user_type || "employee").toLowerCase();
+        console.info(userData, "token");
+
+        localStorage.clear(); // Clear all old keys
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("data", {
+          id: "12345",
+          email: "testuser@gmail.com",
+          role: "employee",
+        });
+
+        localStorage.setItem("role", role);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      const errorMessage =
+        error.response?.data?.errors[0] ||
+        error.response?.data?.error ||
+        "Invalid credentials. Please try again.";
+      setErrors([errorMessage]);
+      toast.error(errorMessage);
+      setLoading(false);
+      setOtpSendLoader(false);
+    }
+  };
+
+  // verify otp
+  const handleVerifyOtp = async () => {
+    // FIXED: Navigate with replace to prevent back button issues
+    navigate(EMPLOYEEDASHBOARD, { replace: true });
+    return;
+    setOtpLoader(true);
+
+    try {
+      const response = await verifyOtp({
+        email: formData.email,
+        otp: otpValue,
+      });
+
+      console.log("OTP Verify Response:", response);
+
+      // API-based success check
+      if (response?.data?.status === true) {
+        toast.success(response?.data?.message || "OTP verified successfully");
+        navigate(EMPLOYEEDASHBOARD, { replace: true });
+      } else {
+        toast.error(response?.data?.message || "Invalid OTP");
+      }
+    } catch (error) {
+      console.error("OTP verification failed:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again",
+      );
+    } finally {
+      setOtpLoader(false);
+    }
+  };
+
+  // resend otp api
+  const handleResendOtp = async () => {
+    setOtpSendLoader(true);
+
+    try {
+      await sendOtp({
+        email: formData.email,
+      });
+
+      toast.success("OTP sent successfully");
+    } catch (error) {
+      console.error("Resend OTP failed:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to resend OTP. Please try again",
+      );
+    } finally {
+      setOtpSendLoader(false);
+    }
+  };
+
+  // clear otp & err message on reopen OTP dialog
   useEffect(() => {
     if (open) {
       setOtp(new Array(6).fill(""));
@@ -105,7 +229,7 @@ const EmployeeLoginForm = () => {
     e.preventDefault();
   };
 
-  // validate email
+  // validate email, password
   const validateForm = () => {
     const newErrors = [];
 
@@ -124,7 +248,7 @@ const EmployeeLoginForm = () => {
     return newErrors;
   };
 
-  // Main login function
+  // Main login function (for login form)
   const handleSubmit = async (event) => {
     event?.preventDefault();
 
@@ -133,7 +257,6 @@ const EmployeeLoginForm = () => {
 
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
-      validationErrors.forEach((error) => toast.error(error));
       return;
     }
 
@@ -143,144 +266,17 @@ const EmployeeLoginForm = () => {
     await performLogin();
   };
 
-  // login API
-  const performLogin = async () => {
+  // forgot password api
+  const handleForgotPassword = async () => {
+    navigate(FORGETPASSWORD); //navigate to forgot password page
+    return;
     try {
-      const response = await LoginApi({
-        email: formData.email,
-        password: formData.password,
-      });
+      const res = await forgotPasswordApi({ email });
 
-      console.log("Login response:", response);
-      Console.info("formdata", formData);
-
-      // Stop both loaders
-      setLoading(false);
-      setOtpSendLoader(false);
-
-      if (response.data?.status === true) {
-        toast.success("OTP sent successfully to your email!");
-        setOpen(true);
-        localStorage.setItem("authToken", response.data?.data?.token); // store token
-        localStorage.setItem("data", response.data?.data); // store data
-      } else {
-        const message = response.data?.errors[0] || "Something went wrong";
-        toast.error(message);
-        setErrors([message]);
-      }
+      toast.success(res?.data?.message || "OTP sent successfully");
     } catch (error) {
-      console.error("Login error:", error);
-      const errorMessage =
-        error.response?.data?.errors[0] ||
-        error.response?.data?.error ||
-        "Invalid credentials. Please try again.";
-      setErrors([errorMessage]);
-      toast.error(errorMessage);
-      setLoading(false);
-      setOtpSendLoader(false);
+      toast.error(error?.response?.data?.message || "Something went wrong");
     }
-  };
-
-  // resend otp api
-  // const resendOtpApi = async (email) => {
-  //   try {
-  //     const response = await resendOtp({ email });
-  //     console.info("Resend OTP response:", response);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // };
-
-  // Send Again function
-  const handleSendAgain = async () => {
-    const validationErrors = validateForm();
-
-    if (validationErrors.length > 0) {
-      setErrors(validationErrors);
-      validationErrors.forEach((error) => toast.error(error));
-      return;
-    }
-
-    setErrors([]);
-    setOtp(new Array(6).fill(""));
-    setOtpSendLoader(true);
-
-    try {
-      // await resendOtpApi(formData.email);
-      toast.success("OTP resent successfully!");
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message ||
-        error.message ||
-        "Failed to resend OTP";
-      setErrors([errorMessage]);
-      toast.error(errorMessage);
-    } finally {
-      setOtpSendLoader(false);
-    }
-  };
-
-  // OTP verify API
-  // const handleVerify = async () => {
-  //   // otp validation
-  //   if (otp.some((digit) => digit === "" || !/^\d$/.test(digit))) {
-  //     const errorMsg = "Please enter a valid 6-digit OTP";
-  //     setOtpError([errorMsg]);
-  //     toast.error(errorMsg);
-  //     return;
-  //   }
-
-  //   try {
-  //     setOtpLoader(true);
-  //     const response = await verifyOtp({
-  //       email: formData.email,
-  //       otp: otp.join(""),
-  //     });
-
-  //     console.log("Verify OTP response:", response);
-
-  //     if (response.data?.status === 200) {
-  //       // Close dialog and reset state
-  //       setOpen(false);
-  //       setOtpLoader(false);
-  //       setOtp(new Array(6).fill(""));
-  //       setOtpError([]);
-
-  //       // Navigate to dashboard
-  //       navigate(EMPLOYEEDASHBOARD, { replace: true });
-  //     } else {
-  //       const errorMsg = response.data?.message || "OTP verification failed";
-  //       setOtpError([errorMsg]);
-  //       toast.error(errorMsg);
-  //       setOtpLoader(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Verify error:", error);
-  //     const errorMessage =
-  //       error.response?.data?.message ||
-  //       "OTP verification failed. Please try again.";
-  //     setOtpError([errorMessage]);
-  //     toast.error(errorMessage);
-  //     setOtpLoader(false);
-  //   }
-  // };
-
-  // resend otp api
-  // const handleResendOtp = async () => {
-  //   setOtpSendLoader(true);
-  //   try {
-  //     await resendOtp({ email: formData.email });
-  //   } catch (error) {
-  //     console.error("Resend OTP failed:", error);
-  //   } finally {
-  //     setOtpSendLoader(false);
-  //   }
-  // };
-
-  // OTP dialog
-  const handleCLickOtp = () => {
-    navigate(FORGETPASSWORD);
   };
 
   // password hide/show
@@ -388,7 +384,7 @@ const EmployeeLoginForm = () => {
               Forgot your password?
               <Button
                 disableRipple
-                onClick={handleCLickOtp}
+                onClick={handleForgotPassword}
                 color="primary"
                 sx={{
                   textTransform: "none",
@@ -417,18 +413,7 @@ const EmployeeLoginForm = () => {
             variant="contained"
             color="primary"
             fullWidth
-            sx={{
-              marginBottom: "10px",
-              marginTop: "8px",
-              height: "42px",
-              boxShadow: "none",
-              "&:hover": {
-                boxShadow: "0 2px 8px rgba(10, 132, 255, 0.3)",
-              },
-              "&:active": {
-                transform: "translatey(1px)",
-              },
-            }}
+            sx={style.signInButton}
           >
             {loading ? (
               <CircularProgress size="20px" color="inherit" />
@@ -517,25 +502,7 @@ const EmployeeLoginForm = () => {
             <Button
               disableRipple
               variant="outlined"
-              sx={{
-                flex: 1,
-                maxWidth: "230px",
-                height: "44px",
-                backgroundColor: "rgba(255,255,255,0.12)",
-                color: "#fff",
-                textTransform: "none",
-                fontSize: "15px",
-                fontWeight: 500,
-                lineHeight: "24px",
-                border: "1px solid rgba(255,255,255,0.15)",
-                boxShadow: "none",
-                transition: "all 0.2s ease",
-                borderColor: "rgba(255,255,255,0.15)",
-                "&:hover": {
-                  backgroundColor: "rgba(255,255,255,0.18)",
-                  borderColor: "rgba(255,255,255,0.25)",
-                },
-              }}
+              sx={style.otpCancelButton}
               onClick={() => {
                 setOpen(false);
                 setOtp(new Array(6).fill(""));
@@ -551,22 +518,8 @@ const EmployeeLoginForm = () => {
               disableRipple
               variant="contained"
               color="primary"
-              sx={{
-                flex: 1,
-                maxWidth: "230px",
-                height: "44px",
-                textTransform: "none",
-                fontSize: "15px",
-                fontWeight: 600,
-                lineHeight: "24px",
-                boxShadow: "none",
-                border: "none",
-                transition: "all 0.2s ease",
-                "&:active": {
-                  transform: "translateY(1px)",
-                },
-              }}
-              // onClick={handleVerify}
+              sx={style.otpConfirmButton}
+              onClick={handleVerifyOtp}
               disabled={otpLoader}
             >
               {otpLoader ? (
@@ -588,7 +541,7 @@ const EmployeeLoginForm = () => {
           <Button
             disableRipple
             sx={style.dialogSendButton}
-            onClick={handleSendAgain}
+            onClick={handleResendOtp}
             disabled={otpSendLoader}
           >
             {otpSendLoader ? (

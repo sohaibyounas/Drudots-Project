@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import logo from "../../../assets/images/Logo.svg";
+import { resetPasswordApi } from "../../../Constant/apiRoutes.js"
 
 const ForgotPassword = () => {
   const [formData, setFormData] = useState({ email: "" });
@@ -31,6 +32,27 @@ const ForgotPassword = () => {
     }
   };
 
+  // reset password api
+  const handleEmail = async () => {
+    try {
+      const response = await resetPasswordApi({ email: formData.email });
+      console.info("Forgot Password Response:", response.data);
+      setLoading(true);
+      setFormData({ email: "" });
+      setSuccess(true);
+      toast.success("Reset link sent!");
+    } catch (error) {
+      console.error("Error during reset:", error);
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to send reset email";
+      setErrors({ email: message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // submit data
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,32 +65,11 @@ const ForgotPassword = () => {
       newErrors.email = "Please enter a valid email address";
     }
 
-    // setErrors(newErrors);
-    // if (Object.keys(newErrors).length === 0) {
-    //   handleEmail(); // call the forgot password API
-    // }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      handleEmail(); // call the reset password API
+    }
   };
-
-  // forgot password api
-  // const handleEmail = async () => {
-  //   try {
-  //     setLoading(true);
-  //     await resendOtp({ email: formData.email });
-  //     setFormData({ email: "" }); // Clear the email field
-  //     setSuccess(true);
-  //     toast.success("Reset link sent!");
-  //   } catch (error) {
-  //     console.error("Error during reset:", error);
-  //     const message =
-  //       error?.response?.data?.message ||
-  //       error?.message ||
-  //       "Failed to send reset email";
-  //     setErrors({ email: message });
-  //     toast.error(message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <>
@@ -118,13 +119,13 @@ const ForgotPassword = () => {
               {/* Send Email */}
               <Button
                 disableRipple
-                // onClick={handleSubmit}
+                onClick={handleSubmit}
                 variant="contained"
                 fullWidth
                 sx={style.sendOtp}
               >
                 {loading ? (
-                  <CircularProgress size="20px" color="#fff" /> //add loader
+                  <CircularProgress size="20px" color="#fff" />
                 ) : (
                   "Submit"
                 )}

@@ -1,19 +1,22 @@
 import api from "../Constant/api.js";
 
-// employee login api
+// employee login 
 export const LoginApi = (data) => api.post("/user/auth/login", data);
 
-// admin login api
+// admin login 
 export const adminLoginApi = (data) => api.post("/user/auth/verify", data);
 
-// opt api
-// export const sendOtp = (data) => api.post("/user/auth/send-otp", data);
+// common otp for send & resend
+export const sendOtp = (data) => api.post("/user/auth/send-otp", data);
 
 // verify otp
-// export const verifyOtp = (data) => api.post("/user/auth/verify/otp", data);
+export const verifyOtp = (data) => api.post("/user/auth/verify/otp", data);
 
-// resend otp
-// export const resendOtp = (data) => api.post("/resend-otp", data);
+// forgot password
+export const forgotPasswordApi = (data) => api.post("/auth/forgot-password", data);
 
-// logout user api
+// reset password
+export const resetPasswordApi = (data) => api.post("/auth/reset-password", data);
+
+// logout user 
 export const logoutUser = () => api.post("/user/auth/logout");
