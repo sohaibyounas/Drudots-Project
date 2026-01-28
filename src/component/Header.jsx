@@ -3,26 +3,26 @@ import { Box, Drawer } from "@mui/material";
 import style from "../assets/css/style.js";
 import { IoMdReorder } from "react-icons/io";
 import logowhite from "../assets/images/Logo.svg";
-import { useNavigate } from "react-router-dom";
-import { EMPLOYEEDASHBOARD } from "./Routes/RouterUrl.js";
 import Sidebar from "./Sidebar.jsx";
-import toast from "react-hot-toast";
+// import { useNavigate } from "react-router-dom";
+// import { EMPLOYEEDASHBOARD } from "./Routes/RouterUrl.js";
+// import toast from "react-hot-toast";
 
 const Header = ({ onMenuClick }) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const sidemenuOpen = () => setSidebarOpen(true);
-  const sidemenuClose = () => setSidebarOpen(false);
+  const sidemenuOpen = () => setSidebarOpen(true); //sidebar open
+  const sidemenuClose = () => setSidebarOpen(false); //sidebar close
 
   return (
     <Box sx={style.headerMain}>
       {/* logo */}
       <Box
         sx={{ ...style.heaederLogoMain, cursor: "pointer" }}
-        onClick={() => {
-          navigate(EMPLOYEEDASHBOARD);
-          toast.success("Welcome to Dashboard!");
-        }}
+      // onClick={() => {
+      //   navigate(EMPLOYEEDASHBOARD);
+      //   toast.success("Welcome to Dashboard!");
+      // }}
       >
         <img
           src={logowhite}
@@ -43,30 +43,13 @@ const Header = ({ onMenuClick }) => {
         open={sidebarOpen}
         onClose={sidemenuClose}
         variant="temporary"
-        slotProps={{
-          backdrop: {
-            sx: {
-              backgroundColor: "rgba(0, 0, 0, 0.6)",
-              backdropFilter: "blur(8px)",
-            },
-          },
-        }}
+        sx={style.root}
         PaperProps={{
           elevation: 0,
-          sx: {
-            backgroundColor: "#000",
-            backdropFilter: "none",
-            border: "none",
-            boxShadow: "none",
-            overflow: "visible",
-            width: "auto",
-            p: 0,
-            paddingTop: "env(safe-area-inset-top, 0px)",
-            paddingBottom: "env(safe-area-inset-bottom, 0px)",
-          },
+          sx: style.paper,
         }}
       >
-        <Sidebar />
+        <Sidebar onMenuItemClick={sidemenuClose} />
       </Drawer>
     </Box>
   );

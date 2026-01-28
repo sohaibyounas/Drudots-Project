@@ -12,282 +12,208 @@ import {
   MenuItem,
   FormControl,
 } from "@mui/material";
-import style from "../../assets/css/style";
+import style from "../../assets/css/style.js";
 import { RxCross2 } from "react-icons/rx";
+import axios from "axios";
+import { getToken } from "../../Constant/api.js";
 
 const Employeeform = ({
   showForm,
   setShowForm,
-  admins,
+  employees,
   fetchEmployee,
-  adminId,
+  employeeId,
   showEdit,
   setShowEdit,
   setSuccess,
+  selectedEmployeeData,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+  const [loader, setLoader] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     gender: "",
   });
-  const [selectedAdminId, setSelectedAdminId] = useState(null);
-  const [loader, setLoader] = useState(false);
+
   const [error, setError] = useState({
     fullName: "",
     email: "",
     phone: "",
     gender: "",
   });
+
   const [globalError, setGlobalError] = useState("");
 
-  // Handle form close
+  // ---------------- CLOSE FORM ----------------
   const handleClose = () => {
     setShowForm(false);
     setShowEdit(false);
     resetForm();
   };
 
+  // input handle 
   const handleInput = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-
-    setError((prevError) => ({
-      ...prevError,
-      [name]: "",
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setError((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // Reset form fields
+  //  reset form 
   const resetForm = () => {
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      gender: "",
-    });
+    setFormData({ fullName: "", email: "", phone: "", gender: "" });
+    setError({ fullName: "", email: "", phone: "", gender: "" });
     setIsEditMode(false);
-    setSelectedAdminId(null);
-    setError({
-      fullName: "",
-      email: "",
-      phone: "",
-      gender: "",
-    });
+    setSelectedEmployeeId(null);
     setGlobalError("");
   };
 
-  // Handle edit profile
+  // edit mode population
   useEffect(() => {
-    if (adminId && showEdit) {
-      const list = extractList(admins);
-      const admin = list?.find?.((a) => a._id === adminId || a.id === adminId);
+    if (employeeId && showEdit) {
+      let employee = selectedEmployeeData;
 
-      if (admin) {
+      if (!employee) {
+        employee = employees?.find?.((e) => e._id === employeeId);
+      }
+
+      if (employee) {
         setIsEditMode(true);
-        setSelectedAdminId(adminId);
+        setSelectedEmployeeId(employeeId);
         setFormData({
-          fullName: admin.fullName || "",
-          email: admin.email || "",
-          phone: admin.phone || "",
-          gender: admin.gender || "",
-        });
-        setError({
-          fullName: "",
-          email: "",
-          phone: "",
-          gender: "",
+          fullName: employee.fullName || "",
+          email: employee.email || "",
+          phone: employee.phone || "",
+          gender: employee.gender || "",
         });
         setShowForm(true);
       }
     } else {
       resetForm();
     }
-  }, [adminId, admins, showEdit]);
+  }, [employeeId, employees, showEdit, selectedEmployeeData]);
 
-  // check validations
-  const handleSubmit = async () => {
-    setGlobalError("");
-    let isValid = true;
-
-    // Email validation
-    const validateEmail = (value) => {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(value);
-    };
-
-    // Phone validation (basic - adjust based on your requirements)
-    const validatePhone = (value) => {
-      const regex = /^[\d\s\-\+\(\)]+$/;
-      return regex.test(value) && value.replace(/\D/g, "").length >= 10;
-    };
-
-    const newError = { ...error };
-
-    // Full name validate
-    if (!formData.fullName.trim()) {
-      newError.fullName = "Please enter full name";
-      isValid = false;
-    } else {
-      newError.fullName = "";
-    }
-
-    // Email validate
-    if (!formData.email.trim()) {
-      newError.email = "The email field is required";
-      isValid = false;
-    } else if (!validateEmail(formData.email)) {
-      newError.email = "The email field must be a valid email address";
-      isValid = false;
-    } else {
-      newError.email = "";
-    }
-
-    // Phone validate
-    if (!formData.phone.trim()) {
-      newError.phone = "Please enter phone number";
-      isValid = false;
-    } else if (!validatePhone(formData.phone)) {
-      newError.phone = "Please enter a valid phone number";
-      isValid = false;
-    } else {
-      newError.phone = "";
-    }
-
-    // Gender validate
-    if (!formData.gender) {
-      newError.gender = "Please select a gender";
-      isValid = false;
-    } else {
-      newError.gender = "";
-    }
-
-    setError(newError);
-
-    if (!isValid) {
-      return;
-    }
-    setLoader(true);
-
+  // add employee 
+  const handleAddEmployee = async (payload) => {
     try {
+      setLoader(true);
       const token = getToken();
-      if (!token) {
-        throw new Error("No authentication token found. Please log in again.");
-      }
 
-      const payload = {
-        fullName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        gender: formData.gender,
-      };
+      await axios.post("/api/employees", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      if (isEditMode && selectedAdminId) {
-        await editEmployee(selectedAdminId, payload);
-        return;
-      }
-
-      await addEmployee(payload);
+      await fetchEmployee();
+      setSuccess("Employee added successfully");
+      handleClose();
     } catch (err) {
-      setGlobalError(
-        err.response?.data?.message ||
-        err.message ||
-        (isEditMode ? "Failed to update employee." : "Failed to add employee."),
-      );
+      setGlobalError(err.response?.data?.message || "Failed to add employee");
     } finally {
       setLoader(false);
     }
   };
 
-  // Add employee API
-  const addEmployee = async (data) => {
+  //  update employee 
+  const handleUpdateEmployee = async (id, payload) => {
     try {
+      setLoader(true);
       const token = getToken();
-      if (!token) {
-        throw new Error("No authentication token found. Please log in again.");
-      }
 
-      const response = await axios.post("/api/employees", data, {
+      await axios.put(`/api/employees/${id}`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
 
-      setSuccess(response.data.message || "Employee added successfully.");
       await fetchEmployee();
+      setSuccess("Employee updated successfully");
       handleClose();
-      resetForm();
-    } catch (error) {
-      throw new Error(
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to add employee."
-      );
+    } catch (err) {
+      setGlobalError(err.response?.data?.message || "Failed to update employee");
+    } finally {
+      setLoader(false);
     }
   };
 
-  // Edit employee API
-  const editEmployee = async (id, data) => {
-    try {
-      const token = getToken();
-      if (!token) {
-        throw new Error("No authentication token found. Please log in again.");
-      }
+  //  submit handler 
+  const handleSubmit = async () => {
+    setGlobalError("");
+    let isValid = true;
 
-      const response = await axios.put(`/api/employees/${id}`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const validateEmail = (value) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
-      setSuccess(response.data.message || "Employee updated successfully.");
-      await fetchEmployee();
-      handleClose();
-      resetForm();
-    } catch (error) {
-      throw new Error(
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to update employee."
-      );
+    const validatePhone = (value) =>
+      /^[\d\s\-\+\(\)]+$/.test(value) &&
+      value.replace(/\D/g, "").length >= 10;
+
+    const newError = { ...error };
+
+    if (!formData.fullName.trim()) {
+      newError.fullName = "Please enter full name";
+      isValid = false;
+    }
+    if (!formData.email.trim()) {
+      newError.email = "Email is required";
+      isValid = false;
+    } else if (!validateEmail(formData.email)) {
+      newError.email = "Invalid email address";
+      isValid = false;
+    }
+    if (!formData.phone.trim()) {
+      newError.phone = "Phone number is required";
+      isValid = false;
+    } else if (!validatePhone(formData.phone)) {
+      newError.phone = "Invalid phone number";
+      isValid = false;
+    }
+    if (!formData.gender) {
+      newError.gender = "Please select gender";
+      isValid = false;
+    }
+
+    setError(newError);
+    if (!isValid) return;
+
+    const payload = { ...formData };
+
+    if (isEditMode && selectedEmployeeId) {
+      await handleUpdateEmployee(selectedEmployeeId, payload);
+    } else {
+      await handleAddEmployee(payload);
     }
   };
 
+  //  drawer 
   return (
     <Drawer
       anchor="right"
       open={showForm}
       onClose={handleClose}
       transitionDuration={300}
-      sx={{
-        "& .MuiDrawer-paper": {
-          width: "500px",
-          backgroundColor: "#1e1f20",
-        },
-      }}
+      sx={style.drawer}
     >
-      {/* Title */}
       <Box sx={style.editDialog}>
         <Typography sx={style.formHeading}>
           {isEditMode ? "Edit Employee" : "Add New Employee"}
         </Typography>
-        <IconButton onClick={handleClose} sx={style.formButton} disableRipple>
-          <RxCross2 size={25} color={"#fff"} />
+        <IconButton onClick={handleClose} sx={style.formButton}>
+          <RxCross2 size={25} color="#fff" />
         </IconButton>
       </Box>
 
-      {/* Employee text fields */}
+      {/* form fields */}
       <Box sx={style.whiteDrawer}>
-        <Box sx={{ p: "0px 20px" }}>
-          {/* Global error */}
-          {globalError ? (
+        <Box sx={{ p: "0 20px" }}>
+          {globalError && (
             <Alert
               severity="error"
               sx={{ mb: 2, backgroundColor: "#2a1f1f", color: "#fff" }}
@@ -295,85 +221,70 @@ const Employeeform = ({
             >
               {globalError}
             </Alert>
-          ) : null}
+          )}
 
-          {/* Full Name */}
+          {/* FULL NAME */}
           <Box sx={style.adminCont}>
             <Typography sx={style.formFieldText}>Full Name</Typography>
             {error.fullName && (
-              <Typography
-                sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}
-              >
+              <Typography sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}>
                 {error.fullName}
               </Typography>
             )}
           </Box>
 
-          {/* full name input */}
           <TextField
             fullWidth
-            id="fullName"
             name="fullName"
             value={formData.fullName}
-            placeholder="Full Name"
+            placeholder="full name"
             onChange={handleInput}
             sx={style.formField}
           />
 
-          {/* Email */}
+          {/* EMAIL */}
           <Box sx={style.adminCont}>
             <Typography sx={style.formFieldText}>Email Address</Typography>
             {error.email && (
-              <Typography
-                sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}
-              >
+              <Typography sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}>
                 {error.email}
               </Typography>
             )}
           </Box>
 
-          {/* email input */}
           <TextField
             fullWidth
-            id="email"
             name="email"
-            autoComplete="email"
-            placeholder="Email Address"
             value={formData.email}
+            placeholder="email address"
             onChange={handleInput}
             sx={style.formField}
           />
 
-          {/* Phone */}
+          {/* PHONE */}
           <Box sx={style.adminCont}>
             <Typography sx={style.formFieldText}>Phone Number</Typography>
             {error.phone && (
-              <Typography
-                sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}
-              >
+              <Typography sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}>
                 {error.phone}
               </Typography>
             )}
           </Box>
 
-          {/* phone input */}
           <TextField
             fullWidth
-            id="phone"
             name="phone"
-            placeholder="Phone Number"
             value={formData.phone}
+            placeholder="phone nNumber"
             onChange={handleInput}
             sx={style.formField}
           />
 
-          {/* Gender */}
+          {/* GENDER */}
           <Box sx={style.adminCont}>
             <Typography sx={style.formFieldText}>Gender</Typography>
             {error.gender && (
-              <Typography
-                sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}
-              >
+              <Typography sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}>
                 {error.gender}
               </Typography>
             )}
@@ -381,9 +292,8 @@ const Employeeform = ({
 
           <FormControl fullWidth sx={style.formField}>
             <Select
-              id="gender"
               name="gender"
-              value={formData.gender}
+              value={String(formData.gender ?? '')}
               onChange={handleInput}
               displayEmpty
               sx={{
@@ -391,30 +301,19 @@ const Employeeform = ({
                 "& .MuiSelect-icon": { color: "#fff" },
               }}
             >
-              <MenuItem value="" disabled sx={{ color: "#fff" }}>
-                Select Gender
-              </MenuItem>
+              <MenuItem value="" disabled sx={{ color: "#fff" }}> Select Gender </MenuItem>
               <MenuItem value="male" sx={{ color: "#fff" }}>Male</MenuItem>
               <MenuItem value="female" sx={{ color: "#fff" }}>Female</MenuItem>
-              <MenuItem value="other" sx={{ color: "#fff" }}>Other</MenuItem>
             </Select>
           </FormControl>
         </Box>
       </Box>
 
-      {/* Submit button */}
+      {/* form submit button */}
       <Box sx={{ ...style.editActiondrawer, mt: 3 }}>
-        <Button
-          disableRipple
-          disabled={loader}
-          onClick={handleSubmit}
-          sx={style.formSubmitButton}
-        >
+        <Button disabled={loader} onClick={handleSubmit} sx={style.formSubmitButton}>
           {loader ? (
-            <Box sx={style.adminAction}>
-              <CircularProgress size="20px" sx={{ color: "#000" }} />
-              <span>{isEditMode ? "Updating..." : "Adding..."}</span>
-            </Box>
+            <CircularProgress size={20} sx={{ color: "#000" }} />
           ) : isEditMode ? (
             "Update Employee"
           ) : (

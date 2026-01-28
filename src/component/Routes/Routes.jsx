@@ -16,86 +16,146 @@ import AdminLogin from "../../pages/Admin/Auth/AdminLogin";
 import EmployeeLogin from "../../pages/Employee/Auth/EmployeeLogin";
 import ForgotPassword from "../../pages/Admin/Auth/ForgotPassword";
 
-// public routes
-const publicRoutes = [
-  // admin login
-  {
-    path: ADMINLOGIN,
-    Component: AdminLogin,
-  },
+// Protected Route Component
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("userRole");
 
-  // reset passwrord
-  {
-    path: FORGETPASSWORD,
-    Component: ForgotPassword,
-  },
+  if (!token) {
+    return <Navigate to={allowedRole === "admin" ? ADMINLOGIN : EMPLOYEELOGIN} replace />;
+  }
 
-  // employee login
-  {
-    path: EMPLOYEELOGIN,
-    Component: EmployeeLogin,
-  },
-];
+  if (userRole !== allowedRole) {
+    return <Navigate to={userRole === "admin" ? ADMINDASHBOARD : EMPLOYEEDASHBOARD} replace />;
+  }
 
-// protected routes (now just normal routes)
-const protectedRoutes = [
-  // admin dashboard
-  {
-    path: ADMINDASHBOARD,
-    Component: AdminDashboard,
-  },
+  return <Layout>{children}</Layout>;
+};
 
-  // employee dashboard
-  {
-    path: EMPLOYEEDASHBOARD,
-    Component: EmployeeDashboard,
-  },
+// Public Route Component
+const PublicRoute = ({ children }) => {
+  // const isAuthenticated = localStorage.getItem("data");
+  // console.info("is aunthenticated", isAuthenticated);
+  // const userRole = localStorage.getItem("userRole");
 
-  // policies page
-  {
-    path: POLICIES,
-    Component: Policies,
-  },
-];
+  // if (isAuthenticated) {
+  //   return <Navigate to={userRole === "admin" ? ADMINDASHBOARD : EMPLOYEEDASHBOARD} replace />;
+  // }
 
-// routes config
+  return children;
+};
+
+// Smart 404 Redirect Component
+// const NotFoundRedirect = () => {
+//   const currentPath = window.location.pathname;
+//   const isAuthenticated = localStorage.getItem("token");
+//   const userRole = localStorage.getItem("userRole");
+
+//   // Agar logged in hai
+//   if (isAuthenticated) {
+//     return <Navigate to={userRole === "admin" ? ADMINDASHBOARD : EMPLOYEEDASHBOARD} replace />;
+//   }
+
+//   // Agar logged out hai, path check karo
+//   if (currentPath.includes("/admin")) {
+//     return <Navigate to={ADMINLOGIN} replace />;
+//   }
+
+//   return <Navigate to={EMPLOYEELOGIN} replace />;
+// };
+
+const NotFoundRedirect = () => {
+  return <Navigate to={EMPLOYEELOGIN} replace />;
+};
+
+
+// Routes config
 const routeConfig = [
-  // Default route → redirect to login
   {
     path: "/",
     element: <Navigate to={EMPLOYEELOGIN} replace />,
   },
 
-  // Public routes → NO protection
-  ...publicRoutes.map(({ path, Component }) => ({
-    path,
-    element: <Component />,
-  })),
-
-  // Protected routes → now just wrapped with Layout, no auth check
-  ...protectedRoutes.map(({ path, Component }) => ({
-    path,
+  // Public routes
+  {
+    path: ADMINLOGIN,
     element: (
-      <Layout>
-        <Component />
-      </Layout>
+      <PublicRoute>
+        <AdminLogin />
+      </PublicRoute>
     ),
-  })),
+  },
+  
+  {
+    path: FORGETPASSWORD,
+    element: (
+      <PublicRoute>
+        <ForgotPassword />
+      </PublicRoute>
+    ),
+  },
 
-  // Catch-all → redirect relevant routes to their login based on URL
+  {
+    path: EMPLOYEELOGIN,
+    element: (
+      <PublicRoute>
+        <EmployeeLogin />
+      </PublicRoute>
+    ),
+  },
+
+  // Protected admin, policies routes
+  // {
+  //   path: ADMINDASHBOARD,
+  //   element: (
+  //     <ProtectedRoute allowedRole="admin">
+  //       <AdminDashboard />
+  //     </ProtectedRoute>
+  //   ),
+  // },
+
+  // for test uses no authentication
+  {
+    path: ADMINDASHBOARD,
+    element: <Layout><AdminDashboard /></Layout>,
+  },
+
+  // {
+  //   path: POLICIES,
+  //   element: (
+  //     <ProtectedRoute allowedRole="admin">
+  //       <Policies />
+  //     </ProtectedRoute>
+  //   ),
+  // },
+
+  // for test purpose no authentication
+  {
+    path: POLICIES,
+    element: <Layout><Policies /></Layout>,
+  },
+
+
+  // Protected employee routes
+  // {
+  //   path: EMPLOYEEDASHBOARD,
+  //   element: (
+  //     <ProtectedRoute allowedRole="employee">
+  //       <EmployeeDashboard />
+  //     </ProtectedRoute>
+  //   ),
+  // },
+
+  // for test uses
+  {
+    path: EMPLOYEEDASHBOARD,
+    element: <Layout><EmployeeDashboard /></Layout>,
+  },
+
+  //  Smart catch-all with role-based redirect
   {
     path: "*",
-    element: (() => {
-      const currentPath = window.location.pathname;
-
-      // If URL contains 'admin', redirect to admin login
-      if (currentPath.includes("/admin")) {
-        return <Navigate to={ADMINLOGIN} replace />;
-      }
-
-      // Otherwise redirect to employee login
-      return <Navigate to={EMPLOYEELOGIN} replace />;
-    })(),
+    element: <NotFoundRedirect />,
   },
 ];
 

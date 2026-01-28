@@ -46,42 +46,171 @@ const style = {
     padding: "15px 0px 10px 0px",
   },
 
-  sidebarMenu: {
-    padding: { xs: "12px", sm: "16px 20px", md: "16px" },
-    height: {
-      xs: "calc(100vh - var(--sat) - var(--sab) - 180px)",
-      sm: "calc(100vh - 92px)",
-    },
-    overflow: "auto",
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-    scrollbarWidth: "none",
+  // Sidebar container
+  sidebarContainer: {
+    display: "flex",
+    flexDirection: "column",
+    height: "calc(100vh - 24px)",
+    backgroundColor: "#1F2024",
   },
 
-  sidebarListHeading: {
+  // Logo style
+  logo: {
+    width: 70,
+    height: "auto",
+    display: "block",
+  },
+
+  sidebarMenu: {
+    padding: { xs: "12px", sm: "16px 20px", md: "16px", },
+    height: {
+      xs: 'calc(100vh - var(--sat) - var(--sab) - 180px)',
+      sm: 'calc(100vh - 92px)',
+    },
+    overflow: 'auto',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+    scrollbarWidth: 'none',
+  },
+
+  // Sidebar item styles
+  sidebarItem: (isActive) => ({
+    minHeight: 48,
+    borderRadius: "10px",
+    margin: "2px",
+    color: "#e0e0e0",
+    backgroundColor: isActive
+      ? "rgba(10, 132, 255, 0.18)"
+      : "transparent",
+    transition: "all 0.2s ease",
+    justifyContent: "flex-start",
+    gap: 1.5,
+
+    "&:hover": {
+      backgroundColor: isActive
+        ? "rgba(10, 132, 255, 0.28)"
+        : "rgba(255, 255, 255, 0.08)",
+    },
+
+    "&.Mui-selected": {
+      backgroundColor: "#0A84FF !important",
+      color: "#ffffff",
+      "&:hover": {
+        backgroundColor: "#1a94ff !important",
+      },
+    },
+  }),
+
+  // Sidebar icon style
+  icon: (isActive) => ({
+    minWidth: 24,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: isActive ? "#ffffff" : "inherit",
+    fontSize: "1.4rem",
+  }),
+
+  // Sidebar list item text style
+  listItem: (isActive) => ({
+    fontSize: "14px",
+    fontWeight: isActive ? 600 : 500,
+    color: "inherit",
+    whiteSpace: "wrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    textTransform: "capitalize",
+  }),
+
+  // logout box
+  logoutButtonBox: {
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5,
+    p: "8px 16px",
+    m: { xs: "0px 16px 8px 16px", sm: "0 16px 8px 16px" },
+    borderRadius: "12px",
+    cursor: "pointer",
+    transition: "none",
+    flexShrink: 0,
+    position: { xs: "relative", sm: "relative" },
+    zIndex: 1200,
+    pb: {
+      xs: `calc(6px + env(safe-area-inset-bottom, 0px))`,
+      sm: `calc(6px + env(safe-area-inset-bottom, 0px))`,
+    },
+    "&:hover": {
+      backgroundColor: "rgba(255,255,255,0.08)",
+    },
+  },
+
+  // logout button text
+  logoutButtonText: {
     color: "#fff",
-    fontSize: "13px",
+    fontSize: 13,
     fontWeight: 600,
     lineHeight: "24px",
+    textTransform: "none",
+    padding: 0,
+    minWidth: 0
   },
 
-  sidebarListSubHeading: {
-    fontSize: "12px",
-    lineHeight: "24px",
-    cursor: "pointer",
-    fontWeight: 400,
-    listStyleType: "circle",
-    display: "list-item",
-    listStylePosition: "inside",
-    textDecoration: "none",
-    color: "#fff",
+  headerMain: {
+    display: {
+      xs: "flex", sm: "flex", md: "none",
+    },
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#000",
+    paddingTop: { xs: "var(--sat)", sm: 0, md: 0 },
+    paddingBottom: 0,
+    borderBottom: "1px solid #3e3f40"
   },
 
-  link: {
+  headerLogoImg: {
+    width: "100px",
+    padding: "0px 30px",
+    filter: "brightness(0) saturate(100%) invert(100%)",
+  },
+
+  headerHumberger: {
     cursor: "pointer",
-    textDecoration: "none",
-    color: "rgb(255 255 255 / 50%)",
+    pr: { xs: "20px", sm: "32px", color: "#fff" },
+  },
+
+  heaederLogoMain: {
+    padding: "15px 0px 10px 0px",
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  // sidebar drawer
+  root: {
+    "& .MuiBackdrop-root": {
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      backdropFilter: "blur(8px)",
+    },
+  },
+
+  paper: {
+    backgroundColor: "#000",
+    backdropFilter: "none",
+    border: "none",
+    boxShadow: "none",
+    overflow: "visible",
+    width: "auto",
+    p: 0,
+    paddingTop: "env(safe-area-inset-top, 0px)",
+    paddingBottom: "env(safe-area-inset-bottom, 0px)",
+  },
+
+  // form drawer
+  drawer: {
+    "& .MuiDrawer-paper": {
+      width: "500px",
+      backgroundColor: "#1e1f20",
+    },
   },
 
   // content details
@@ -159,51 +288,6 @@ const style = {
     fontWeight: 400,
   },
 
-  logout: {
-    width: "100%",
-    height: { xs: "35px", sm: "45px" },
-    color: "#fff",
-    background: "red",
-    textTransform: "none",
-    borderRadius: "10px",
-    border: "1px solid #3e3f40",
-    fontSize: "16px",
-    lineHeight: "24px",
-    fontWeight: 400,
-  },
-
-  // small screen header logo
-  headerMain: {
-    display: {
-      xs: "flex",
-      sm: "flex",
-      md: "none",
-    },
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#000",
-    paddingTop: { xs: "var(--sat)", sm: 0, md: 0 },
-    paddingBottom: 0,
-    borderBottom: "1px solid #3e3f40",
-  },
-
-  headerLogoImg: {
-    width: "100px",
-    padding: "0px 30px",
-    filter: "brightness(0) saturate(100%) invert(100%)",
-  },
-
-  headerHumberger: {
-    cursor: "pointer",
-    pr: { xs: "20px", sm: "32px", color: "#fff" },
-  },
-
-  heaederLogoMain: {
-    padding: "15px 0px 10px 0px",
-    display: "flex",
-    justifyContent: "center",
-  },
-
   // layout content details
   layoutContentDetails: {
     flex: "1",
@@ -217,190 +301,7 @@ const style = {
     scrollbarWidth: "none",
   },
 
-  // OTP Dialog
-  dialog: {
-    "& .MuiDialog-container": {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    "& .MuiPaper-root": {
-      background: "linear-gradient(180deg, #1F1F1F 0%, #1A1A1A 100%)",
-      borderRadius: "32px",
-      border: "1px solid rgba(255,255,255,0.08)",
-      boxShadow: "0 35px 60px rgba(0,0,0,0.55)",
-      color: "#fff",
-      padding: "20px",
-      margin: 0,
-      position: "relative",
-      maxWidth: { xs: "350px", sm: "450px" },
-      width: "90%",
-    },
-  },
-
-  dialogText: {
-    fontWeight: 600,
-    fontSize: { sm: "22px", xs: "20px" },
-    lineHeight: { sm: "28px", xs: "24px" },
-    color: "#fff",
-  },
-
-  dialogSubText: {
-    mt: "6px",
-    mb: { sm: "26px", xs: "16px" },
-    textAlign: "center",
-  },
-
-  dialogHeadText: {
-    textAlign: "center",
-    margin: { sm: "0px 24px", xs: "0px 12px" },
-    color: "rgba(255,255,255,0.72)",
-    fontWeight: 400,
-    lineHeight: { sm: "24px", xs: "20px" },
-    fontSize: { sm: "16px", xs: "14px" },
-  },
-
-  dialogEmail: {
-    pt: { sm: "6px", xs: "4px" },
-    pb: { sm: "2px", xs: "10px" },
-    color: "#fff",
-    fontWeight: 600,
-    lineHeight: { sm: "24px", xs: "20px" },
-    fontSize: "16px",
-    letterSpacing: 0.2,
-  },
-
-  dialogOtp: {
-    marginBottom: "10px",
-    textAlign: "start",
-    color: "rgba(255,255,255,0.9)",
-    fontWeight: 600,
-    fontSize: "17px",
-    lineHeight: "24px",
-    letterSpacing: 0.4,
-  },
-
-  dialogOtpInputs: {
-    display: "flex",
-    gap: "12px",
-  },
-
-  dialogOtpfields: {
-    width: "100%",
-    "& .MuiOutlinedInput-root": {
-      borderRadius: "18px",
-      background: "rgba(255,255,255,0.05)",
-      border: "1px solid rgba(255,255,255,0.12)",
-      boxShadow: "0 20px 35px rgba(0,0,0,0.55)",
-      transition: "all 0.2s ease",
-    },
-
-    // border on hover
-    "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgba(10,132,255,0.7)",
-      borderWidth: "1px",
-    },
-
-    //  border on focus (click)
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgba(10,132,255,0.95)",
-      borderWidth: "2px",
-      boxShadow: "0 0 0 2px rgba(10,132,255,0.25)",
-    },
-
-    "& .MuiInputBase-input": {
-      height: { sm: "3rem", xs: "2.5rem" },
-      padding: 0,
-      textAlign: "center",
-      fontWeight: 700,
-      fontSize: { sm: "20px", xs: "18px" },
-      color: "#fff",
-    },
-  },
-
-  dialogButtons: {
-    mt: "28px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: { sm: "14px", xs: "10px" },
-    flexWrap: "nowrap",
-    width: "100%",
-  },
-
-  dialogCancelButton: {
-    flex: 1,
-    maxWidth: "230px",
-    height: "44px",
-    background: "rgba(255,255,255,0.12)",
-    color: "#fff",
-    textTransform: "none",
-    borderRadius: "12px",
-    fontSize: "15px",
-    fontWeight: 500,
-    lineHeight: "24px",
-    border: "1px solid rgba(255,255,255,0.15)",
-    boxShadow: "none",
-    transition: "all 0.2s ease",
-    "&:hover": {
-      background: "rgba(255,255,255,0.18)",
-      borderColor: "rgba(255,255,255,0.25)",
-    },
-  },
-
-  otpLoader: {
-    size: "15px",
-    color: "#fff",
-  },
-
-  dialofConfirmButton: {
-    flex: 1,
-    maxWidth: "230px",
-    height: "44px",
-    background: "#0A84FF",
-    color: "#fff",
-    textTransform: "none",
-    borderRadius: "12px", 
-    fontSize: "15px",
-    fontWeight: 600,
-    lineHeight: "24px",
-    boxShadow: "none",
-    border: "none",
-    transition: "all 0.2s ease",
-    "&:hover": {
-      background: "#0067CC",
-    },
-    "&:active": {
-      transform: "translateY(1px)",
-    },
-  },
-
-  dialogSpamText: {
-    pl: "0px",
-    mt: "22px",
-    color: "rgba(255,255,255,0.65)",
-    fontSize: "15px",
-    fontWeight: 400,
-    lineHeight: "24px",
-  },
-
-  dialogSendButton: {
-    color: "#0A84FF",
-    textDecoration: "underline",
-    background: "transparent",
-    textTransform: "none",
-    fontSize: "15px",
-    fontWeight: 600,
-    lineHeight: "24px",
-    letterSpacing: 0.2,
-    "&:hover": {
-      textDecoration: "underline",
-      background: "transparent",
-      color: "#0067CC",
-    },
-  },
-
-  // Role Management page
+  // loader
   loader: {
     gap: 1,
     display: "flex",

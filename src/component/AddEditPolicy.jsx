@@ -116,7 +116,6 @@ const AddEditPolicy = ({
         if (reason === "backdropClick" || reason === "escapeKeyDown") return;
         onClose(e, reason);
       }}
-      disableEscapeKeyDown
       maxWidth="md"
       fullWidth
     >
@@ -194,7 +193,11 @@ const AddEditPolicy = ({
                   value={item}
                   onChange={(e) => handleItemChange(idx, e.target.value)}
                 />
-                <IconButton size="small" onClick={() => removeItem(idx)}>
+                <IconButton
+                  size="small"
+                  onClick={() => removeItem(idx)}
+                  sx={{ color: "#fff" }}
+                >
                   <CloseIcon fontSize="small" />
                 </IconButton>
               </Box>
@@ -210,13 +213,13 @@ const AddEditPolicy = ({
         sx={{
           width: "100%",
           p: 2,
-          justifyContent: "space-between",
           borderTop: "1px solid #5D5E63",
+          gap: 2,
         }}
       >
         <Button
           onClick={onClose}
-          sx={{ border: "1px solid #ccc", width: "100%", color: "#fff" }}
+          sx={{ border: "1px solid #ccc", color: "#fff", flex: 1 }}
         >
           Cancel
         </Button>
@@ -224,14 +227,14 @@ const AddEditPolicy = ({
           variant="contained"
           onClick={handleSubmit}
           disabled={!title.trim() || loading}
-          sx={{ width: "100%" }}
+          sx={{ flex: 1 }}
         >
           {loading ? (
             <>
               <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
-              {editingPolicy ? "Updating..." : "Saving..."}
+              {initialData ? "Updating..." : "Saving..."}
             </>
-          ) : editingPolicy ? (
+          ) : initialData ? (
             "Update Policy"
           ) : (
             "Save Policy"

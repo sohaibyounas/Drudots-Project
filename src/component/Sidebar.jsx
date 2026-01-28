@@ -25,16 +25,16 @@ import { IoIosLogOut } from "react-icons/io";
 import Dialog from "../component/Ui/Dialog.jsx";
 import { logoutUser } from "../Constant/apiRoutes.js";
 
-const Sidebar = ({ role: propRole }) => {
+const Sidebar = ({ onMenuItemClick }) => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get role from props first, fallback to localStorage
-  const rawRole = propRole || localStorage.getItem("role");
-  const role = rawRole ? rawRole.toLowerCase() : "";
+  // // Get role from props first, fallback to localStorage
+  // const rawRole = propRole || localStorage.getItem("role");
+  // const role = rawRole ? rawRole.toLowerCase() : "";
 
   // logout api
   const handleLogout = async () => {
@@ -63,7 +63,6 @@ const Sidebar = ({ role: propRole }) => {
   };
 
   // logout dialog open & close
-  const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setErrors({});
@@ -77,7 +76,7 @@ const Sidebar = ({ role: propRole }) => {
       label: "Admin Dashboard",
       to: ADMINDASHBOARD,
       icon: <DashboardOutlinedIcon fontSize="small" />,
-      roles: ["admin"], // Only admin can see this
+      // roles: ["admin"], // Only admin can see this
     },
 
     // employee dashboard - FOR BOTH ADMIN AND EMPLOYEE
@@ -86,7 +85,7 @@ const Sidebar = ({ role: propRole }) => {
       label: "Employee Dashboard",
       to: EMPLOYEEDASHBOARD,
       icon: <DashboardOutlinedIcon fontSize="small" />,
-      roles: ["employee", "admin"], // Both can see this
+      // roles: ["employee", "admin"], // Both can see this
     },
 
     // policies - FOR BOTH
@@ -95,45 +94,41 @@ const Sidebar = ({ role: propRole }) => {
       label: "Policies",
       to: POLICIES,
       icon: <DescriptionOutlinedIcon fontSize="small" />,
-      roles: ["admin", "employee"], // Both can see this
+      // roles: ["admin", "employee"], // Both can see this
     },
   ];
 
   // Filter menu items based on user role
-  const filteredMenu = sidebarMenu.filter((item) => item.roles?.includes(role));
+  // const filteredMenu = sidebarMenu.filter((item) => item.roles?.includes(role));
+
+  const filteredMenu = sidebarMenu; // menu without filtering
+
 
   return (
     <>
       <Box
         sx={{
           ...style.sidebar,
-          display: "flex",
-          flexDirection: "column",
-          height: "calc(100vh - 24px)",
-          backgroundColor: "#1F2024",
+          ...style.sidebarContainer
         }}
       >
         {/* Logo Section */}
         <Box
           sx={style.logomain}
           // role based navigation
-          onClick={() => {
-            if (role === "admin") {
-              navigate(ADMINDASHBOARD);
-            } else {
-              navigate(EMPLOYEEDASHBOARD);
-            }
-          }}
+          // onClick={() => {
+          //   if (role === "admin") {
+          //     navigate(ADMINDASHBOARD);
+          //   } else {
+          //     navigate(EMPLOYEEDASHBOARD);
+          //   }
+          // }}
           style={{ cursor: "pointer" }}
         >
           <img
             src={logowhite}
             alt="Logo"
-            style={{
-              width: 70,
-              height: "auto",
-              display: "block",
-            }}
+            style={style.logo}
           />
         </Box>
 
@@ -150,48 +145,21 @@ const Sidebar = ({ role: propRole }) => {
             filteredMenu.map((section) => {
               const isActive = location.pathname === section.to;
               return (
-                <List key={section.key} disablePadding sx={{ mb: 1 }}>
+                <List key={section.key} disablePadding sx={{ mb: 1, textwrap: "wrap", }}>
                   {/* Section Header */}
                   <ListItemButton
-                    onClick={() => navigate(section.to)}
-                    sx={{
-                      minHeight: 48,
-                      borderRadius: "10px",
-                      margin: "2px",
-                      color: "#e0e0e0",
-                      backgroundColor: isActive
-                        ? "rgba(10, 132, 255, 0.18)"
-                        : "transparent",
-                      transition: "all 0.2s ease",
-                      justifyContent: "flex-start",
-                      gap: 1.5,
-
-                      "&:hover": {
-                        backgroundColor: isActive
-                          ? "rgba(10, 132, 255, 0.28)"
-                          : "rgba(255, 255, 255, 0.08)",
-                      },
-
-                      "&.Mui-selected": {
-                        backgroundColor: "#0A84FF !important",
-                        color: "#ffffff",
-                        "&:hover": {
-                          backgroundColor: "#1a94ff !important",
-                        },
-                      },
+                    onClick={() => {
+                      navigate(section.to)
+                      if (onMenuItemClick) {
+                        onMenuItemClick()
+                      }
                     }}
+                    sx={style.sidebarItem(isActive)}
                     selected={isActive}
                   >
                     {/* Icon */}
                     <Box
-                      sx={{
-                        minWidth: 24,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: isActive ? "#ffffff" : "inherit",
-                        fontSize: "1.4rem",
-                      }}
+                      sx={style.iconStyle}
                     >
                       {section.icon}
                     </Box>
@@ -201,15 +169,7 @@ const Sidebar = ({ role: propRole }) => {
                       primary={
                         <Typography
                           variant="body2"
-                          sx={{
-                            fontSize: "14px",
-                            fontWeight: isActive ? 600 : 500,
-                            color: "inherit",
-                            whiteSpace: "wrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            textTransform: "capitalize",
-                          }}
+                          sx={style.listItem(isActive)}
                         >
                           {section.label}
                         </Typography>
@@ -229,40 +189,13 @@ const Sidebar = ({ role: propRole }) => {
 
         {/* Logout button - fixed at bottom of sidebar */}
         <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-            p: "8px 16px",
-            m: { xs: "0px 16px 8px 16px", sm: "0 16px 8px 16px" },
-            borderRadius: "12px",
-            cursor: "pointer",
-            transition: "none",
-            flexShrink: 0,
-            position: { xs: "relative", sm: "relative" },
-            zIndex: 1200,
-            pb: {
-              xs: `calc(6px + env(safe-area-inset-bottom, 0px))`,
-              sm: `calc(6px + env(safe-area-inset-bottom, 0px))`,
-            },
-            "&:hover": {
-              backgroundColor: "rgba(255,255,255,0.08)",
-            },
-          }}
+          sx={style.logoutButtonBox}
           onClick={() => setOpen(true)}
         >
           <IoIosLogOut size={20} color="#fff" />
           {/* Logout button */}
           <Button
-            sx={{
-              color: "#fff",
-              fontSize: 13,
-              fontWeight: 600,
-              lineHeight: "24px",
-              textTransform: "none",
-              padding: 0,
-              minWidth: 0,
-            }}
+            sx={style.logoutButtonText}
           >
             Logout
           </Button>

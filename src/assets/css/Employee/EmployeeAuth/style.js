@@ -198,6 +198,10 @@ const style = {
     },
   },
 
+  dialogContent: {
+    p: "8px 16px",
+  },
+
   dialogText: {
     fontWeight: 600,
     fontSize: { sm: "22px", xs: "20px" },

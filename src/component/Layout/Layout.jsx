@@ -11,38 +11,40 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // sidebar hid/show
+  // sidebar hide/show
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const rawRole = localStorage.getItem("role");
-  const role = rawRole ? rawRole.toLowerCase() : null;
-  const token = localStorage.getItem("authToken");
+  // get role and token
+  // const rawRole = localStorage.getItem("role");
+  // const role = rawRole ? rawRole.toLowerCase() : null;
+  // const token = localStorage.getItem("authToken");
 
-  useEffect(() => {
-    // 1. Not logged in -> Redirect to login
-    if (!token) {
-      if (location.pathname.startsWith("/admin")) {
-        navigate("/admin/login", { replace: true });
-      } else {
-        navigate("/employee/login", { replace: true });
-      }
-      return;
-    }
+  // navigate based on auth status and role
+  // useEffect(() => {
+  //   // 1. Not logged in -> Redirect to login
+  //   if (!token) {
+  //     if (location.pathname.startsWith("/admin")) {
+  //       navigate("/admin/login", { replace: true });
+  //     } else {
+  //       navigate("/employee/login", { replace: true });
+  //     }
+  //     return;
+  //   }
 
-    // 2. Role-based route protection
-    if (role !== "admin" && location.pathname.startsWith("/admin")) {
-      navigate("/employee/dashboard", { replace: true });
-      return;
-    }
+  //   // 2. Role-based route protection
+  //   if (role !== "admin" && location.pathname.startsWith("/admin")) {
+  //     navigate("/employee/dashboard", { replace: true });
+  //     return;
+  //   }
 
-    // ADDED: Employee accessing admin routes
-    if (role === "employee" && location.pathname.startsWith("/admin")) {
-      navigate("/employee/dashboard", { replace: true });
-      return;
-    }
-  }, [location.pathname, navigate, role, token]);
+  //   // ADDED: Employee accessing admin routes
+  //   if (role === "employee" && location.pathname.startsWith("/admin")) {
+  //     navigate("/employee/dashboard", { replace: true });
+  //     return;
+  //   }
+  // }, [location.pathname, navigate, role, token]);
 
   return (
     <>
@@ -55,9 +57,10 @@ const Layout = ({ children }) => {
 
       {/* layout */}
       <Box sx={style.layout}>
-        {/* sidebar - PASS ROLE TO SIDEBAR */}
+        {/* sidebar */}
         <Box sx={{ display: { xs: "none", md: "block" } }}>
-          <Sidebar role={role} />
+          {/* <Sidebar role={role} /> */}
+          <Sidebar />
         </Box>
 
         {/* sidebar */}

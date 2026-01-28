@@ -19,6 +19,7 @@ import {
   Button,
   CircularProgress,
   DialogTitle,
+  AccordionActions,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
@@ -41,6 +42,7 @@ import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
 import { darkDataGridSx } from "../../theme/surface,js";
 import Adminform from "../../component/AdminForm/AdminForm.jsx";
 import { IoWarningOutline } from "react-icons/io5";
+import { SlOptions } from "react-icons/sl";
 
 // Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
@@ -452,14 +454,7 @@ const AdminDashboard = () => {
     <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: 1400, mx: "auto" }}>
       {/* Header info */}
       <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "row", md: "row" },
-          gap: { xs: 1.5, md: 2 },
-          alignItems: { xs: "flex-start", md: "center" },
-          justifyContent: { xs: "space-between", md: "space-between" },
-          mb: 2,
-        }}
+        sx={style.pageContainer}
       >
         {/* title info */}
         <Box sx={style.pageHeaderContent}>
@@ -479,14 +474,7 @@ const AdminDashboard = () => {
         </Box>
 
         {/* Add admin */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: { xs: 0.6, sm: 1 },
-            alignItems: "start",
-            justifyContent: { xs: "flex-start", md: "flex-end" },
-          }}
-        >
+        <Box sx={style.addAdmin}>
           <Button
             variant="contained"
             startIcon={<FaPlus />}
@@ -570,29 +558,14 @@ const AdminDashboard = () => {
                     key={admin.id}
                     expanded={expanded === panelId}
                     onChange={handleAccordionChange(panelId)}
-                    sx={{
-                      mb: 2,
-                      bgcolor: "#1F2024",
-                      borderRadius: 1,
-                      "&:before": { display: "none" },
-                      boxShadow: "none",
-                    }}
+                    sx={style.accordion}
                   >
                     <AccordionSummary
                       expandIcon={<FaChevronDown color="#fff" />}
-                      sx={{
-                        bgcolor: "#1F2024",
-                        borderRadius: 1,
-                        "&:hover": { bgcolor: "#2a2b30" },
-                        color: "#fff",
-                      }}
+                      sx={style.accordionSummary}
                     >
                       <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          width: "100%",
-                        }}
+                        sx={style.accordionSummaryDetails}
                       >
                         <Avatar
                           sx={{
@@ -620,41 +593,35 @@ const AdminDashboard = () => {
                     </AccordionSummary>
 
                     <AccordionDetails
-                      sx={{
-                        p: "8px 20px 16px",
-                        bgcolor: "#1F2024",
-                        color: "#fff",
-                      }}
+                      sx={style.accordionDetail}
                     >
-                      {/* Additional info  */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          mb: 1,
-                          justifyContent: "space-between",
-                        }}
-                      >
+                      {/* email info  */}
+                      <Box sx={style.accordionInner}>
                         <Typography>Email</Typography>
                         <Typography>{admin.email}</Typography>
                       </Box>
 
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          mb: 1,
-                          justifyContent: "space-between",
-                        }}
-                      >
+                      {/* role info */}
+                      <Box sx={style.accordionInner}>
                         <Typography>Role</Typography>
-                        <Typography
-                          sx={{ textTransform: "capitalize", color: "#fff" }}
-                        >
+                        <Typography sx={style.accordionText}>
                           {admin.role || "Admin"}
                         </Typography>
                       </Box>
                     </AccordionDetails>
+
+                    {/* action */}
+                    <AccordionActions
+                      sx={{ ...style.accordionDetail, ...style.accordionInner }}
+                    >
+                      <Typography>Action</Typography>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleMenuClick(e, admin)}
+                      >
+                        <SlOptions size={14} />
+                      </IconButton>
+                    </AccordionActions>
                   </Accordion>
                 );
               })}
@@ -676,23 +643,7 @@ const AdminDashboard = () => {
             }}
             slotProps={{
               paper: {
-                sx: {
-                  backgroundColor: "#1F2024",
-                  color: "#fff",
-                  borderRadius: 2,
-                  border: "1px solid #333",
-                  boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
-                  mt: 1,
-                  "& .MuiMenuItem-root": {
-                    color: "#e0e0e0",
-                    minHeight: 42,
-                    px: 2,
-                    py: 1,
-                    "&:hover": {
-                      backgroundColor: "#2a2b30",
-                    },
-                  },
-                },
+                sx: style.paper,
               },
             }}
           >
@@ -746,7 +697,7 @@ const AdminDashboard = () => {
             sx={style.deleteButton}
             disabled={loader}
             disableRipple
-            // onClick={handleDeleteAdmin}
+          // onClick={handleDeleteAdmin}
           >
             {loader ? <CircularProgress size="20px" color="#fff" /> : "Delete"}
           </Button>

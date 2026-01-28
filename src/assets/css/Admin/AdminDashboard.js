@@ -2,12 +2,11 @@ const style = {
   // header styles
   pageContainer: {
     display: "flex",
-    flexDirection: "column",
-    gap: { xs: 2.5, md: 3.5 },
-    paddingX: { xs: 2, md: 4 },
-    paddingTop: { xs: 2, md: 3 },
-    paddingBottom: { xs: 3, md: 4 },
-    color: "#fff",
+    gap: { xs: 1.5, md: 2 },
+    alignItems: { xs: "flex-start", md: "center" },
+    justifyContent: "space-between",
+    mb: 2,
+    mx: 1
   },
 
   pageHeaderContent: {
@@ -21,6 +20,13 @@ const style = {
     fontSize: { xs: "20px", md: "26px" },
     fontWeight: 700,
     color: "#fff",
+  },
+
+  addAdmin: {
+    display: "flex",
+    gap: { xs: 0.6, sm: 1 },
+    alignItems: "start",
+    justifyContent: { xs: "flex-start", md: "flex-end" },
   },
 
   // page styles
@@ -145,6 +151,68 @@ const style = {
     gap: 1,
     display: "flex",
     alignItems: "center",
+  },
+
+  // accordion 
+  accordion: {
+    mb: 1,
+    bgcolor: "#1F2024",
+    borderRadius: "16px !important",
+    overflow: "hidden",
+    "&:before": { display: "none" },
+    boxShadow: "none",
+    "&.Mui-expanded": {
+      margin: "8px 0",
+    },
+  },
+
+  accordionSummary: {
+    bgcolor: "#1F2024",
+    color: "#fff",
+  },
+
+  accordionSummaryDetails: {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+  },
+
+  accordionDetail: {
+    p: "8px 20px 16px",
+    bgcolor: "#1F2024",
+    color: "#fff",
+  },
+
+  accordionInner: {
+    display: "flex",
+    alignItems: "center",
+    mb: 1,
+    justifyContent: "space-between",
+  },
+
+  accordionText: {
+    color: "#fff",
+    textTransform: "capitalize"
+  },
+
+  // popover 
+  paper: {
+    backgroundColor: "#1F2024",
+    color: "#fff",
+    borderRadius: 2,
+    border: "1px solid #333",
+    boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+    mt: 1,
+
+    "& .MuiMenuItem-root": {
+      color: "#e0e0e0",
+      minHeight: 42,
+      px: 2,
+      py: 1,
+      "&:hover": {
+        backgroundColor: "#2a2b30",
+      },
+    },
   },
 };
 

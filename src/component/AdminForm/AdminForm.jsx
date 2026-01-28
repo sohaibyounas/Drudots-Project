@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import style from "../../assets/css/style";
+import style from "../../assets/css/style.js";
 import { RxCross2 } from "react-icons/rx";
 
 const Adminform = ({
@@ -56,7 +56,7 @@ const Adminform = ({
     }
   };
 
-  // Edit/ update admin api
+  // update admin api
   const handleUpdateAdmin = async (id, payload) => {
     try {
       setLoader(true);
@@ -206,12 +206,7 @@ const Adminform = ({
       open={showForm}
       onClose={handleClose}
       transitionDuration={300}
-      sx={{
-        "& .MuiDrawer-paper": {
-          width: "500px",
-          backgroundColor: "#1e1f20",
-        },
-      }}
+      sx={style.drawer}
     >
       {/* title */}
       <Box sx={style.editDialog}>

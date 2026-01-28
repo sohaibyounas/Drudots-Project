@@ -18,6 +18,7 @@ import {
   forgotPasswordApi,
   LoginApi,
   sendOtp,
+  verifyOtp,
 } from "../../../Constant/apiRoutes.js";
 import {
   EMPLOYEEDASHBOARD,
@@ -38,75 +39,63 @@ const EmployeeLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // FIXED: Check auth status on mount and when navigating back to login
-  useEffect(() => {
-    const checkAuthStatus = () => {
-      const token = localStorage.getItem("authToken");
-      const rawRole = localStorage.getItem("role");
-      const role = rawRole ? rawRole.toLowerCase() : null;
-
-      console.log("Auth check - Token:", token, "Role:", role);
-
-      if (token && role === "employee") {
-        console.log("Already logged in, redirecting to dashboard");
-        navigate(EMPLOYEEDASHBOARD, { replace: true });
-      }
-    };
-
-    checkAuthStatus();
-  }, [navigate]);
-
   // login API
   const performLogin = async () => {
+    setOtpLoader(true);
+    setLoading(true);
+    setErrors([]);
+
     try {
       const response = await LoginApi({
         email: formData.email,
         password: formData.password,
       });
-
       console.log("Login response:", response.data);
 
-      // Stop both loaders
-      setLoading(false);
-      setOtpSendLoader(false);
-
       if (response.data) {
-        toast.success("OTP sent successfully to your email!");
-        setOpen(true);
+        toast.success(response.data.message || "OTP send successfully");
 
-        const userData = response.data?.data;
+        const userData = response.data.data;
         const token = userData?.token;
         const role = (userData?.user_type || "employee").toLowerCase();
-        console.info(userData, "token");
 
-        localStorage.clear(); // Clear all old keys
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("data", {
-          id: "12345",
-          email: "testuser@gmail.com",
-          role: "employee",
-        });
+        localStorage.clear(); // Clear old session data
+        localStorage.setItem("tempAuthToken", token);
+        localStorage.setItem("tempUserData", JSON.stringify(userData));
+        localStorage.setItem("tempRole", role);
 
-        localStorage.setItem("role", role);
+        setOpen(true); //open otp dialog
       }
     } catch (error) {
       console.error("Login error:", error);
+
       const errorMessage =
-        error.response?.data?.errors[0] ||
-        error.response?.data?.error ||
+        error?.response?.data?.errors?.[0] ||
+        error?.response?.data?.error ||
         "Invalid credentials. Please try again.";
       setErrors([errorMessage]);
       toast.error(errorMessage);
+    } finally {
       setLoading(false);
-      setOtpSendLoader(false);
+      setOtpLoader(false);
+
     }
   };
 
   // verify otp
-  const handleVerifyOtp = async () => {
-    // FIXED: Navigate with replace to prevent back button issues
-    navigate(EMPLOYEEDASHBOARD, { replace: true });
-    return;
+  const handleVerifyOtp = async (e) => {
+    e?.preventDefault();
+
+    // Get OTP value from array
+    const otpValue = otp.join("");
+    console.log("OTP Value:", otpValue);
+
+    // Validate OTP is complete
+    if (!/^\d{6}$/.test(otpValue)) {
+      setOtpError(["Please enter complete 6-digit OTP"]);
+      return;
+    }
+
     setOtpLoader(true);
 
     try {
@@ -114,12 +103,12 @@ const EmployeeLoginForm = () => {
         email: formData.email,
         otp: otpValue,
       });
-
       console.log("OTP Verify Response:", response);
 
       // API-based success check
       if (response?.data?.status === true) {
         toast.success(response?.data?.message || "OTP verified successfully");
+        setOpen(false); // close otp dialog
         navigate(EMPLOYEEDASHBOARD, { replace: true });
       } else {
         toast.error(response?.data?.message || "Invalid OTP");
@@ -127,10 +116,8 @@ const EmployeeLoginForm = () => {
     } catch (error) {
       console.error("OTP verification failed:", error);
 
-      toast.error(
-        error?.response?.data?.message ||
-          "Something went wrong. Please try again",
-      );
+      const errorMsg = error?.response?.data?.message || "Something went wrong. Please try again";
+      toast.error(errorMsg);
     } finally {
       setOtpLoader(false);
     }
@@ -138,6 +125,7 @@ const EmployeeLoginForm = () => {
 
   // resend otp api
   const handleResendOtp = async () => {
+    // api send recall here
     setOtpSendLoader(true);
 
     try {
@@ -148,10 +136,9 @@ const EmployeeLoginForm = () => {
       toast.success("OTP sent successfully");
     } catch (error) {
       console.error("Resend OTP failed:", error);
-
       toast.error(
         error?.response?.data?.message ||
-          "Failed to resend OTP. Please try again",
+        "Failed to resend OTP. Please try again",
       );
     } finally {
       setOtpSendLoader(false);
@@ -440,7 +427,7 @@ const EmployeeLoginForm = () => {
         }}
         sx={style.dialog}
       >
-        <DialogContent>
+        <DialogContent sx={style.dialogContent}>
           <Box>
             <Typography sx={style.dialogText}>Account Verification</Typography>
             <Box sx={style.dialogSubText}>
@@ -499,6 +486,7 @@ const EmployeeLoginForm = () => {
 
           {/* Dialog cancel/confirm Buttons */}
           <Box sx={style.dialogButtons}>
+            {/* cancel */}
             <Button
               disableRipple
               variant="outlined"
@@ -514,6 +502,8 @@ const EmployeeLoginForm = () => {
             >
               Cancel
             </Button>
+
+            {/* confirm */}
             <Button
               disableRipple
               variant="contained"
@@ -541,7 +531,7 @@ const EmployeeLoginForm = () => {
           <Button
             disableRipple
             sx={style.dialogSendButton}
-            onClick={handleResendOtp}
+            // onClick={handleResendOtp}
             disabled={otpSendLoader}
           >
             {otpSendLoader ? (

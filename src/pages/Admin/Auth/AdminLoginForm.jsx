@@ -12,7 +12,7 @@ import {
 import Dialog from "../../../component/Ui/Dialog.jsx";
 import style from "../../../assets/css/Admin/AdminAuth/admin.js";
 import { useNavigate } from "react-router-dom";
-import { adminLoginApi, sendOtp } from "../../../Constant/apiRoutes.js";
+import { adminLoginApi, sendOtp, verifyOtp } from "../../../Constant/apiRoutes.js";
 import { ADMINDASHBOARD } from "../../../component/Routes/RouterUrl.js";
 import toast from "react-hot-toast";
 
@@ -20,24 +20,19 @@ const AdminLoginForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "" });
   const [errors, setErrors] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); //otp dialog
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [otpError, setOtpError] = useState([]);
   const [loading, setLoading] = useState(false);
   const [otpLoader, setOtpLoader] = useState(false);
   const [otpSendLoader, setOtpSendLoader] = useState(false);
 
-  // If already logged in, redirect to dashboard
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const role = localStorage.getItem("role");
-    if (token && role === "admin") {
-      navigate(ADMINDASHBOARD);
-    }
-  }, [navigate]);
-
-  // login admin
+  // login admin api
   const AdminLogin = async () => {
+    // navigate to admin dashboard
+    navigate(ADMINDASHBOARD, { replace: true });
+    return;
+    
     setLoading(true);
     setErrors([]);
 
@@ -46,40 +41,49 @@ const AdminLoginForm = () => {
         email: formData.email,
         password: formData.password,
       });
-
       console.log("Admin login response:", response);
 
       // API success case
       if (response.data) {
-        setOpen(true);
-        toast.success("OTP sent successfully to your email!");
+        toast.success(response.data.messgae || "Login successful!");
 
         const userData = response.data?.data;
         const token = userData?.token;
         const role = (userData?.user_type || "admin").toLowerCase();
 
         localStorage.clear(); // Clear old session data
-        localStorage.setItem("authToken", token);
+        localStorage.setItem("token", token);
         localStorage.setItem("data", JSON.stringify(userData));
-        localStorage.setItem("role", role);
+        localStorage.setItem("userRole", role);
+
+        setOpen(true); //open otp dialog
       }
     } catch (error) {
       console.error("Failed to login", error);
-
       const errors = error.response?.data?.errors || [
         "Server error. Please try again.",
       ];
-
       setErrors(errors);
     } finally {
       setLoading(false);
     }
   };
 
-  // verify otp
-  const handleVerifyOtp = async () => {
-    navigate(ADMINDASHBOARD);
-    return;
+  // verify otp api
+  const handleVerifyOtp = async (e) => {
+    e?.preventDefault();
+
+    // Get OTP value from array
+    const otpValue = otp.join("");
+
+    // Validate OTP is complete
+    if (otpValue.length !== 6) {
+      setOtpError(["Please enter complete 6-digit OTP"]);
+      return;
+    }
+    navigate(ADMINDASHBOARD, { replace: true });
+    if (otpLoader) return;
+
     setOtpLoader(true);
 
     try {
@@ -87,23 +91,21 @@ const AdminLoginForm = () => {
         email: formData.email,
         otp: otpValue,
       });
-
       console.log("OTP Verify Response:", response);
 
       // API-based success check
       if (response?.data?.status === true) {
         toast.success(response?.data?.message || "OTP verified successfully");
-        navigate(ADMINDASHBOARD);
+        setOpen(false); // close otp dialog
+        navigate(ADMINDASHBOARD, { replace: true });
       } else {
         toast.error(response?.data?.message || "Invalid OTP");
       }
     } catch (error) {
       console.error("OTP verification failed:", error);
 
-      toast.error(
-        error?.response?.data?.message ||
-          "Something went wrong. Please try again",
-      );
+      const errorMsg = error?.response?.data?.message || "Something went wrong. Please try again";
+      toast.error(errorMsg);
     } finally {
       setOtpLoader(false);
     }
@@ -111,20 +113,20 @@ const AdminLoginForm = () => {
 
   // resend otp api
   const handleResendOtp = async () => {
+    // otp send api recall here
     setOtpSendLoader(true);
 
     try {
       await sendOtp({
         email: formData.email,
       });
-
       toast.success("OTP sent successfully");
     } catch (error) {
       console.error("Resend OTP failed:", error);
 
       toast.error(
         error?.response?.data?.message ||
-          "Failed to resend OTP. Please try again",
+        "Failed to resend OTP. Please try again",
       );
     } finally {
       setOtpSendLoader(false);
@@ -307,8 +309,8 @@ const AdminLoginForm = () => {
         }}
         sx={style.dialog}
       >
-        <DialogContent sx={style.dialogText}>
-          {/* text input  */}
+        <DialogContent sx={style.dialogContent}>
+          {/* text inputs  */}
           <Box>
             <Typography sx={style.dialogText}>Account Verification</Typography>
             {/* email text */}
@@ -392,7 +394,7 @@ const AdminLoginForm = () => {
               color="primary"
               sx={style.otpConfirmButton}
               // send otp api 1st time
-              onClick={handleVerifyOtp}
+              // onClick={handleVerifyOtp}
               disabled={otpLoader}
             >
               {otpLoader ? (
