@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import logowhite from "../assets/images/Logo.svg";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import style from "../assets/css/style.js";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
@@ -145,11 +145,12 @@ const Sidebar = ({ onMenuItemClick }) => {
             filteredMenu.map((section) => {
               const isActive = location.pathname === section.to;
               return (
-                <List key={section.key} disablePadding sx={{ mb: 1, textwrap: "wrap", }}>
+                <List key={section.key} disablePadding sx={{ mb: 1, textWrap: "wrap" }}>
                   {/* Section Header */}
                   <ListItemButton
+                    component={Link}
+                    to={section.to}
                     onClick={() => {
-                      navigate(section.to)
                       if (onMenuItemClick) {
                         onMenuItemClick()
                       }
@@ -216,17 +217,17 @@ const Sidebar = ({ onMenuItemClick }) => {
           }}
           sx={style.dialog}
         >
-          <DialogContent sx={{ px: { xs: 1, sm: 2 }, py: { xs: 1, sm: 2 } }}>
+          <Box>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
-              <IoWarningOutline color="#fb7185" size={28} />
+              <IoWarningOutline color="red" size={28} />
             </Box>
             {/* title */}
-            <Typography sx={style.dialogText}>
+            <Typography sx={style.deletTitle}>
               Are you sure you want to log out?
             </Typography>
 
             {/* subtitle */}
-            <Box sx={style.dialogSubText}>
+            <Box sx={style.deletSubTitle}>
               <Typography sx={style.dialogHeadText}>
                 You will be redirected to the login page.
               </Typography>
@@ -269,7 +270,7 @@ const Sidebar = ({ onMenuItemClick }) => {
                 )}
               </Button>
             </Box>
-          </DialogContent>
+          </Box>
         </Dialog>
       </Box>
     </>

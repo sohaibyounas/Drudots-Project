@@ -91,6 +91,7 @@ const ForgotPassword = () => {
               </Typography>
             </Box>
 
+            {/* error alert */}
             {errors.email && (
               <Alert severity="error" sx={{ ...style.formAlertbox, mb: 3 }}>
                 <Typography variant="body2">{errors.email}</Typography>

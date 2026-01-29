@@ -32,7 +32,7 @@ const AdminLoginForm = () => {
     // navigate to admin dashboard
     navigate(ADMINDASHBOARD, { replace: true });
     return;
-    
+
     setLoading(true);
     setErrors([]);
 
@@ -68,6 +68,11 @@ const AdminLoginForm = () => {
       setLoading(false);
     }
   };
+
+  // login api in use-Effect
+  // useEffect(() => {
+  //   AdminLogin();
+  // }, []); //add dependencies here
 
   // verify otp api
   const handleVerifyOtp = async (e) => {

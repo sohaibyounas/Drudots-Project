@@ -1,4 +1,3 @@
-// src/pages/Policies.jsx
 import React, { useRef, useState } from "react";
 import {
   Container,
@@ -22,22 +21,15 @@ import {
   Skeleton,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import GavelIcon from "@mui/icons-material/Gavel";
-import HomeIcon from "@mui/icons-material/Home";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import PaymentsIcon from "@mui/icons-material/Payments";
-import SecurityIcon from "@mui/icons-material/Security";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import PeopleIcon from "@mui/icons-material/People";
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import CircleIcon from "@mui/icons-material/Circle";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditPolicy from "../../component/AddEditPolicy";
 import Dialog from "../../component/Ui/Dialog";
 import { IoWarningOutline } from "react-icons/io5";
-import style from "../../assets/css/policy/policy";
+import style from "../../assets/css/policy/policy.js";
 import { FaPlus } from "react-icons/fa";
+import { policiesData } from "../../policyData/policiesData";
 
 const Policies = () => {
   const theme = useTheme();
@@ -47,124 +39,13 @@ const Policies = () => {
   const [loading, setLoading] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
-  const [policies, setPolicies] = useState([
-    // code of conduct
-    {
-      id: "code-of-conduct",
-      title: "Code of Conduct & Professional Ethics",
-      icon: <GavelIcon sx={{ color: "#fff" }} />,
-      defaultExpanded: true,
-      items: [
-        "We maintain the highest standards of integrity, honesty and professionalism",
-        "Zero tolerance for harassment, discrimination or bullying of any kind",
-        "Strict confidentiality of client information and project details",
-        "No conflicts of interest – personal projects must not interfere with company work",
-        "Responsible use of company resources and intellectual property",
-      ],
-      description: "",
-    },
-
-    // remote & hybrid work
-    {
-      id: "remote-hybrid-work",
-      title: "Remote & Hybrid Work Policy",
-      icon: <HomeIcon sx={{ color: "#fff" }} />,
-      items: [
-        "Core working hours: 10:00 AM – 4:00 PM PKT (Monday–Friday)",
-        "Full remote allowed with 2–3 mandatory office days per month in Lahore",
-        "Company provides necessary tools: laptop, licensed software, high-speed internet allowance",
-        "Daily stand-ups (10–15 min) and weekly sprint planning required",
-        "Use of Slack / Teams for communication + daily updates",
-      ],
-      description: "",
-    },
-
-    // leave & attendance
-    {
-      id: "leave-attendance",
-      title: "Leave & Attendance Policy",
-      icon: <CalendarTodayIcon sx={{ color: "#fff" }} />,
-      items: [
-        "20 paid annual leaves + 10 paid sick leaves per year",
-        "Public holidays (Pakistan official + selected religious holidays)",
-        "Maternity leave: 12 weeks (as per law), Paternity leave: 5 days paid",
-        "Leaves require prior approval (except emergency sick leave)",
-        "Unpaid leave possible in special circumstances (case-by-case)",
-      ],
-      description: "",
-    },
-
-    // compensation & benefits
-    {
-      id: "compensation-benefits",
-      title: "Compensation & Benefits",
-      icon: <PaymentsIcon sx={{ color: "#fff" }} />,
-      items: [
-        "Competitive salary paid on the 1st–5th of every month",
-        "Performance bonus (quarterly / project-based)",
-        "Health insurance (OPD + hospitalization coverage)",
-        "Internet & electricity reimbursement for remote employees",
-        "Professional development budget (courses, books, conferences)",
-      ],
-      description: "",
-    },
-
-    // data security & ip
-    {
-      id: "data-security-ip",
-      title: "Data Security & Intellectual Property",
-      icon: <SecurityIcon sx={{ color: "#fff" }} />,
-      items: [
-        "All employees sign NDA on joining",
-        "Client code, designs & data remain strictly confidential",
-        "Company owns all work produced during employment",
-        "Use of approved version control (Git) and secure repositories only",
-        "Personal devices must follow company security policies if used for work",
-      ],
-      description: "",
-    },
-
-    // performance growth reviews
-    {
-      id: "performance-growth",
-      title: "Performance, Growth & Reviews",
-      icon: <TrendingUpIcon sx={{ color: "#fff" }} />,
-      items: [
-        "Bi-annual performance reviews (June & December)",
-        "Clear OKRs / KPIs set at project & individual level",
-        "Training & certification support (Udemy, Frontend Masters, conferences)",
-        "Promotion & salary review based on performance & business needs",
-      ],
-      description: "",
-    },
-
-    // diversity inclusion
-    {
-      id: "diversity-inclusion",
-      title: "Diversity, Equity & Inclusion",
-      icon: <PeopleIcon sx={{ color: "#fff" }} />,
-      paragraph:
-        "Drudots Technologies is an equal opportunity employer. We do not discriminate on the basis of gender, religion, ethnicity, age, disability or any other protected characteristic.",
-      description: "",
-    },
-
-    // grievance whistleblower
-    {
-      id: "grievance-whistleblower",
-      title: "Grievance & Whistleblower Policy",
-      icon: <ReportProblemIcon sx={{ color: "#fff" }} />,
-      paragraph:
-        "Any concern regarding policy violation, harassment, unethical behavior or misconduct can be reported confidentially to HR. We ensure no retaliation against good-faith reporters.",
-      description: "",
-    },
-  ]);
+  const [policies, setPolicies] = useState(policiesData);
 
   // add/edit policy states
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPolicy, setEditingPolicy] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedPolicyForActions, setSelectedPolicyForActions] =
-    useState(null);
+  const [selectedPolicyForActions, setSelectedPolicyForActions] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -234,98 +115,56 @@ const Policies = () => {
 
   // Shimmer only for AccordionSummary
   const SummarySkeleton = () => (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        bgcolor: "#1F2024",
-        borderRadius: "12px",
-        minHeight: 64,
-        px: 3,
-        py: 1.5,
-        mb: 2,
-        overflow: "hidden",
-      }}
-    >
+    <Box sx={style.SummarySkeleton}>
       {/* icon + text */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexGrow: 1 }}>
+      <Box sx={style.skeletonBox}>
         {/* icon placeholder */}
         <Skeleton
           variant="circular"
-          width={30}
-          height={30}
-          sx={{ bgcolor: "#2a2b30" }}
+          sx={style.skeletonIcon}
         />
 
         {/* title placeholder */}
         <Skeleton
           variant="text"
-          width="55%"
-          height={28}
-          sx={{ bgcolor: "#2a2b30" }}
+          sx={style.skeletonTitle}
         />
       </Box>
 
-      {/* action button / more icon placeholder */}
+      {/* action button */}
       <Skeleton
         variant="text"
-        width="10%"
-        height={28}
-        sx={{ bgcolor: "#2a2b30" }}
+        sx={style.skeletonButton}
       />
     </Box>
   );
 
   return (
-    <Box
-      sx={{
-        bgcolor: "#000000",
-        color: "#ffffff",
-        minHeight: "100vh",
-        py: 5,
-      }}
-    >
+    <Box sx={style.policyContainer}>
       <Container maxWidth="lg">
         {/* Header info + Add button */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "start",
-            mb: 4,
-          }}
-        >
+        <Box sx={style.policyHeader}>
           {/* header text details */}
           <Box>
             <Typography
-              variant="h3"
-              component="h1"
               gutterBottom
-              sx={{
-                color: "#fff",
-                fontSize: isMobile ? 28 : 36,
-                fontWeight: isMobile ? 600 : 700,
-              }}
+              sx={style.policyHeaderTitle(isMobile)}
             >
               Company Policies
             </Typography>
             <Typography
-              variant="h6"
-              sx={{ color: "#e0e0e0", fontSize: isMobile ? 16 : 18 }}
-              maxWidth={{ xs: 500, sm: 600, md: 720 }}
+              sx={style.policysubTitle(isMobile)}
             >
               At Drudots Technologies, we are committed to transparency, quality
               delivery...
             </Typography>
-            <Typography variant="body2" color="#aaaaaa" mt={1}>
+            <Typography sx={style.policyTime}>
               Last updated: January 2026
             </Typography>
           </Box>
 
-          {/* add policy */}
+          {/* add policy button */}
           <Button
-            variant="contained"
             startIcon={<FaPlus />}
             onClick={() => {
               setEditingPolicy(null);
@@ -333,16 +172,16 @@ const Policies = () => {
             }}
             sx={style.PAGE_STYLES.addButton}
           >
-            {isTablet ? "Add" : "Add New Policy"}
+            {isTablet ? "Policy" : "Add New Policy"}
           </Button>
         </Box>
 
-        <Divider sx={{ my: 5, borderColor: "#444" }} />
+        <Divider sx={style.divider} />
 
-        {/* Dynamic Accordions */}
+        {/* Accordions */}
         <Box ref={targetRef}>
           {loading ? (
-            // Show shimmer skeletons instead of real accordions
+            // Show skeletons instead of real data
             <>
               {[...Array(6)].map((_, i) => (
                 <SummarySkeleton key={i} />
@@ -358,84 +197,51 @@ const Policies = () => {
                   key={section.id}
                   expanded={expanded === panelId}
                   onChange={handleChange(panelId)}
-                  sx={{
-                    mb: 2,
-                    bgcolor: "#1F2024",
-                    borderRadius: "12px !important",
-                    overflow: "hidden",
-                    boxShadow: "none",
-                    "&:before": { display: "none" },
-                    "&.Mui-expanded": { bgcolor: "#1F2024" },
-                  }}
+                  sx={style.policyAccordion}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon sx={{ color: "#bbbbbb" }} />}
-                    sx={{
-                      bgcolor: "#1F2024",
-                      "&:hover": { bgcolor: "#2a2b30" },
-                      color: "#ffffff",
-                      minHeight: 64,
-                    }}
+                    expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}
+                    sx={style.policyAccordionSummary}
                   >
                     <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                        flexGrow: 1,
-                      }}
+                      sx={style.accordionSummaryInfo}
                     >
                       {section.icon}
                       <Typography
-                        variant="h6"
-                        sx={{ fontWeight: 600, fontSize: 16 }}
+                        sx={style.summaryInfoText}
                       >
                         {section.title}
                       </Typography>
                     </Box>
 
+                    {/* edit icon */}
                     <Box
-                      aria-label="actions"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleMenuClick(e, section);
                       }}
                       onFocus={(e) => e.stopPropagation()}
-                      sx={{
-                        p: "5px",
-                        borderRadius: "50%",
-                        color: "#aaa",
-                        ml: "auto",
-                        cursor: "pointer",
-                        "&:hover": {
-                          backgroundColor: "rgba(255, 255, 255, 0.08)",
-                        },
-                        display: "flex",
-                        alignItems: "center",
-                      }}
+                      sx={style.summaryIcon}
                     >
-                      <EditIcon fontSize="small" />
+                      <EditIcon fontSize="small" sx={{ color: "#fff" }} />
                     </Box>
                   </AccordionSummary>
 
                   <AccordionDetails
-                    sx={{ bgcolor: "#1F2024", color: "#e0e0e0", px: 4, pb: 3 }}
+                    sx={style.accordionDetail}
                   >
                     {section.description ? (
-                      <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
+                      <Typography sx={style.accordionDescription}>
                         {section.description}
                       </Typography>
                     ) : section.paragraph ? (
-                      <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
+                      <Typography sx={style.accordionDescription}>
                         {section.paragraph}
                       </Typography>
                     ) : (
                       <List
                         disablePadding
-                        sx={{
-                          color: "#e0e0e0",
-                          "& .MuiListItem-root": { py: 0.6, px: 0 },
-                        }}
+                        sx={style.accordionList}
                       >
                         {section.items?.map((text, idx) => (
                           <ListItem
@@ -443,7 +249,7 @@ const Policies = () => {
                             disablePadding
                             sx={{ alignItems: "center" }}
                           >
-                            <ListItemIcon sx={{ minWidth: 22, color: "#777" }}>
+                            <ListItemIcon sx={style.accordionListIcon}>
                               <CircleIcon fontSize="15px" />
                             </ListItemIcon>
                             <ListItemText
@@ -451,7 +257,7 @@ const Policies = () => {
                               slotProps={{
                                 primary: {
                                   variant: "body1",
-                                  sx: { color: "#e0e0e0" },
+                                  sx: { color: "#fff" },
                                 },
                               }}
                             />
@@ -480,27 +286,7 @@ const Policies = () => {
           vertical: "top",
           horizontal: "right",
         }}
-        slotProps={{
-          paper: {
-            sx: {
-              backgroundColor: "#1F2024",
-              color: "#fff",
-              borderRadius: 2,
-              border: "1px solid #333",
-              boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
-              mt: 1,
-              "& .MuiMenuItem-root": {
-                color: "#e0e0e0",
-                minHeight: 42,
-                px: 2,
-                py: 1,
-                "&:hover": {
-                  backgroundColor: "#2a2b30",
-                },
-              },
-            },
-          },
-        }}
+        slotProps={style.popover}
       >
         <Box>
           {/* edit policy */}
@@ -534,58 +320,40 @@ const Policies = () => {
       />
 
       {/* Delete confirmation dialog */}
-
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        {/* header */}
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <IoWarningOutline color="red" size={28} />
         </Box>
-        <DialogTitle sx={{ textAlign: "center", color: "#fff", mt: 2 }}>
+
+        {/* title */}
+        <DialogTitle sx={style.deletTitle}>
           Confirm Deletion
         </DialogTitle>
-        <Typography sx={{ textAlign: "center", color: "#e0e0e0", mb: 3 }}>
+        
+        <Typography sx={style.deletSubTitle}>
           Are you sure you want to delete this policy?
         </Typography>
 
         {/* cancel, submit button */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 2,
-            width: "100%",
-          }}
-        >
+        <Box sx={style.cancelBox}>
           <Button
             disableRipple
             onClick={handleCloseDeleteDialog}
-            sx={{
-              width: "100%",
-              color: "#fff",
-              borderColor: "#777",
-              border: "1px solid #3e3f40",
-              "&:hover": {
-                borderColor: "#aaa",
-                bgcolor: "rgba(255,255,255,0.08)",
-              },
-            }}
+            sx={style.cancelTitle}
           >
             Cancel
           </Button>
 
           {/* delete policy */}
           <Button
-            sx={{
-              width: "100%",
-              bgcolor: "error.main",
-              color: "#fff",
-              "&:hover": { bgcolor: "error.dark" },
-            }}
+            sx={style.deleteButton}
             disabled={deleteLoading}
             disableRipple
             onClick={() => handleDeletePolicy(selectedPolicyForActions?.id)}
           >
             {deleteLoading ? (
-              <CircularProgress size="20px" color="inherit" />
+              <CircularProgress size="20px" color="fff" />
             ) : (
               "Delete"
             )}

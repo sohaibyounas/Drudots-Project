@@ -290,51 +290,51 @@ const EmployeeDashboard = () => {
   const rows = [
     {
       id: 1, fullName: "Jon Snow", email: "jon.snow@example.com", phone: "23129371209",
-      gender: "Male"
+      gender: "male"
     },
     {
       id: 2,
       fullName: "Cersei Lannister",
       email: "cersei.lannister@example.com", phone: "23129371209",
-      gender: "Female"
+      gender: "female"
     },
     {
       id: 3,
       fullName: "Jaime Lannister",
       email: "jaime.lannister@example.com",
       phone: "23129371209",
-      gender: "Male"
+      gender: "male"
     },
     {
       id: 4, fullName: "Arya Stark", email: "arya.stark@example.com", phone: "23129371209",
-      gender: "Female"
+      gender: "female"
     },
     {
       id: 5,
       fullName: "Daenerys Targaryen",
       email: "daenerys.targaryen@example.com",
       phone: "23129371209",
-      gender: "Male"
+      gender: "male"
     },
     {
       id: 6, fullName: "Melisandre", email: "melisandre@example.com", phone: "23129371209",
-      gender: "Female"
+      gender: "female"
     },
     {
       id: 7,
       fullName: "Ferrara Clifford",
       email: "ferrara.clifford@example.com", phone: "23129371209",
-      gender: "Female"
+      gender: "female"
     },
     {
       id: 8,
       fullName: "Rossini Frances",
       email: "rossini.frances@example.com", phone: "23129371209",
-      gender: "Female"
+      gender: "female"
     },
     {
       id: 9, fullName: "Harvey Roxie", email: "harvey.roxie@example.com", phone: "23129371209",
-      gender: "Male"
+      gender: "male"
     },
   ];
 
@@ -718,7 +718,6 @@ const EmployeeDashboard = () => {
       )}
 
       {/* Delete confirmation dialog */}
-
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <IoWarningOutline color="red" size={28} />

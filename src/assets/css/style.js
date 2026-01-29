@@ -193,6 +193,13 @@ const style = {
     },
   },
 
+  // drawer global error
+  drawerError: {
+    mb: 2,
+    color: "#fff",
+    backgroundColor: "#2a1f1f",
+  },
+
   paper: {
     backgroundColor: "#000",
     backdropFilter: "none",
@@ -823,7 +830,7 @@ const style = {
   },
 
   deletSubTitle: {
-    color: "#fff",
+    color: "#b0b0b0",
     mb: 2,
     textAlign: "center",
   },
@@ -966,12 +973,12 @@ const style = {
           backgroundColor: "#262626",
           color: "#fff",
           "&:hover": {
-            backgroundColor: "#262626",
+            backgroundColor: "#3a3a3a",
           },
           "&.Mui-selected": {
             backgroundColor: "#262626",
             "&:hover": {
-              backgroundColor: "#262626",
+              backgroundColor: "#3a3a3a",
             },
           },
         },

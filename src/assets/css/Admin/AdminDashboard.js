@@ -22,6 +22,17 @@ const style = {
     color: "#fff",
   },
 
+  pageTitleIcon: {
+    marginRight: 10,
+    verticalAlign: "middle",
+    color: "#fff",
+  },
+
+  adminSubTitle: {
+    fontSize: "14px",
+    color: "rgba(255,255,255,0.7)"
+  },
+
   addAdmin: {
     display: "flex",
     gap: { xs: 0.6, sm: 1 },
@@ -75,6 +86,44 @@ const style = {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  // datagrid cell styles
+
+  // full name
+  fullName: {
+    display: "flex !important",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: 2,
+  },
+
+  // avatar
+  avatar: {
+    width: 35,
+    height: 35,
+    borderRadius: "50%",
+    backgroundColor: "#262626",
+    color: "#fff",
+    fontSize: "16px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  // user info
+  userInfo: {
+    fontSize: "14px",
+    color: "#fff"
+  },
+
+  // action cell icon
+  actionIconButton: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   // delete confirmation dialog styles

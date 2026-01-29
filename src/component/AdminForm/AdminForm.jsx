@@ -5,6 +5,7 @@ import {
   Button,
   CircularProgress,
   Drawer,
+  FormControl,
   IconButton,
   MenuItem,
   Select,
@@ -77,6 +78,7 @@ const Adminform = ({
     resetForm();
   };
 
+  // input handler
   const handleInput = (e) => {
     const { name, value } = e.target;
 
@@ -140,6 +142,7 @@ const Adminform = ({
     }
   }, [adminId, admins, showEdit, selectedAdminData]);
 
+  // form submit handler
   const handleSubmit = async () => {
     setGlobalError("");
     let isValid = true;
@@ -224,7 +227,7 @@ const Adminform = ({
           {globalError && (
             <Alert
               severity="error"
-              sx={{ mb: 2, backgroundColor: "#2a1f1f", color: "#fff" }}
+              sx={style.drawerError}
               onClose={() => setGlobalError("")}
             >
               {globalError}
@@ -287,42 +290,42 @@ const Adminform = ({
               </Typography>
             )}
           </Box>
-          <Select
-            fullWidth
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                role: e.target.value,
-                roleId: e.target.value,
-              })
-            }
-            value={formData.roleId}
-            MenuProps={style.selectMenuProps}
-            sx={{
-              ...style.formField,
-              ...style.formSelect,
-            }}
-            displayEmpty
-          >
-            {loadingRoles ? (
-              <MenuItem disabled>Loading roles...</MenuItem>
-            ) : roles.length === 0 ? (
-              [
-                <MenuItem key="admin" disableRipple value="admin">
-                  Admin
-                </MenuItem>,
-                <MenuItem key="manager" disableRipple value="manager">
-                  Manager
-                </MenuItem>,
-              ]
-            ) : (
-              roles.map((role) => (
-                <MenuItem key={role.id} disableRipple value={role.id}>
-                  {role.name}
-                </MenuItem>
-              ))
-            )}
-          </Select>
+
+          {/* options */}
+          <FormControl fullWidth sx={style.formField}>
+            <Select
+              fullWidth
+              name="roleId"
+              onChange={handleInput}
+              value={formData.roleId || ""}
+              MenuProps={style.selectMenuProps}
+              displayEmpty
+              sx={{
+                color: formData.roleId ? "#fff" : "#999",
+                "& .MuiSelect-icon": { color: "#fff" },
+              }}
+            >
+              {loadingRoles ? (
+                <MenuItem disabled>Loading roles...</MenuItem>
+              ) : roles.length === 0 ? (
+                [
+                  <MenuItem value="" disabled sx={{ color: "#fff" }}> Select Role </MenuItem>,
+                  <MenuItem key="admin" disableRipple value="admin">
+                    Admin
+                  </MenuItem>,
+                  <MenuItem key="manager" disableRipple value="manager">
+                    Manager
+                  </MenuItem>,
+                ]
+              ) : (
+                roles.map((role) => (
+                  <MenuItem key={role.id} disableRipple value={role.id}>
+                    {role.name}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
         </Box>
       </Box>
 

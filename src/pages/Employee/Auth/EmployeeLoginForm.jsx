@@ -53,7 +53,7 @@ const EmployeeLoginForm = () => {
       console.log("Login response:", response.data);
 
       if (response.data) {
-        toast.success(response.data.message || "OTP send successfully");
+        toast.success(response.data.message || "OTP sent successfully");
 
         const userData = response.data.data;
         const token = userData?.token;
@@ -82,6 +82,11 @@ const EmployeeLoginForm = () => {
     }
   };
 
+  // login api in use-Effect
+  // useEffect(() => {
+  //   performLogin();
+  // }, []) // add dpeendecies here
+
   // verify otp
   const handleVerifyOtp = async (e) => {
     e?.preventDefault();
@@ -95,6 +100,9 @@ const EmployeeLoginForm = () => {
       setOtpError(["Please enter complete 6-digit OTP"]);
       return;
     }
+    // navigate to employeen dashboard
+    navigate(EMPLOYEEDASHBOARD, { replace: true })
+    return; //not check otp veri api
 
     setOtpLoader(true);
 
@@ -373,20 +381,7 @@ const EmployeeLoginForm = () => {
                 disableRipple
                 onClick={handleForgotPassword}
                 color="primary"
-                sx={{
-                  textTransform: "none",
-                  textDecoration: "underline",
-                  fontSize: { xs: 14, sm: 15 },
-                  fontWeight: 500,
-                  padding: "0 4px",
-                  minWidth: "auto",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    textDecoration: "underline",
-                    backgroundColor: "transparent",
-                    opacity: 0.8,
-                  },
-                }}
+                sx={style.forgotPasswordButton}
               >
                 Reset it here.
               </Button>

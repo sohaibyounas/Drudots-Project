@@ -366,7 +366,7 @@ const style = {
     },
   },
 
-  // Forgot Password Page
+  // Forgot Password secion on login page
   forgotPasswordSection: {
     textAlign: "center",
     marginTop: { xs: 1, sm: 1.2 },
@@ -376,6 +376,21 @@ const style = {
     fontSize: { xs: 13, sm: 14 },
     fontWeight: 400,
     color: "rgba(255,255,255,0.6)",
+  },
+
+  forgotPasswordButton: {
+    textTransform: "none",
+    textDecoration: "underline",
+    fontSize: { xs: 14, sm: 15 },
+    fontWeight: 500,
+    padding: "0 4px",
+    minWidth: "auto",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      textDecoration: "underline",
+      backgroundColor: "transparent",
+      opacity: 0.8,
+    },
   },
 
   ResetPasswordButton: {
@@ -415,6 +430,7 @@ const style = {
       boxShadow: "none",
     },
   },
+  
 };
 
 export default style;

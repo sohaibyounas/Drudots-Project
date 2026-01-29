@@ -334,25 +334,9 @@ const AdminDashboard = () => {
       flex: 1,
       minWidth: 200,
       renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex !important",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            flexDirection: "row",
-            gap: 2,
-          }}
-        >
+        <Box sx={style.fullName}>
           {/* user avatar */}
-          <Avatar
-            sx={{
-              bgcolor: "primary.main",
-              color: "#fff",
-              fontSize: "14px",
-              width: 40,
-              height: 40,
-            }}
-          >
+          <Avatar sx={style.avatar}>
             {/* initials from fullName */}
             {params.row.fullName
               .split(" ")
@@ -363,7 +347,7 @@ const AdminDashboard = () => {
 
           {/* user info */}
           <Box>
-            <Typography variant="body2" fontWeight="medium">
+            <Typography variant="body2" sx={style.userInfo}>
               {params.row.fullName}
             </Typography>
           </Box>
@@ -379,7 +363,7 @@ const AdminDashboard = () => {
       minWidth: 250,
       renderCell: (params) => (
         <Box>
-          <Typography variant="body2">{params.row.email}</Typography>
+          <Typography variant="body2" sx={style.userInfo}>{params.row.email}</Typography>
         </Box>
       ),
     },
@@ -394,7 +378,7 @@ const AdminDashboard = () => {
         <Box>
           <Typography
             variant="body2"
-            sx={{ textTransform: "capitalize", color: "#fff" }}
+            sx={{ ...style.userInfo, texttransform: "capitalize" }}
           >
             {params.row.role || "Admin"}
           </Typography>
@@ -416,15 +400,9 @@ const AdminDashboard = () => {
           disableRipple
           size="small"
           onClick={(e) => handleMenuClick(e, params.row)}
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          sx={style.actionIconButton}
         >
-          <FaEllipsisV size={14} />
+          <FaEllipsisV size={14} color="#fff" />
         </IconButton>
       ),
     },
@@ -460,15 +438,11 @@ const AdminDashboard = () => {
         <Box sx={style.pageHeaderContent}>
           <Typography sx={style.pageTitle}>
             <FaUserShield
-              style={{
-                marginRight: 10,
-                verticalAlign: "middle",
-                color: "#fff",
-              }}
+              style={style.pageTitleIcon}
             />
             Admins
           </Typography>
-          <Typography sx={{ fontSize: "14px", color: "rgba(255,255,255,0.7)" }}>
+          <Typography sx={style.adminSubTitle}>
             Manage your admins here
           </Typography>
         </Box>
@@ -682,7 +656,7 @@ const AdminDashboard = () => {
           Are you sure you want to delete this admin?
         </Typography>
 
-        {/* cancel, submit button */}
+        {/* cancel, delete button */}
         <Box sx={style.cancelBox}>
           <Button
             disableRipple
@@ -692,7 +666,6 @@ const AdminDashboard = () => {
             Cancel
           </Button>
 
-          {/* delete admin */}
           <Button
             sx={style.deleteButton}
             disabled={loader}

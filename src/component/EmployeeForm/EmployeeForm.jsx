@@ -55,7 +55,7 @@ const Employeeform = ({
     resetForm();
   };
 
-  // input handle 
+  // input handler 
   const handleInput = (e) => {
     const { name, value } = e.target;
 
@@ -88,7 +88,7 @@ const Employeeform = ({
           fullName: employee.fullName || "",
           email: employee.email || "",
           phone: employee.phone || "",
-          gender: employee.gender || "",
+          gender: employee.gender ? employee.gender.toLowerCase() : "",
         });
         setShowForm(true);
       }
@@ -213,10 +213,11 @@ const Employeeform = ({
       {/* form fields */}
       <Box sx={style.whiteDrawer}>
         <Box sx={{ p: "0 20px" }}>
+          {/* Global error */}
           {globalError && (
             <Alert
               severity="error"
-              sx={{ mb: 2, backgroundColor: "#2a1f1f", color: "#fff" }}
+              sx={style.drawerError}
               onClose={() => setGlobalError("")}
             >
               {globalError}
@@ -290,11 +291,13 @@ const Employeeform = ({
             )}
           </Box>
 
+          {/* options */}
           <FormControl fullWidth sx={style.formField}>
             <Select
               name="gender"
-              value={String(formData.gender ?? '')}
               onChange={handleInput}
+              value={String(formData.gender ?? '')}
+              MenuProps={style.selectMenuProps}
               displayEmpty
               sx={{
                 color: formData.gender ? "#fff" : "#999",
