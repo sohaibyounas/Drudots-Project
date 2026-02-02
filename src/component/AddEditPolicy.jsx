@@ -1,11 +1,9 @@
 // src/components/AddEditPolicyModal.jsx
 import React, { useState, useEffect } from "react";
 import {
-  Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Button,
   IconButton,
   Box,
@@ -16,24 +14,8 @@ import {
 import GavelIcon from "@mui/icons-material/Gavel";
 import CloseIcon from "@mui/icons-material/Close";
 import AppTextField from "./designSystem/AppTextField";
-
-// dialog scrollbar styles
-export const scrollbarStyles = {
-  "&::-webkit-scrollbar": {
-    width: "8px",
-  },
-  "&::-webkit-scrollbar-track": {
-    background: "none",
-  },
-  "&::-webkit-scrollbar-thumb": {
-    background: "#555",
-    borderRadius: "4px",
-  },
-  "&::-webkit-scrollbar-button": {
-    display: "none",
-  },
-  scrollbarColor: "#262626",
-};
+import Dialog from "./Ui/Dialog.jsx";
+import style from "../assets/css/Policy";
 
 const AddEditPolicy = ({
   open,
@@ -119,24 +101,14 @@ const AddEditPolicy = ({
       maxWidth="md"
       fullWidth
     >
-      <DialogTitle sx={{ color: "#fff", borderBottom: "1px solid #5D5E63" }}>
+      <DialogTitle sx={style.dialogTitle}>
         {initialData ? "Edit Policy" : "Add New Policy"}
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{ position: "absolute", right: 8, top: 8, color: "#fff" }}
-        >
+        <IconButton aria-label="close" onClick={onClose} sx={{ color: "#fff" }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent
-        dividers
-        sx={{
-          color: "#fff",
-          ...scrollbarStyles,
-        }}
-      >
+      <DialogContent dividers sx={style.dialogContent}>
         <Box>
           {/* Policy Title Input */}
           <Typography variant="subtitle2" gutterBottom>
@@ -146,8 +118,8 @@ const AddEditPolicy = ({
             fullWidth
             margin="dense"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
             sx={{ mb: 2 }}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </Box>
 
@@ -160,7 +132,7 @@ const AddEditPolicy = ({
               label="Bullet List"
               color={type === "list" ? "primary" : "default"}
               onClick={() => setType("list")}
-              sx={{ mr: 1, color: "#fff" }}
+              sx={style.dialogChip}
             />
             <Chip
               label="Paragraph"
@@ -181,12 +153,10 @@ const AddEditPolicy = ({
             onChange={(e) => setContent(e.target.value)}
           />
         ) : (
+          // list input
           <Box>
             {items.map((item, idx) => (
-              <Box
-                key={idx}
-                sx={{ display: "flex", alignItems: "center", mb: 1 }}
-              >
+              <Box key={idx} sx={style.dialogList}>
                 <AppTextField
                   fullWidth
                   size="small"
@@ -209,20 +179,11 @@ const AddEditPolicy = ({
         )}
       </DialogContent>
 
-      <DialogActions
-        sx={{
-          width: "100%",
-          p: 2,
-          borderTop: "1px solid #5D5E63",
-          gap: 2,
-        }}
-      >
-        <Button
-          onClick={onClose}
-          sx={{ border: "1px solid #ccc", color: "#fff", flex: 1 }}
-        >
+      <DialogActions sx={style.dialogActions}>
+        <Button onClick={onClose} sx={style.dialogCancel}>
           Cancel
         </Button>
+
         <Button
           variant="contained"
           onClick={handleSubmit}
@@ -231,7 +192,7 @@ const AddEditPolicy = ({
         >
           {loading ? (
             <>
-              <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+              <CircularProgress size={20} sx={style.loader} />
               {initialData ? "Updating..." : "Saving..."}
             </>
           ) : initialData ? (

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Container,
   Typography,
@@ -31,11 +31,20 @@ import style from "../../assets/css/policy/policy.js";
 import { FaPlus } from "react-icons/fa";
 import { policiesData } from "../../policyData/policiesData";
 
+// Constants
+const CONSTANTS = {
+  TITLE: "Company Policies",
+  SUBTITLE: "At Drudots Technologies, we are committed to transparency, quality delivery...",
+  LAST_UPDATED: "Last updated: January 2026",
+  ADD_BUTTON_TEXT: "Add New Policy",
+  ADD_BUTTON_TEXT_MOBILE: "Policy",
+  SKELETON_COUNT: 6,
+};
+
 const Policies = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isTablet = useMediaQuery(theme.breakpoints.between("xs", "md"));
-  const targetRef = useRef();
   const [loading, setLoading] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
@@ -45,97 +54,97 @@ const Policies = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPolicy, setEditingPolicy] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedPolicyForActions, setSelectedPolicyForActions] = useState(null);
+  const [selectedPolicyForActions, setSelectedPolicyForActions] =
+    useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const open = Boolean(anchorEl);
+  const addButtonText = isTablet ? CONSTANTS.ADD_BUTTON_TEXT_MOBILE : CONSTANTS.ADD_BUTTON_TEXT;
 
   // accordion expand/collapse
-  const handleChange = (panel) => (event, isExpanded) => {
+  const handleChange = useCallback((panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-  };
+  }, []);
 
   // Save new or edited policy
-  const handleSavePolicy = (newPolicy) => {
-    if (editingPolicy) {
-      // edit
-      setPolicies(policies.map((p) => (p.id === newPolicy.id ? newPolicy : p)));
-    } else {
-      // add
-      setPolicies([...policies, newPolicy]);
+  const handleSavePolicy = useCallback((newPolicy) => {
+    try {
+      if (editingPolicy) {
+        setPolicies(policies.map((p) => (p.id === newPolicy.id ? newPolicy : p)));
+      } else {
+        const newPolicyWithId = { ...newPolicy, id: Date.now() };
+        setPolicies([...policies, newPolicyWithId]);
+      }
+      setEditingPolicy(null);
+      setModalOpen(false);
+    } catch (error) {
+      console.error("Error saving policy:", error);
     }
-    setEditingPolicy(null);
-    setModalOpen(false);
-  };
+  }, [editingPolicy, policies]);
 
   // Delete policy
-  const handleDeletePolicy = (policyId) => {
+  const handleDeletePolicy = useCallback((policyId) => {
     setDeleteLoading(true);
-    // Simulate API call
     setTimeout(() => {
-      setPolicies(policies.filter((p) => p.id !== policyId));
-      setOpenDeleteDialog(false);
-      setSelectedPolicyForActions(null);
-      setDeleteLoading(false);
+      try {
+        setPolicies(policies.filter((p) => p.id !== policyId));
+        setOpenDeleteDialog(false);
+        setSelectedPolicyForActions(null);
+      } catch (error) {
+        console.error("Error deleting policy:", error);
+      } finally {
+        setDeleteLoading(false);
+      }
     }, 500);
-  };
+  }, [policies]);
 
   // Edit existing policy
-  const handleEdit = (policy) => {
+  const handleEdit = useCallback((policy) => {
     setEditingPolicy(policy);
     setModalOpen(true);
     handleMenuClose();
-  };
+  }, []);
 
   // Popover menu open
-  const handleMenuClick = (event, policy) => {
+  const handleMenuClick = useCallback((event, policy) => {
     setAnchorEl(event.currentTarget);
     setSelectedPolicyForActions(policy);
-  };
+  }, []);
 
   // Popover menu close
-  const handleMenuClose = () => {
+  const handleMenuClose = useCallback(() => {
     setAnchorEl(null);
     setSelectedPolicyForActions(null);
-  };
+  }, []);
 
   // Open delete confirmation dialog
-  const handleOpenDeleteDialog = (policy) => {
+  const handleOpenDeleteDialog = useCallback((policy) => {
     setSelectedPolicyForActions(policy);
     setOpenDeleteDialog(true);
     handleMenuClose();
-  };
+  }, [handleMenuClose]);
 
   // Close delete confirmation dialog
-  const handleCloseDeleteDialog = () => {
+  const handleCloseDeleteDialog = useCallback(() => {
     setOpenDeleteDialog(false);
     setSelectedPolicyForActions(null);
-  };
+  }, []);
 
-  // Shimmer only for AccordionSummary
+  // Shimmers for Accordion
   const SummarySkeleton = () => (
     <Box sx={style.SummarySkeleton}>
       {/* icon + text */}
       <Box sx={style.skeletonBox}>
         {/* icon placeholder */}
-        <Skeleton
-          variant="circular"
-          sx={style.skeletonIcon}
-        />
+        <Skeleton variant="circular" sx={style.skeletonIcon} />
 
         {/* title placeholder */}
-        <Skeleton
-          variant="text"
-          sx={style.skeletonTitle}
-        />
+        <Skeleton variant="text" sx={style.skeletonTitle} />
       </Box>
 
       {/* action button */}
-      <Skeleton
-        variant="text"
-        sx={style.skeletonButton}
-      />
+      <Skeleton variant="text" sx={style.skeletonButton} />
     </Box>
   );
 
@@ -146,20 +155,14 @@ const Policies = () => {
         <Box sx={style.policyHeader}>
           {/* header text details */}
           <Box>
-            <Typography
-              gutterBottom
-              sx={style.policyHeaderTitle(isMobile)}
-            >
-              Company Policies
+            <Typography gutterBottom sx={style.policyHeaderTitle(isMobile)}>
+              {CONSTANTS.TITLE}
             </Typography>
-            <Typography
-              sx={style.policysubTitle(isMobile)}
-            >
-              At Drudots Technologies, we are committed to transparency, quality
-              delivery...
+            <Typography sx={style.policysubTitle(isMobile)}>
+              {CONSTANTS.SUBTITLE}
             </Typography>
             <Typography sx={style.policyTime}>
-              Last updated: January 2026
+              {CONSTANTS.LAST_UPDATED}
             </Typography>
           </Box>
 
@@ -172,25 +175,23 @@ const Policies = () => {
             }}
             sx={style.PAGE_STYLES.addButton}
           >
-            {isTablet ? "Policy" : "Add New Policy"}
+            {addButtonText}
           </Button>
         </Box>
 
         <Divider sx={style.divider} />
 
         {/* Accordions */}
-        <Box ref={targetRef}>
+        <Box>
           {loading ? (
-            // Show skeletons instead of real data
             <>
-              {[...Array(6)].map((_, i) => (
+              {[...Array(CONSTANTS.SKELETON_COUNT)].map((_, i) => (
                 <SummarySkeleton key={i} />
               ))}
             </>
           ) : (
             policies.map((section) => {
               const panelId = `panel-${section.id}`;
-
               return (
                 <Accordion
                   square={false}
@@ -203,13 +204,9 @@ const Policies = () => {
                     expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}
                     sx={style.policyAccordionSummary}
                   >
-                    <Box
-                      sx={style.accordionSummaryInfo}
-                    >
+                    <Box sx={style.accordionSummaryInfo}>
                       {section.icon}
-                      <Typography
-                        sx={style.summaryInfoText}
-                      >
+                      <Typography sx={style.summaryInfoText}>
                         {section.title}
                       </Typography>
                     </Box>
@@ -227,9 +224,7 @@ const Policies = () => {
                     </Box>
                   </AccordionSummary>
 
-                  <AccordionDetails
-                    sx={style.accordionDetail}
-                  >
+                  <AccordionDetails sx={style.accordionDetail}>
                     {section.description ? (
                       <Typography sx={style.accordionDescription}>
                         {section.description}
@@ -239,10 +234,7 @@ const Policies = () => {
                         {section.paragraph}
                       </Typography>
                     ) : (
-                      <List
-                        disablePadding
-                        sx={style.accordionList}
-                      >
+                      <List disablePadding sx={style.accordionList}>
                         {section.items?.map((text, idx) => (
                           <ListItem
                             key={idx}
@@ -327,10 +319,8 @@ const Policies = () => {
         </Box>
 
         {/* title */}
-        <DialogTitle sx={style.deletTitle}>
-          Confirm Deletion
-        </DialogTitle>
-        
+        <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
+
         <Typography sx={style.deletSubTitle}>
           Are you sure you want to delete this policy?
         </Typography>
@@ -353,7 +343,7 @@ const Policies = () => {
             onClick={() => handleDeletePolicy(selectedPolicyForActions?.id)}
           >
             {deleteLoading ? (
-              <CircularProgress size="20px" color="fff" />
+              <CircularProgress size="20px" sx={{ color: "#fff" }} />
             ) : (
               "Delete"
             )}

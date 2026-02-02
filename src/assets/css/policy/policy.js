@@ -5,15 +5,21 @@ const style = {
     pageTitle: { fontSize: 28, fontWeight: 700, color: "#fff" },
     pageSubtitle: { color: "rgba(255,255,255,0.7)", fontSize: 14 },
     addButton: {
-      textTransform: "none",
-      fontWeight: 700,
+      textTransform: "capitalize",
+      fontWeight: 600,
       color: "#0f1115",
       backgroundColor: "#fff",
       borderRadius: "12px",
       px: 2.5,
       boxShadow: "none",
-      "&:hover": { backgroundColor: "#f4f6fb", boxShadow: "none" },
-      textTransform: "capitalize",
+      "&:hover": {
+        backgroundColor: "#f4f6fb",
+        boxShadow: "none",
+        transform: "translateY(-1px)",
+      },
+    },
+    "&:active": {
+      transform: "translateY(0)",
     },
   },
 
@@ -25,7 +31,7 @@ const style = {
     bgcolor: "#1F2024",
     borderRadius: "12px",
     minHeight: 64,
-    px: 3,
+    px: 2,
     py: 1.5,
     mb: 2,
     overflow: "hidden",
@@ -35,25 +41,26 @@ const style = {
     display: "flex",
     alignItems: "center",
     gap: 2,
-    flexGrow: 1
+    flexGrow: 1,
   },
 
   skeletonIcon: {
     width: 30,
     height: 30,
-    bgcolor: "#2a2b30"
+    bgcolor: "#626365",
   },
 
   skeletonTitle: {
     width: "55%",
     height: 28,
-    bgcolor: "#2a2b30"
+    bgcolor: "#626365",
   },
 
   skeletonButton: {
-    width: "10%",
-    height: 28,
-    bgcolor: "#2a2b30"
+    width: "7%",
+    height: 30,
+    borderRadius: "10%",
+    bgcolor: "#626365",
   },
 
   // policy container
@@ -68,7 +75,9 @@ const style = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "start",
+    gap: 3,
     mb: 4,
+    flexWrap: { xs: "wrap", sm: "nowrap" },
   },
 
   policyHeaderTitle: (isMobile) => ({
@@ -79,8 +88,8 @@ const style = {
 
   policysubTitle: (isMobile) => ({
     color: "#e0e0e0",
-    fontSize: isMobile ? 16 : 18,
-    fontWeight: isMobile ? 500 : 600,
+    fontSize: isMobile ? 14 : 16,
+    fontWeight: 400,
     maxWidth: {
       xs: 500,
       sm: 600,
@@ -90,12 +99,14 @@ const style = {
 
   policyTime: {
     color: "#aaaaaa",
-    mt: 1
+    fontSize: 13,
+    fontWeight: 400,
+    mt: 1.5,
   },
 
   divider: {
-    my: 5,
-    borderColor: "#444"
+    my: 4,
+    borderColor: "#444",
   },
 
   // policy accordions
@@ -105,12 +116,18 @@ const style = {
     borderRadius: "12px !important",
     overflow: "hidden",
     boxShadow: "none",
+    border: "1px solid transparent",
     "&:before": { display: "none" },
-    "&.Mui-expanded": { bgcolor: "#1F2024" },
-    transition: "all 0.3s ease",
+    "&.Mui-expanded": {
+      bgcolor: "#1F2024",
+      m: 0,
+      mb: 2,
+    },
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     "&:hover": {
-      transform: "translateY(-4px)",
+      transform: "translateY(-2px)",
       boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+      borderColor: "#2a2b30",
     },
   },
 
@@ -119,6 +136,10 @@ const style = {
     "&:hover": { bgcolor: "#2a2b30" },
     color: "#ffffff",
     minHeight: 64,
+    transition: "background-color 0.2s ease",
+    "& .MuiAccordionSummary-content": {
+      my: 2,
+    },
   },
 
   accordionSummaryInfo: {
@@ -126,6 +147,7 @@ const style = {
     alignItems: "center",
     gap: 2,
     flexGrow: 1,
+    minWidth: 0,
   },
 
   summaryInfoText: {
@@ -139,24 +161,30 @@ const style = {
     color: "#aaa",
     ml: "auto",
     cursor: "pointer",
+    transition: "all 0.2s ease",
     "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.08)",
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      color: "#fff",
+    },
+    "&:active": {
+      transform: "scale(0.95)",
     },
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
   },
 
   accordionDetail: {
     bgcolor: "#1F2024",
     color: "#e0e0e0",
     px: 4,
-    pb: 3
+    pb: 3,
   },
 
   accordionDescription: {
     lineHeight: 1.7,
-    fontSize: "16px",
-    color: "#fff"
+    fontSize: "15px",
+    color: "#fff",
   },
 
   accordionList: {
@@ -166,7 +194,7 @@ const style = {
 
   accordionListIcon: {
     minWidth: 22,
-    color: "#fff"
+    color: "#fff",
   },
 
   // popover
@@ -182,8 +210,10 @@ const style = {
         "& .MuiMenuItem-root": {
           color: "#e0e0e0",
           minHeight: 42,
+          fontSize: "14px",
           px: 2,
           py: 1,
+          transition: "background-color 0.2s ease",
           "&:hover": {
             backgroundColor: "#2a2b30",
           },
@@ -192,7 +222,7 @@ const style = {
     },
   },
 
-  // delete confirmation dialog 
+  // delete confirmation dialog
   deletTitle: {
     display: "flex",
     alignItems: "center",
@@ -200,12 +230,14 @@ const style = {
     fontSize: "1.5rem",
     fontWeight: 600,
     color: "#fff",
+    pt: 2,
+    pb: 1,
   },
 
   deletSubTitle: {
     color: "#b0b0b0",
     fontSize: "0.95rem",
-    marginBottom: "28px",
+    marginBottom: "24px",
     lineHeight: 1.5,
     paddingLeft: "24px",
     paddingRight: "24px",
@@ -231,9 +263,14 @@ const style = {
     textTransform: "none",
     fontSize: "0.95rem",
     fontWeight: 500,
+    transition: "all 0.2s ease",
     "&:hover": {
       backgroundColor: "#2a2a2a",
       borderColor: "#505050",
+    },
+    "&:disabled": {
+      opacity: 0.5,
+      cursor: "not-allowed",
     },
   },
 
@@ -243,10 +280,11 @@ const style = {
     flex: 1,
     backgroundColor: "#dc2626",
     color: "#fff",
-    borderRadius: "12px",
+    borderRadius: "10px",
     textTransform: "none",
     fontSize: "0.95rem",
     fontWeight: 500,
+    transition: "all 0.2s ease",
     "&:hover": {
       backgroundColor: "#b91c1c",
     },
@@ -256,7 +294,6 @@ const style = {
       opacity: 0.7,
     },
   },
-
 };
 
 export default style;

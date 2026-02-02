@@ -245,8 +245,11 @@ const AdminDashboard = () => {
     setError(null);
 
     try {
+      // Mocking response since FetchAdminsApi is currently commented out or not defined
       // const res = await FetchAdminsApi();
-      setAdmins(res.data || []);
+      // setAdmins(res?.data || []);
+      // If you have actual data in rows that you want to sync to admins:
+      // setAdmins(rows);
     } catch (err) {
       setError("Failed to load admins. Please try again.");
       console.error(err);
@@ -363,7 +366,9 @@ const AdminDashboard = () => {
       minWidth: 250,
       renderCell: (params) => (
         <Box>
-          <Typography variant="body2" sx={style.userInfo}>{params.row.email}</Typography>
+          <Typography variant="body2" sx={style.userInfo}>
+            {params.row.email}
+          </Typography>
         </Box>
       ),
     },
@@ -408,6 +413,12 @@ const AdminDashboard = () => {
     },
   ];
 
+  // mobile accordion view controlled
+  const [expanded, setExpanded] = useState(false);
+  const handleAccordionChange = (panelId) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panelId : false);
+  };
+
   // Error text if no data found
   if (error && !loading) {
     return (
@@ -422,24 +433,14 @@ const AdminDashboard = () => {
     );
   }
 
-  // mobile accordion view controlled
-  const [expanded, setExpanded] = useState(false);
-  const handleAccordionChange = (panelId) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panelId : false);
-  };
-
   return (
     <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: 1400, mx: "auto" }}>
       {/* Header info */}
-      <Box
-        sx={style.pageContainer}
-      >
+      <Box sx={style.pageContainer}>
         {/* title info */}
         <Box sx={style.pageHeaderContent}>
           <Typography sx={style.pageTitle}>
-            <FaUserShield
-              style={style.pageTitleIcon}
-            />
+            <FaUserShield style={style.pageTitleIcon} />
             Admins
           </Typography>
           <Typography sx={style.adminSubTitle}>
@@ -538,9 +539,7 @@ const AdminDashboard = () => {
                       expandIcon={<FaChevronDown color="#fff" />}
                       sx={style.accordionSummary}
                     >
-                      <Box
-                        sx={style.accordionSummaryDetails}
-                      >
+                      <Box sx={style.accordionSummaryDetails}>
                         <Avatar
                           sx={{
                             bgcolor:
@@ -566,9 +565,7 @@ const AdminDashboard = () => {
                       </Box>
                     </AccordionSummary>
 
-                    <AccordionDetails
-                      sx={style.accordionDetail}
-                    >
+                    <AccordionDetails sx={style.accordionDetail}>
                       {/* email info  */}
                       <Box sx={style.accordionInner}>
                         <Typography>Email</Typography>
@@ -670,7 +667,7 @@ const AdminDashboard = () => {
             sx={style.deleteButton}
             disabled={loader}
             disableRipple
-          // onClick={handleDeleteAdmin}
+            // onClick={handleDeleteAdmin}
           >
             {loader ? <CircularProgress size="20px" color="#fff" /> : "Delete"}
           </Button>

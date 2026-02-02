@@ -23,12 +23,14 @@ const Adminform = ({
   showEdit,
   setShowEdit,
   selectedAdminData,
+  fetchAdmins,
+  setSuccess,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    role: "admin",
+    role: "",
     roleId: "",
   });
 
@@ -48,8 +50,8 @@ const Adminform = ({
     try {
       setLoader(true);
       // await AddAdminApi(payload);
-      fetchAdmins();
-      setSuccess("Admin added successfully");
+      if (fetchAdmins) fetchAdmins();
+      if (setSuccess) setSuccess("Admin added successfully");
     } catch (err) {
       console.error(err);
     } finally {
@@ -62,8 +64,8 @@ const Adminform = ({
     try {
       setLoader(true);
       // await UpdateAdminApi(id, payload);
-      fetchAdmins();
-      setSuccess("Admin updated successfully");
+      if (fetchAdmins) fetchAdmins();
+      if (setSuccess) setSuccess("Admin updated successfully");
     } catch (err) {
       console.error(err);
     } finally {
@@ -82,10 +84,26 @@ const Adminform = ({
   const handleInput = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === "roleId") {
+      let roleName = value;
+      // If roles array is populated, find the role name
+      if (roles && roles.length > 0) {
+        const selectedRole = roles.find(
+          (r) => r.id === value || r._id === value,
+        );
+        if (selectedRole) roleName = selectedRole.name;
+      }
+      setFormData((prev) => ({
+        ...prev,
+        roleId: value,
+        role: roleName,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
 
     setError((prev) => ({
       ...prev,
@@ -98,7 +116,7 @@ const Adminform = ({
     setFormData({
       fullName: "",
       email: "",
-      role: "admin",
+      role: "",
       roleId: "",
     });
     setIsEditMode(false);
@@ -128,7 +146,12 @@ const Adminform = ({
           fullName: admin.fullName,
           email: admin.email || "",
           role: admin.role || "admin",
-          roleId: admin.roleId || admin.role?._id || admin.role || "",
+          roleId:
+            admin.roleId ||
+            admin.role?._id ||
+            (typeof admin.role === "string"
+              ? admin.role.toLowerCase()
+              : "admin"),
         });
         setError({
           fullName: "",
@@ -190,7 +213,7 @@ const Adminform = ({
     try {
       if (isEditMode) {
         // Call the update API
-        await handleUpdateAdmin(formData);
+        await handleUpdateAdmin(selectedAdminId, formData);
       } else {
         // Call the add API
         await handleAddAdmin(formData);
@@ -309,7 +332,14 @@ const Adminform = ({
                 <MenuItem disabled>Loading roles...</MenuItem>
               ) : roles.length === 0 ? (
                 [
-                  <MenuItem value="" disabled sx={{ color: "#fff" }}> Select Role </MenuItem>,
+                  <MenuItem
+                    key="select-role"
+                    value=""
+                    disabled
+                    sx={{ color: "#fff" }}
+                  >
+                    Select Role
+                  </MenuItem>,
                   <MenuItem key="admin" disableRipple value="admin">
                     Admin
                   </MenuItem>,
@@ -319,7 +349,11 @@ const Adminform = ({
                 ]
               ) : (
                 roles.map((role) => (
-                  <MenuItem key={role.id} disableRipple value={role.id}>
+                  <MenuItem
+                    key={role.id || role._id}
+                    disableRipple
+                    value={role.id || role._id}
+                  >
                     {role.name}
                   </MenuItem>
                 ))
