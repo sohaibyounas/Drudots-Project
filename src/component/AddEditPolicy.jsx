@@ -13,16 +13,15 @@ import {
 } from "@mui/material";
 import GavelIcon from "@mui/icons-material/Gavel";
 import CloseIcon from "@mui/icons-material/Close";
-import AppTextField from "./designSystem/AppTextField";
+import AppTextField from "./designSystem/AppTextField.jsx";
 import Dialog from "./Ui/Dialog.jsx";
-import style from "../assets/css/Policy";
+import style from "../assets/css/Policy.js";
 
 const AddEditPolicy = ({
   open,
   onClose,
   onSave,
   initialData = null,
-  editingPolicy,
 }) => {
   const [title, setTitle] = useState("");
   const [type, setType] = useState("list"); // 'list' or 'paragraph'
@@ -100,6 +99,7 @@ const AddEditPolicy = ({
       }}
       maxWidth="md"
       fullWidth
+      sx={{ padding: "22px 0px 26px 0px" }}
     >
       <DialogTitle sx={style.dialogTitle}>
         {initialData ? "Edit Policy" : "Add New Policy"}
@@ -109,8 +109,8 @@ const AddEditPolicy = ({
       </DialogTitle>
 
       <DialogContent dividers sx={style.dialogContent}>
+        {/* Policy Title Input */}
         <Box>
-          {/* Policy Title Input */}
           <Typography variant="subtitle2" gutterBottom>
             Policy Title
           </Typography>
@@ -123,11 +123,12 @@ const AddEditPolicy = ({
           />
         </Box>
 
+        {/* type selection section */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle2" gutterBottom>
             Type
           </Typography>
-          <Box component="span">
+          <Box>
             <Chip
               label="Bullet List"
               color={type === "list" ? "primary" : "default"}
@@ -143,6 +144,7 @@ const AddEditPolicy = ({
           </Box>
         </Box>
 
+        {/* list or paragraph */}
         {type === "paragraph" ? (
           // paragraph input
           <AppTextField
@@ -172,7 +174,7 @@ const AddEditPolicy = ({
                 </IconButton>
               </Box>
             ))}
-            <Button size="small" onClick={addItem}>
+            <Button size="small" onClick={addItem} sx={{ color: "#fff" }}>
               + Add Item
             </Button>
           </Box>
@@ -188,7 +190,7 @@ const AddEditPolicy = ({
           variant="contained"
           onClick={handleSubmit}
           disabled={!title.trim() || loading}
-          sx={{ flex: 1 }}
+          sx={{ width: "100%" }}
         >
           {loading ? (
             <>

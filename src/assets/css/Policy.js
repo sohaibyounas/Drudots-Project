@@ -2,8 +2,7 @@ const style = {
     dialogTitle: {
         color: "#fff",
         borderBottom: "1px solid #5D5E63",
-        mx: -2.5,
-        p: "0px 16px 0px 20px",
+        p: "0px 20px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -12,23 +11,14 @@ const style = {
     // dialog content scrollbar styles
     dialogContent: {
         "&::-webkit-scrollbar": {
-            width: "8px",
-        },
-        "&::-webkit-scrollbar-track": {
-            background: "none",
-        },
-        "&::-webkit-scrollbar-thumb": {
-            background: "#555",
-            borderRadius: "4px",
-        },
-        "&::-webkit-scrollbar-button": {
             display: "none",
         },
-        scrollbarColor: "#262626",
+        scrollbarWidth: "none",
+        overflow: "auto",
         color: "#fff",
         borderTop: "none",
         borderBottom: "none",
-        p: "24px 0px",
+        p: "10px 20px",
     },
 
     dialogChip: {
@@ -44,12 +34,14 @@ const style = {
 
     dialogActions: {
         width: "100%",
+        borderTop: "1px solid #3e3f40",
+         p: "10px 20px 0px 20px",
     },
 
     dialogCancel: {
         border: "1px solid #ccc",
         color: "#fff",
-        flex: 1
+        width: "100%", 
     },
 
     loader: {

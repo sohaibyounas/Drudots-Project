@@ -6,7 +6,6 @@ import {
   Button,
   CircularProgress,
   Paper,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -20,7 +19,7 @@ const ForgotPassword = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const navigate = useNavigate(); //set navigation
+  const navigate = useNavigate();
 
   // get value(name) from formdata
   const handleChange = (e) => {

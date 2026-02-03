@@ -517,7 +517,7 @@ const EmployeeDashboard = () => {
             variant="contained"
             startIcon={<FaPlus />}
             onClick={() => setShowForm(true)}
-            sx={style.PAGE_STYLES.addButton}
+            sx={style.addButton}
           >
             Add New Employee
           </Button>
@@ -545,9 +545,9 @@ const EmployeeDashboard = () => {
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
-            searchEmployees(e.target.value);
+            // searchEmployees(e.target.value);
           }}
-          sx={{ width: "100%" }}
+          sx={style.SEARCH_INPUT}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -559,7 +559,7 @@ const EmployeeDashboard = () => {
       </Box>
 
       {/* divider */}
-      <Divider sx={{ mb: 3, color: "rgba(255,255,255,0.7)" }} />
+      {/* <Divider sx={{ mb: 3, color: "rgba(255,255,255,0.7)" }} /> */}
 
       {/* Loading datagrid or accordion */}
       {loading ? (

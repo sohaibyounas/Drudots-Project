@@ -1,4 +1,5 @@
 export const darkDataGridSx = {
+  borderRadius: "8px",
   backgroundColor: "#121620",
   border: "1px solid #3e3f40",
   borderTop: "none",
@@ -8,9 +9,9 @@ export const darkDataGridSx = {
   "--DataGrid-overlayBackground": "rgba(11, 15, 24, 0.92)",
   "--DataGrid-cellOffsetMultiplier": "0",
   "& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within":
-    {
-      outline: "none",
-    },
+  {
+    outline: "none",
+  },
 
   "& .MuiDataGrid-columnHeaders": {
     backgroundColor: "#000",

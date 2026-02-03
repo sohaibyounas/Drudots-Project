@@ -430,7 +430,7 @@ const style = {
       boxShadow: "none",
     },
   },
-  
+
 };
 
 export default style;

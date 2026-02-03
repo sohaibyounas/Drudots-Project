@@ -14,7 +14,7 @@ import Layout from "../Layout/Layout";
 import EmployeeDashboard from "../../pages/Employee/EmployeeDashboard";
 import AdminLogin from "../../pages/Admin/Auth/AdminLogin";
 import EmployeeLogin from "../../pages/Employee/Auth/EmployeeLogin";
-import ForgotPassword from "../../pages/Admin/Auth/ForgotPassword";
+import ForgotPassword from "../../pages/Employee/Auth/ForgotPassword";
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRole }) => {
@@ -77,6 +77,8 @@ const routeConfig = [
   },
 
   // Public routes
+
+  // admin login
   {
     path: ADMINLOGIN,
     element: (
@@ -86,6 +88,7 @@ const routeConfig = [
     ),
   },
   
+  // forgot password
   {
     path: FORGETPASSWORD,
     element: (
@@ -95,6 +98,7 @@ const routeConfig = [
     ),
   },
 
+  // employee login
   {
     path: EMPLOYEELOGIN,
     element: (

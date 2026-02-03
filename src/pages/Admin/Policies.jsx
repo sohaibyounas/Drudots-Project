@@ -31,7 +31,7 @@ import style from "../../assets/css/policy/policy.js";
 import { FaPlus } from "react-icons/fa";
 import { policiesData } from "../../policyData/policiesData";
 
-// Constants
+// Header text details
 const CONSTANTS = {
   TITLE: "Company Policies",
   SUBTITLE: "At Drudots Technologies, we are committed to transparency, quality delivery...",
@@ -54,13 +54,12 @@ const Policies = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPolicy, setEditingPolicy] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedPolicyForActions, setSelectedPolicyForActions] =
-    useState(null);
+  const [selectedPolicyForActions, setSelectedPolicyForActions] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const open = Boolean(anchorEl);
-  const addButtonText = isTablet ? CONSTANTS.ADD_BUTTON_TEXT_MOBILE : CONSTANTS.ADD_BUTTON_TEXT;
+  const addButtonText = isTablet ? CONSTANTS.ADD_BUTTON_TEXT_MOBILE : CONSTANTS.ADD_BUTTON_TEXT; // show "Add New Policy" or "Policy" based on screen size
 
   // accordion expand/collapse
   const handleChange = useCallback((panel) => (event, isExpanded) => {

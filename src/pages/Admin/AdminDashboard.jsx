@@ -46,57 +46,31 @@ import { SlOptions } from "react-icons/sl";
 
 // Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
-  <Paper
-    sx={{
-      height: 600,
-      width: "100%",
-      overflow: "hidden",
-      bgcolor: "#1F2024",
-      border: "1px solid #333",
-      borderRadius: 1,
-    }}
-  >
+  <Paper sx={style.dataGridShimmer}>
     {/* Header Row */}
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        p: 2,
-        borderBottom: "1px solid #333",
-        bgcolor: "#1a1b1e",
-      }}
-    >
+    <Box sx={style.shimmerHeader}>
       {/* Name Header */}
       <Skeleton
         variant="text"
-        width={100}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+        sx={style.waveColor}
       />
 
       {/* Email Header */}
       <Skeleton
         variant="text"
-        width={100}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+        sx={style.waveColor}
       />
 
       {/* Role Header */}
       <Skeleton
         variant="text"
-        width={60}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+        sx={style.roleWave}
       />
 
       {/* Action Header */}
       <Skeleton
         variant="text"
-        width={100}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+        sx={style.waveColor}
       />
     </Box>
 
@@ -104,63 +78,43 @@ const DataGridShimmer = () => (
     {Array.from({ length: 8 }, (_, index) => (
       <Box
         key={index}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          p: 2,
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
-          "&:hover": {
-            bgcolor: "rgba(255,255,255,0.02)",
-          },
-        }}
+        sx={style.dataRows}
       >
         {/* Avatar + Name Column */}
-        <Box
-          sx={{ display: "flex", alignItems: "center", flex: 1, minWidth: 200 }}
-        >
+        <Box sx={style.avatarName}>
           <Skeleton
             variant="circular"
-            width={40}
-            height={40}
-            sx={{ mr: 2, bgcolor: "rgba(255,255,255,0.1)" }}
+            sx={style.avatarRow}
           />
           <Box>
             <Skeleton
               variant="text"
-              width={140}
-              height={20}
-              sx={{ mb: 0.5, bgcolor: "rgba(255,255,255,0.1)" }}
+              sx={style.nameRow}
             />
           </Box>
         </Box>
 
         {/* Email Column */}
-        <Box sx={{ flex: 1, minWidth: 250, ml: 2 }}>
+        <Box sx={style.emailBox}>
           <Skeleton
             variant="text"
-            width={200}
-            height={20}
-            sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+            sx={style.emailRow}
           />
         </Box>
 
         {/* Role Column */}
-        <Box sx={{ flex: 0.5, minWidth: 100, ml: 2 }}>
+        <Box sx={style.roleBox}>
           <Skeleton
             variant="text"
-            width={100}
-            height={20}
-            sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+            sx={style.roleRow}
           />
         </Box>
 
         {/* Action Column */}
-        <Box sx={{ width: 100, display: "flex", justifyContent: "center" }}>
+        <Box sx={style.actionBox}>
           <Skeleton
             variant="circular"
-            width={32}
-            height={32}
-            sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
+            sx={style.actionRow}
           />
         </Box>
       </Box>
@@ -174,45 +128,24 @@ const AccordionShimmer = () => (
     {Array.from({ length: 5 }, (_, index) => (
       <Accordion
         key={index}
-        sx={{
-          mb: 2,
-          bgcolor: "#1F2024",
-          "&:before": { display: "none" },
-        }}
+        sx={style.accordionShimmer}
       >
         <AccordionSummary
           expandIcon={<FaChevronDown color="rgba(255,255,255,0.3)" />}
-          sx={{
-            bgcolor: "#1F2024",
-            borderRadius: 1,
-            "&:hover": {
-              bgcolor: "#2a2b30",
-            },
-          }}
+          sx={style.accordionSummaryShimmer}
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              width: "50%",
-              gap: 2,
-            }}
-          >
+          <Box sx={style.accordionSummayBox}>
             {/* Avatar */}
             <Skeleton
               variant="circular"
-              width={40}
-              height={40}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)", flexShrink: 0 }}
+              sx={style.accordionSummaryAvatar}
             />
 
             {/* Name */}
             <Box sx={{ flexGrow: 1 }}>
               <Skeleton
                 variant="text"
-                width="70%"
-                height={24}
-                sx={{ mb: 0.5, bgcolor: "rgba(255,255,255,0.1)" }}
+                sx={style.accordionSummaryName}
               />
             </Box>
           </Box>
@@ -330,7 +263,7 @@ const AdminDashboard = () => {
 
   // DataGrid columns data
   const columns = [
-    // user details
+    // user info
     {
       field: "fullName",
       headerName: "Name",
@@ -358,7 +291,7 @@ const AdminDashboard = () => {
       ),
     },
 
-    // email
+    // email info
     {
       field: "email",
       headerName: "Email",
@@ -373,7 +306,7 @@ const AdminDashboard = () => {
       ),
     },
 
-    // role
+    // role info
     {
       field: "role",
       headerName: "Role",
@@ -434,7 +367,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: 1400, mx: "auto" }}>
+    <Box sx={style.mainBox}>
       {/* Header info */}
       <Box sx={style.pageContainer}>
         {/* title info */}
@@ -454,7 +387,7 @@ const AdminDashboard = () => {
             variant="contained"
             startIcon={<FaPlus />}
             onClick={() => setShowForm(true)}
-            sx={style.PAGE_STYLES.addButton}
+            sx={style.addButton}
           >
             Add New Admin
           </Button>
@@ -484,7 +417,7 @@ const AdminDashboard = () => {
             setSearch(e.target.value);
             // fetchAdmins(e.target.value);
           }}
-          sx={{ width: "100%" }}
+          sx={style.SEARCH_INPUT}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -494,9 +427,6 @@ const AdminDashboard = () => {
           }}
         />
       </Box>
-
-      {/* divider */}
-      <Divider sx={{ mb: 3, color: "rgba(255,255,255,0.7)" }} />
 
       {/* Loading State */}
       {loading ? (
@@ -539,16 +469,9 @@ const AdminDashboard = () => {
                       expandIcon={<FaChevronDown color="#fff" />}
                       sx={style.accordionSummary}
                     >
-                      <Box sx={style.accordionSummaryDetails}>
+                      <Box sx={style.fullName}>
                         <Avatar
-                          sx={{
-                            bgcolor:
-                              admin.role === "admin"
-                                ? "warning.main"
-                                : "primary.main",
-                            mr: 2,
-                            color: "#fff",
-                          }}
+                          sx={style.avatar}
                         >
                           {/* initials banao */}
                           {admin.fullName
@@ -557,7 +480,7 @@ const AdminDashboard = () => {
                             .join("")
                             .toUpperCase() || "AD"}
                         </Avatar>
-                        <Box sx={{ flexGrow: 1 }}>
+                        <Box sx={style.userInfo}>
                           <Typography fontWeight="medium">
                             {admin.fullName || "Admin Name"}
                           </Typography>
@@ -568,13 +491,13 @@ const AdminDashboard = () => {
                     <AccordionDetails sx={style.accordionDetail}>
                       {/* email info  */}
                       <Box sx={style.accordionInner}>
-                        <Typography>Email</Typography>
-                        <Typography>{admin.email}</Typography>
+                        <Typography>Email:</Typography>
+                        <Typography>{admin.email || "Email"}</Typography>
                       </Box>
 
                       {/* role info */}
                       <Box sx={style.accordionInner}>
-                        <Typography>Role</Typography>
+                        <Typography>Role:</Typography>
                         <Typography sx={style.accordionText}>
                           {admin.role || "Admin"}
                         </Typography>
@@ -585,7 +508,7 @@ const AdminDashboard = () => {
                     <AccordionActions
                       sx={{ ...style.accordionDetail, ...style.accordionInner }}
                     >
-                      <Typography>Action</Typography>
+                      <Typography>Action:</Typography>
                       <IconButton
                         size="small"
                         onClick={(e) => handleMenuClick(e, admin)}
@@ -624,7 +547,7 @@ const AdminDashboard = () => {
                 <FaEdit style={{ marginRight: 12 }} />
                 Edit Admin
               </MenuItem>
-
+              
               {/* delete admin */}
               <MenuItem
                 onClick={() => {
@@ -634,7 +557,7 @@ const AdminDashboard = () => {
                 }}
                 sx={{ color: "error.main" }}
               >
-                <FaTrash style={{ marginRight: 12, color: "red" }} />
+                <FaTrash style={style.warningIcon} />
                 Delete Admin
               </MenuItem>
             </Box>
@@ -667,7 +590,7 @@ const AdminDashboard = () => {
             sx={style.deleteButton}
             disabled={loader}
             disableRipple
-            // onClick={handleDeleteAdmin}
+          // onClick={handleDeleteAdmin}
           >
             {loader ? <CircularProgress size="20px" color="#fff" /> : "Delete"}
           </Button>

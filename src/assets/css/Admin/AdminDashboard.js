@@ -1,4 +1,11 @@
 const style = {
+  // main box styles
+  mainBox: {
+    p: { xs: 2, md: 3 },
+    maxWidth: 1400,
+    mx: "auto"
+  },
+
   // header styles
   pageContainer: {
     display: "flex",
@@ -40,22 +47,17 @@ const style = {
     justifyContent: { xs: "flex-start", md: "flex-end" },
   },
 
-  // page styles
-  PAGE_STYLES: {
-    container: { p: { xs: 2.5, md: 4 } },
-    pageTitle: { fontSize: 28, fontWeight: 700, color: "#fff" },
-    pageSubtitle: { color: "rgba(255,255,255,0.7)", fontSize: 14 },
-    addButton: {
-      textTransform: "none",
-      fontWeight: 700,
-      color: "#0f1115",
-      backgroundColor: "#fff",
-      borderRadius: "12px",
-      px: 2.5,
-      boxShadow: "none",
-      "&:hover": { backgroundColor: "#f4f6fb", boxShadow: "none" },
-      textTransform: "capitalize",
-    },
+  // add button styles
+  addButton: {
+    textTransform: "none",
+    fontWeight: 700,
+    color: "#0f1115",
+    backgroundColor: "#fff",
+    borderRadius: "12px",
+    px: 2.5,
+    boxShadow: "none",
+    "&:hover": { backgroundColor: "#f4f6fb", boxShadow: "none" },
+    textTransform: "capitalize",
   },
 
   // search input
@@ -73,6 +75,7 @@ const style = {
     },
     "& .MuiInputBase-input": { py: 1 },
     boxShadow: "none",
+    mb: 3
   },
 
   // avatar styles
@@ -89,7 +92,6 @@ const style = {
   },
 
   // datagrid cell styles
-
   // full name
   fullName: {
     display: "flex !important",
@@ -126,6 +128,140 @@ const style = {
     alignItems: "center",
   },
 
+  // datagrid  header row shimmer styles
+  dataGridShimmer: {
+    height: 600,
+    width: "100%",
+    overflow: "hidden",
+    bgcolor: "#1F2024",
+    border: "1px solid #333",
+    borderRadius: 1,
+  },
+
+  shimmerHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    p: 2,
+    borderBottom: "1px solid #333",
+    bgcolor: "#1a1b1e",
+  },
+
+  waveColor: {
+    width: 100,
+    height: 24,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  roleWave: {
+    width: 60,
+    height: 24,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  // datagrid rows shimmers
+  dataRows: {
+    display: "flex",
+    alignItems: "center",
+    p: 2,
+    borderBottom: "1px solid rgba(255,255,255,0.05)",
+    "&:hover": {
+      bgcolor: "rgba(255,255,255,0.02)",
+    },
+  },
+
+  avatarName: {
+    display: "flex",
+    alignItems: "center",
+    flex: 1,
+    minWidth: 200
+  },
+
+  avatarRow: {
+    width: 40,
+    height: 40,
+    mr: 2,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  nameRow: {
+    width: 140,
+    height: 20,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  emailBox: {
+    flex: 1,
+    minWidth: 250,
+    ml: 2
+  },
+
+  emailRow: {
+    width: 200,
+    height: 20,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  roleBox: {
+    flex: 0.5,
+    minWidth: 100,
+    ml: 2
+  },
+
+  roleRow: {
+    width: 100,
+    height: 20,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  actionBox: {
+    width: 100,
+    display: "flex",
+    justifyContent: "center"
+  },
+
+  actionRow: {
+    width: 32,
+    height: 32,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  // mobile shimmers styles
+  accordionShimmer: {
+    mb: 2,
+    bgcolor: "#1F2024",
+    "&:before": { display: "none" },
+  },
+
+  accordionSummaryShimmer: {
+    bgcolor: "#1F2024",
+    borderRadius: 1,
+    "&:hover": {
+      bgcolor: "#2a2b30",
+    },
+  },
+
+  accordionSummayBox: {
+    display: "flex",
+    alignItems: "center",
+    width: "50%",
+    gap: 2,
+  },
+
+  accordionSummaryAvatar: {
+    width: 40,
+    height: 40,
+    flexShrink: 0,
+    bgcolor: "rgba(255,255,255,0.1)",
+  },
+
+  accordionSummaryName: {
+    width: "70%",
+    height: 24,
+    mb: 0.5,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
   // delete confirmation dialog styles
   deletTitle: {
     display: "flex",
@@ -137,8 +273,8 @@ const style = {
   },
 
   warningIcon: {
-    color: "#dc2626",
-    fontSize: "28px",
+    marginRight: 12,
+    color: "red"
   },
 
   deletSubTitle: {
@@ -224,6 +360,7 @@ const style = {
     display: "flex",
     alignItems: "center",
     width: "100%",
+    gap: 1,
   },
 
   accordionDetail: {
