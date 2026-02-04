@@ -958,10 +958,18 @@ const style = {
     backgroundColor: "#fff",
     border: "1px solid #3e3f40",
     fontSize: 16,
-    fontWeight: 600,
+    fontWeight: 500,
     textTransform: "none",
     width: "100%",
     height: "38px",
+  },
+
+  spanLoader: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: 500,
+    textTransform: "none",
+    width: "100%",
   },
 
   selectMenuProps: {
@@ -994,6 +1002,15 @@ const style = {
       bgcolor: "rgba(255,255,255,0.1)",
     },
   },
+
+  actionLoader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    fontWeight: 500,
+  }
+
 };
 
 export default style;

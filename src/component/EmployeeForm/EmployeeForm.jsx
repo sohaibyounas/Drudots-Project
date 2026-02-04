@@ -59,7 +59,14 @@ const Employeeform = ({
   const handleInput = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Only allow digits for phone number field
+    if (name === "phone") {
+      const digitsOnly = value.replace(/\D/g, "").slice(0, 11);
+      setFormData((prev) => ({ ...prev, [name]: digitsOnly }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
     setError((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -77,6 +84,7 @@ const Employeeform = ({
     if (employeeId && showEdit) {
       let employee = selectedEmployeeData;
 
+      // fallback to searching in employees array
       if (!employee) {
         employee = employees?.find?.((e) => e._id === employeeId);
       }
@@ -101,16 +109,17 @@ const Employeeform = ({
   const handleAddEmployee = async (payload) => {
     try {
       setLoader(true);
-      const token = getToken();
+      // const token = getToken();
 
-      await axios.post("/api/employees", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // API call commented for future use - working without backend for now
+      // await axios.post("/api/employees", payload, {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
-      await fetchEmployee();
+      // await fetchEmployee();
       setSuccess("Employee added successfully");
       handleClose();
     } catch (err) {
@@ -124,16 +133,17 @@ const Employeeform = ({
   const handleUpdateEmployee = async (id, payload) => {
     try {
       setLoader(true);
-      const token = getToken();
+      // const token = getToken();
 
-      await axios.put(`/api/employees/${id}`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // API call commented for future use - working without backend for now
+      // await axios.put(`/api/employees/${id}`, payload, {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
-      await fetchEmployee();
+      // await fetchEmployee();
       setSuccess("Employee updated successfully");
       handleClose();
     } catch (err) {
@@ -152,8 +162,7 @@ const Employeeform = ({
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
     const validatePhone = (value) =>
-      /^[\d\s\-\+\(\)]+$/.test(value) &&
-      value.replace(/\D/g, "").length >= 10;
+      /^\d+$/.test(value) && value.length === 11;
 
     const newError = { ...error };
 
@@ -172,7 +181,7 @@ const Employeeform = ({
       newError.phone = "Phone number is required";
       isValid = false;
     } else if (!validatePhone(formData.phone)) {
-      newError.phone = "Invalid phone number";
+      newError.phone = "Phone number must be 11 digits";
       isValid = false;
     }
     if (!formData.gender) {
@@ -276,7 +285,7 @@ const Employeeform = ({
             fullWidth
             name="phone"
             value={formData.phone}
-            placeholder="phone nNumber"
+            placeholder="phone number"
             onChange={handleInput}
             sx={style.formField}
           />
@@ -291,12 +300,12 @@ const Employeeform = ({
             )}
           </Box>
 
-          {/* options */}
+          {/* Gender Select */}
           <FormControl fullWidth sx={style.formField}>
             <Select
               name="gender"
               onChange={handleInput}
-              value={String(formData.gender ?? '')}
+              value={formData.gender || ""}
               MenuProps={style.selectMenuProps}
               displayEmpty
               sx={{
@@ -304,19 +313,33 @@ const Employeeform = ({
                 "& .MuiSelect-icon": { color: "#fff" },
               }}
             >
-              <MenuItem value="" disabled sx={{ color: "#fff" }}> Select Gender </MenuItem>
-              <MenuItem value="male" sx={{ color: "#fff" }}>Male</MenuItem>
-              <MenuItem value="female" sx={{ color: "#fff" }}>Female</MenuItem>
+              <MenuItem value="" disabled sx={{ color: "#fff" }}>
+                Select Gender
+              </MenuItem>
+              <MenuItem value="male" sx={{ color: "#fff" }}>
+                Male
+              </MenuItem>
+              <MenuItem value="female" sx={{ color: "#fff" }}>
+                Female
+              </MenuItem>
             </Select>
           </FormControl>
         </Box>
       </Box>
 
-      {/* form submit button */}
+      {/* Submit button */}
       <Box sx={{ ...style.editActiondrawer, mt: 3 }}>
-        <Button disabled={loader} onClick={handleSubmit} sx={style.formSubmitButton}>
+        <Button
+          disableRipple
+          disabled={loader}
+          onClick={handleSubmit}
+          sx={style.formSubmitButton}
+        >
           {loader ? (
-            <CircularProgress size={20} sx={{ color: "#000" }} />
+            <Box sx={style.actionLoader}>
+              <CircularProgress size={18} thickness={4} sx={{ color: "#000" }} />
+              <span style={style.spanLoader}>{isEditMode ? "Updating Employee..." : "Adding Employee..."}</span>
+            </Box>
           ) : isEditMode ? (
             "Update Employee"
           ) : (
@@ -324,6 +347,7 @@ const Employeeform = ({
           )}
         </Button>
       </Box>
+
     </Drawer>
   );
 };

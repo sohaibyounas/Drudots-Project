@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Dialog from "../../component/Ui/Dialog.jsx";
 import {
   Box,
@@ -11,15 +11,14 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  AccordionActions,
   useMediaQuery,
   useTheme,
   Paper,
-  Divider,
   Skeleton,
   Button,
   CircularProgress,
   DialogTitle,
-  AccordionActions,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
@@ -31,132 +30,55 @@ import {
   FaUserShield,
   FaPlus,
 } from "react-icons/fa";
-import style from "../../assets/css/Admin/AdminDashboard.js";
 import { IoIosSearch } from "react-icons/io";
-import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
-import { darkDataGridSx } from "../../theme/surface,js";
 import { IoWarningOutline } from "react-icons/io5";
-import Employeeform from "../../component/EmployeeForm/EmployeeForm.jsx";
 import { SlOptions } from "react-icons/sl";
+import style from "../../assets/css/Admin/AdminDashboard.js";
+import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
+import Employeeform from "../../component/EmployeeForm/EmployeeForm.jsx";
+import { darkDataGridSx } from "../../theme/surface,js";
 
 // Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
-  <Paper
-    sx={{
-      height: 600,
-      width: "100%",
-      overflow: "hidden",
-      bgcolor: "#1F2024",
-      border: "1px solid #333",
-      borderRadius: 1,
-    }}
-  >
+  <Paper sx={style.dataGridShimmer}>
     {/* Header Row */}
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        p: 2,
-        borderBottom: "1px solid #333",
-        bgcolor: "#1a1b1e",
-      }}
-    >
-      {/* Name Header */}
-      <Skeleton
-        variant="text"
-        width={100}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-      />
-
-      {/* Email Header */}
-      <Skeleton
-        variant="text"
-        width={100}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-      />
-
-      {/* Role Header */}
-      <Skeleton
-        variant="text"
-        width={60}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-      />
-
-      {/* Action Header */}
-      <Skeleton
-        variant="text"
-        width={100}
-        height={24}
-        sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-      />
+    <Box sx={style.shimmerHeader}>
+      <Skeleton variant="text" sx={style.nameWave} /> {/* Name Header */}
+      <Skeleton variant="text" sx={style.emailWave} /> {/* Email Header */}
+      <Skeleton variant="text" sx={style.phoneWave} /> {/* Phone Header */}
+      <Skeleton variant="text" sx={style.roleWave} /> {/* Gender Header */}
+      <Skeleton variant="text" sx={style.actionWave} /> {/* Action Header */}
     </Box>
 
     {/* Data Rows */}
     {Array.from({ length: 8 }, (_, index) => (
-      <Box
-        key={index}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          p: 2,
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
-          "&:hover": {
-            bgcolor: "rgba(255,255,255,0.02)",
-          },
-        }}
-      >
+      <Box key={index} sx={style.dataRows}>
         {/* Avatar + Name Column */}
-        <Box
-          sx={{ display: "flex", alignItems: "center", flex: 1, minWidth: 200 }}
-        >
-          <Skeleton
-            variant="circular"
-            width={40}
-            height={40}
-            sx={{ mr: 2, bgcolor: "rgba(255,255,255,0.1)" }}
-          />
+        <Box sx={style.avatarName}>
+          <Skeleton variant="circular" sx={style.avatarRow} />
           <Box>
-            <Skeleton
-              variant="text"
-              width={140}
-              height={20}
-              sx={{ mb: 0.5, bgcolor: "rgba(255,255,255,0.1)" }}
-            />
+            <Skeleton variant="text" sx={style.nameRow} />
           </Box>
         </Box>
 
         {/* Email Column */}
-        <Box sx={{ flex: 1, minWidth: 250, ml: 2 }}>
-          <Skeleton
-            variant="text"
-            width={200}
-            height={20}
-            sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-          />
+        <Box sx={style.avatarName}>
+          <Skeleton variant="text" sx={style.emailRow} />
         </Box>
 
-        {/* Role Column */}
-        <Box sx={{ flex: 0.5, minWidth: 100, ml: 2 }}>
-          <Skeleton
-            variant="text"
-            width={100}
-            height={20}
-            sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-          />
+        {/* Phone Column */}
+        <Box sx={style.phoneName}>
+          <Skeleton variant="text" sx={style.emailRow} />
+        </Box>
+
+        {/* Gender Column */}
+        <Box sx={style.roleName}>
+          <Skeleton variant="text" sx={style.roleRow} />
         </Box>
 
         {/* Action Column */}
-        <Box sx={{ width: 100, display: "flex", justifyContent: "center" }}>
-          <Skeleton
-            variant="circular"
-            width={32}
-            height={32}
-            sx={{ bgcolor: "rgba(255,255,255,0.1)" }}
-          />
+        <Box sx={style.actionBox}>
+          <Skeleton variant="circular" sx={style.actionRow} />
         </Box>
       </Box>
     ))}
@@ -167,48 +89,16 @@ const DataGridShimmer = () => (
 const AccordionShimmer = () => (
   <Box sx={{ width: "100%" }}>
     {Array.from({ length: 5 }, (_, index) => (
-      <Accordion
-        key={index}
-        sx={{
-          mb: 2,
-          bgcolor: "#1F2024",
-          "&:before": { display: "none" },
-        }}
-      >
+      <Accordion key={index} sx={style.accordionShimmer}>
         <AccordionSummary
           expandIcon={<FaChevronDown color="rgba(255,255,255,0.3)" />}
-          sx={{
-            bgcolor: "#1F2024",
-            borderRadius: 1,
-            "&:hover": {
-              bgcolor: "#2a2b30",
-            },
-          }}
+          sx={style.accordionSummaryShimmer}
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              width: "50%",
-              gap: 2,
-            }}
-          >
-            {/* Avatar */}
-            <Skeleton
-              variant="circular"
-              width={40}
-              height={40}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)", flexShrink: 0 }}
-            />
-
-            {/* Name */}
+          {/* Avatar + Name */}
+          <Box sx={style.accordionSummayBox}>
+            <Skeleton variant="circular" sx={style.accordionSummaryAvatar} />
             <Box sx={{ flexGrow: 1 }}>
-              <Skeleton
-                variant="text"
-                width="70%"
-                height={24}
-                sx={{ mb: 0.5, bgcolor: "rgba(255,255,255,0.1)" }}
-              />
+              <Skeleton variant="text" sx={style.accordionSummaryName} />
             </Box>
           </Box>
         </AccordionSummary>
@@ -234,28 +124,7 @@ const EmployeeDashboard = () => {
   const [loader, setLoader] = useState(false);
   const open = Boolean(anchorEl);
 
-  // fetch employee
-  // const fetchEmployees = async () => {
-  //   setLoading(true);
-  //   setError(null);
-
-  //   try {
-  //     const res = await fetchAdminsApi();
-  //     setAdmins(res.data || []);
-  //   } catch (err) {
-  //     setError("Failed to load emplpoyee. Please try again.");
-  //     console.error(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // fetch employee calls
-  // useEffect(() => {
-  //   fetchEmployees();
-  // }, []);
-
-  // popover open
+  // Popover open
   const handleMenuClick = (e, employee) => {
     setAnchorEl(e.currentTarget);
     setSelectedEmployee(employee);
@@ -265,10 +134,9 @@ const EmployeeDashboard = () => {
     setAnchorEl(null);
   };
 
-  //   open popover
+  // Action handler
   const handleAction = async (action) => {
     if (!selectedEmployee) return;
-
     if (action === "edit") {
       setSelectedEmployeeId(selectedEmployee.id);
       setShowEdit(true);
@@ -277,106 +145,46 @@ const EmployeeDashboard = () => {
     handleMenuClose();
   };
 
-  // close popover
   const handlePopClose = () => {
     setAnchorEl(null);
-    setSelectedAdmin(null);
+    setSelectedEmployee(null);
   };
 
   // Close delete confirmation dialog
   const handleCloseDialog = () => setOpenDialog(null);
 
-  // datagrid rows dummy data
+  // Dummy rows data
   const rows = [
-    {
-      id: 1, fullName: "Jon Snow", email: "jon.snow@example.com", phone: "23129371209",
-      gender: "male"
-    },
-    {
-      id: 2,
-      fullName: "Cersei Lannister",
-      email: "cersei.lannister@example.com", phone: "23129371209",
-      gender: "female"
-    },
-    {
-      id: 3,
-      fullName: "Jaime Lannister",
-      email: "jaime.lannister@example.com",
-      phone: "23129371209",
-      gender: "male"
-    },
-    {
-      id: 4, fullName: "Arya Stark", email: "arya.stark@example.com", phone: "23129371209",
-      gender: "female"
-    },
-    {
-      id: 5,
-      fullName: "Daenerys Targaryen",
-      email: "daenerys.targaryen@example.com",
-      phone: "23129371209",
-      gender: "male"
-    },
-    {
-      id: 6, fullName: "Melisandre", email: "melisandre@example.com", phone: "23129371209",
-      gender: "female"
-    },
-    {
-      id: 7,
-      fullName: "Ferrara Clifford",
-      email: "ferrara.clifford@example.com", phone: "23129371209",
-      gender: "female"
-    },
-    {
-      id: 8,
-      fullName: "Rossini Frances",
-      email: "rossini.frances@example.com", phone: "23129371209",
-      gender: "female"
-    },
-    {
-      id: 9, fullName: "Harvey Roxie", email: "harvey.roxie@example.com", phone: "23129371209",
-      gender: "male"
-    },
+    { id: 1, fullName: "Jon Snow", email: "jon.snow@example.com", phone: "23129371209", gender: "male" },
+    { id: 2, fullName: "Cersei Lannister", email: "cersei.lannister@example.com", phone: "23129371209", gender: "female" },
+    { id: 3, fullName: "Jaime Lannister", email: "jaime.lannister@example.com", phone: "23129371209", gender: "male" },
+    { id: 4, fullName: "Arya Stark", email: "arya.stark@example.com", phone: "23129371209", gender: "female" },
+    { id: 5, fullName: "Daenerys Targaryen", email: "daenerys.targaryen@example.com", phone: "23129371209", gender: "male" },
+    { id: 6, fullName: "Melisandre", email: "melisandre@example.com", phone: "23129371209", gender: "female" },
+    { id: 7, fullName: "Ferrara Clifford", email: "ferrara.clifford@example.com", phone: "23129371209", gender: "female" },
+    { id: 8, fullName: "Rossini Frances", email: "rossini.frances@example.com", phone: "23129371209", gender: "female" },
+    { id: 9, fullName: "Harvey Roxie", email: "harvey.roxie@example.com", phone: "23129371209", gender: "male" },
   ];
 
-  // DataGrid columns dummy data
+  // DataGrid columns
   const columns = [
-    // user details
+    // full name
     {
       field: "fullName",
       headerName: "Name",
       flex: 1,
       minWidth: 200,
       renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex !important",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            flexDirection: "row",
-            gap: 2,
-          }}
-        >
-          {/* user avatar */}
-          <Avatar
-            sx={{
-              bgcolor: "primary.main",
-              color: "#fff",
-              fontSize: "14px",
-              width: 40,
-              height: 40,
-            }}
-          >
-            {/* initials from fullName */}
+        <Box sx={style.fullName}>
+          <Avatar sx={style.avatar}>
             {params.row.fullName
               .split(" ")
               .map((n) => n[0])
               .join("")
               .toUpperCase()}
           </Avatar>
-
-          {/* user info */}
           <Box>
-            <Typography variant="body2" fontWeight="medium">
+            <Typography variant="body2" sx={style.userInfo}>
               {params.row.fullName}
             </Typography>
           </Box>
@@ -391,9 +199,7 @@ const EmployeeDashboard = () => {
       flex: 1,
       minWidth: 250,
       renderCell: (params) => (
-        <Box>
-          <Typography variant="body2">{params.row.email}</Typography>
-        </Box>
+        <Typography variant="body2" sx={style.userInfo}>{params.row.email}</Typography>
       ),
     },
 
@@ -403,16 +209,7 @@ const EmployeeDashboard = () => {
       headerName: "Phone",
       flex: 0.5,
       minWidth: 100,
-      renderCell: (params) => (
-        <Box>
-          <Typography
-            variant="body2"
-            sx={{ textTransform: "capitalize", color: "#fff" }}
-          >
-            {params.row.phone || "Phone"}
-          </Typography>
-        </Box>
-      ),
+      renderCell: (params) => <Typography sx={{ color: "#fff" }}>{params.row.phone}</Typography>,
     },
 
     // gender
@@ -422,14 +219,9 @@ const EmployeeDashboard = () => {
       flex: 0.5,
       minWidth: 100,
       renderCell: (params) => (
-        <Box>
-          <Typography
-            variant="body2"
-            sx={{ textTransform: "capitalize", color: "#fff" }}
-          >
-            {params.row.gender || "Gender"}
-          </Typography>
-        </Box>
+        <Typography sx={{ textTransform: "capitalize", color: "#fff" }}>
+          {params.row.gender}
+        </Typography>
       ),
     },
 
@@ -443,93 +235,51 @@ const EmployeeDashboard = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <IconButton
-          disableRipple
-          size="small"
-          onClick={(e) => handleMenuClick(e, params.row)}
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <IconButton disableRipple size="small" onClick={(e) => handleMenuClick(e, params.row)} sx={style.actionIconButton}>
           <FaEllipsisV size={14} />
         </IconButton>
       ),
     },
   ];
 
-  // Error text if no data found
+  // Error state
   if (error && !loading) {
     return (
       <Box sx={{ p: 3, textAlign: "center" }}>
-        <Typography color="error" gutterBottom>
-          {error}
-        </Typography>
-        <IconButton
-          // onClick={fetchEmployees}
-          color="primary">
-          <FaSearch /> Retry
-        </IconButton>
+        <Typography color="error" gutterBottom>{error}</Typography>
+        <IconButton color="primary"><FaSearch /> Retry</IconButton>
       </Box>
     );
   }
 
-  // mobile accordion view controlled
+  // Mobile accordion state
   const [expanded, setExpanded] = useState(false);
   const handleAccordionChange = (panelId) => (event, newExpanded) => {
     setExpanded(newExpanded ? panelId : false);
   };
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: 1400, mx: "auto" }}>
-      {/* Header info */}
+    <Box sx={style.mainBox}>
+      {/* Header */}
       <Box sx={style.pageContainer}>
-        {/* title info */}
         <Box sx={style.pageHeaderContent}>
           <Typography sx={style.pageTitle}>
-            <FaUserShield
-              style={{
-                marginRight: 10,
-                verticalAlign: "middle",
-                color: "#fff",
-              }}
-            />
-            Employee
+            <FaUserShield style={style.pageTitleIcon} /> Employee
           </Typography>
-          <Typography sx={{ fontSize: "14px", color: "rgba(255,255,255,0.7)" }}>
-            Manage your employees here
-          </Typography>
+          <Typography sx={style.adminSubTitle}>Manage your employees here</Typography>
         </Box>
-
-        {/* Add employee */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: { xs: 0.6, sm: 1 },
-            alignItems: "start",
-            justifyContent: { xs: "flex-start", md: "flex-end" },
-          }}
-        >
-          <Button
-            variant="contained"
-            startIcon={<FaPlus />}
-            onClick={() => setShowForm(true)}
-            sx={style.addButton}
-          >
+        <Box sx={style.addAdmin}>
+          <Button variant="contained" startIcon={<FaPlus />} onClick={() => setShowForm(true)} sx={style.addButton}>
             Add New Employee
           </Button>
         </Box>
       </Box>
 
-      {/* Employee form */}
+      {/* Employee Form */}
       <Employeeform
         setShowForm={setShowForm}
         showForm={showForm}
         employees={employees}
-        // fetchEmployees={fetchEmployees}
         employeeId={selectedEmployeeId}
         showEdit={showEdit}
         setShowEdit={setShowEdit}
@@ -537,214 +287,97 @@ const EmployeeDashboard = () => {
         selectedEmployeeData={selectedEmployee}
       />
 
-      {/* Search field */}
+      {/* Search Field */}
       <Box>
         <AppSearchField
           fullWidth
           placeholder="Search employee by name, email or phone..."
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            // searchEmployees(e.target.value);
-          }}
+          onChange={(e) => setSearch(e.target.value)}
           sx={style.SEARCH_INPUT}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <IoIosSearch color="#9CA3AF" />
-              </InputAdornment>
-            ),
-          }}
+          InputProps={{ startAdornment: <InputAdornment position="start"><IoIosSearch color="#9CA3AF" /></InputAdornment> }}
         />
       </Box>
 
-      {/* divider */}
-      {/* <Divider sx={{ mb: 3, color: "rgba(255,255,255,0.7)" }} /> */}
+      {/* Loading / DataGrid / Accordion */}
+      {loading ? (!isMobile ? <DataGridShimmer /> : <AccordionShimmer />) : (
+        !isMobile ? (
+          // desktop datagrid
+          <DataGrid
+            getRowHeight={() => "auto"}
+            rows={rows}
+            columns={columns}
+            pageSizeOptions={[]}
+            hideFooter
+            disableCheckboxSelection
+            disableColumnMenu
+            disableColumnResize
+            disableRowSelectionOnClick
+            disableColumnSorting
+            disableColumnSelector
+            sx={{ ...darkDataGridSx, minHeight: 400 }}
+          />
+        ) : (
+          // mobile accordion
+          <Box sx={{ width: "100%" }}>
+            {rows.map((employee) => {
+              const panelId = `panel-${employee.id}`;
+              return (
+                <Accordion key={employee.id} expanded={expanded === panelId} onChange={handleAccordionChange(panelId)} sx={style.accordion}>
+                  <AccordionSummary expandIcon={<FaChevronDown color="#fff" />} sx={style.accordionSummary}>
+                    <Box sx={style.accordionSummaryDetails}>
+                      <Avatar sx={style.avatar}>{employee.fullName?.split(" ").map((n) => n[0]).join("").toUpperCase()}</Avatar>
+                      <Box sx={style.userInfo}><Typography fontWeight="medium">{employee.fullName}</Typography></Box>
+                    </Box>
+                  </AccordionSummary>
 
-      {/* Loading datagrid or accordion */}
-      {loading ? (
-        <>{!isMobile ? <DataGridShimmer /> : <AccordionShimmer />}</>
-      ) : (
-        <>
-          {/* Desktop View - DataGrid */}
-          {!isMobile ? (
-            <Box>
-              <DataGrid
-                getRowHeight={() => "auto"}
-                rows={rows}
-                columns={columns}
-                pageSizeOptions={[]}
-                hideFooter
-                sortingMode="server"
-                disableCheckboxSelection
-                disableColumnMenu
-                disableColumnResize
-                disableRowSelectionOnClick
-                disableColumnSorting
-                disableColumnSelector
-                sx={{ ...darkDataGridSx, minHeight: 400 }}
-              />
-            </Box>
-          ) : (
-            /* Mobile View - Accordion */
-            <Box sx={{ width: "100%" }}>
-              {rows.map((employee) => {
-                const panelId = `panel-${employee.id}`;
+                  <AccordionDetails sx={style.accordionDetail}>
+                    <Box sx={style.accordionInner}><Typography>Email</Typography><Typography>{employee.email}</Typography></Box>
+                    <Box sx={style.accordionInner}><Typography>Phone</Typography><Typography sx={style.accordionText}>{employee.phone}</Typography></Box>
+                    <Box sx={style.accordionInner}><Typography>Gender</Typography><Typography sx={style.accordionText}>{employee.gender}</Typography></Box>
+                  </AccordionDetails>
 
-                return (
-                  <Accordion
-                    key={employee.id}
-                    expanded={expanded === panelId}
-                    onChange={handleAccordionChange(panelId)}
-                    sx={style.accordion}
-                  >
-                    <AccordionSummary
-                      expandIcon={<FaChevronDown color="#fff" />}
-                      sx={style.accordionSummary}
-                    >
-                      <Box
-                        sx={style.accordionSummaryDetails}
-                      >
-                        <Avatar
-                          sx={{
-                            bgcolor:
-                              employee.role === "admin"
-                                ? "warning.main"
-                                : "primary.main",
-                            mr: 2,
-                            color: "#fff",
-                          }}
-                        >
-                          {/* initials from name */}
-                          {employee.fullName
-                            ?.split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase() || "AD"}
-                        </Avatar>
-                        <Box sx={{ flexGrow: 1 }}>
-                          <Typography fontWeight="medium">
-                            {employee.fullName || "Employee Name"}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </AccordionSummary>
-
-                    <AccordionDetails sx={style.accordionDetail}>
-                      {/* email info  */}
-                      <Box sx={style.accordionInner}>
-                        <Typography>Email</Typography>
-                        <Typography>{employee.email}</Typography>
-                      </Box>
-
-                      {/* phone info */}
-                      <Box sx={style.accordionInner}>
-                        <Typography>Phone</Typography>
-                        <Typography
-                          sx={style.accordionText}
-                        >
-                          {employee.phone || ""}
-                        </Typography>
-                      </Box>
-
-                      {/* gender info */}
-                      <Box sx={style.accordionInner}>
-                        <Typography>Gender</Typography>
-                        <Typography sx={style.accordionText}>
-                          {employee.gender || ""}
-                        </Typography>
-                      </Box>
-
-                      {/* action */}
-                      <AccordionActions
-                        sx={{ ...style.accordionInner, ...style.accordionInner, p: "8px 0" }}
-                      >
-                        <Typography>Action</Typography>
-                        <IconButton
-                          size="small"
-                          onClick={(e) => handleMenuClick(e, employee)}
-                        >
-                          <SlOptions size={14} />
-                        </IconButton>
-                      </AccordionActions>
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })}
-            </Box>
-          )}
-
-          {/* Actions cell Popover */}
-          <Popover
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleMenuClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            slotProps={{
-              paper: {
-                sx: style.paper,
-              },
-            }}
-          >
-            <Box>
-              {/* edit employee */}
-              <MenuItem onClick={() => handleAction("edit")}>
-                <FaEdit style={{ marginRight: 12 }} />
-                Edit Employee
-              </MenuItem>
-
-              {/* delete employee */}
-              <MenuItem
-                onClick={() => {
-                  setOpenDialog(true);
-                  handlePopClose();
-                  // handleDeleteEmployee();
-                }}
-                sx={{ color: "error.main" }}
-              >
-                <FaTrash style={{ marginRight: 12, color: "red" }} />
-                Delete Employee
-              </MenuItem>
-            </Box>
-          </Popover>
-        </>
+                  <AccordionActions sx={{ ...style.accordionDetail, ...style.accordionInner }}>
+                    <Typography>Action:</Typography>
+                    <IconButton size="small" onClick={(e) => handleMenuClick(e, employee)}><SlOptions size={14} /></IconButton>
+                  </AccordionActions>
+                </Accordion>
+              );
+            })}
+          </Box>
+        )
       )}
 
-      {/* Delete confirmation dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <IoWarningOutline color="red" size={28} />
+      {/* Actions Popover */}
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleMenuClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        slotProps={{ paper: { sx: style.paper } }}
+      >
+        <Box>
+          <MenuItem onClick={() => handleAction("edit")}><FaEdit style={{ marginRight: 12 }} /> Edit Employee</MenuItem>
+          <MenuItem onClick={() => { setOpenDialog(true); handlePopClose(); }} sx={{ color: "error.main" }}>
+            <FaTrash style={{ marginRight: 12, color: "red" }} /> Delete Employee
+          </MenuItem>
         </Box>
+      </Popover>
+
+      {/* Delete confirmation Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        {/* header */}
+        <Box sx={{ display: "flex", justifyContent: "center" }}><IoWarningOutline color="red" size={28} /></Box>
+        {/* title */}
         <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
-        <Typography sx={style.deletSubTitle}>
-          Are you sure you want to delete this employee?
-        </Typography>
-
-        {/* cancel, submit button */}
+        {/* subtitle */}
+        <Typography sx={style.deletSubTitle}>Are you sure you want to delete this employee?</Typography>
+        {/* cancel, delete button */}
         <Box sx={style.cancelBox}>
-          <Button
-            disableRipple
-            onClick={handleCloseDialog}
-            sx={style.cancelTitle}
-          >
-            Cancel
-          </Button>
-
-          {/* delete admin */}
-          <Button
-            sx={style.deleteButton}
-            disabled={loader}
-            disableRipple
-          // onClick={handleDeleteEmployee}
-          >
-            {loader ? <CircularProgress size="20px" color="#fff" /> : "Delete"}
+          <Button disableRipple onClick={handleCloseDialog} sx={style.cancelTitle}>Cancel</Button>
+          <Button sx={style.deleteButton} disabled={loader} disableRipple>
+            {loader ? <CircularProgress size="20px" sx={{ color: "#fff" }} /> : "Delete"}
           </Button>
         </Box>
       </Dialog>

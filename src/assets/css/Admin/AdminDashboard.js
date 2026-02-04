@@ -145,17 +145,40 @@ const style = {
     p: 2,
     borderBottom: "1px solid #333",
     bgcolor: "#1a1b1e",
+    gap: 2
   },
 
-  waveColor: {
+  nameWave: {
+    width: 210,
+    height: 24,
+    flex: 1,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  emailWave: {
+    width: 200,
+    height: 24,
+    flex: 1,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  phoneWave: {
     width: 100,
     height: 24,
+    flex: 1,
     bgcolor: "rgba(255,255,255,0.1)"
   },
 
   roleWave: {
-    width: 60,
+    width: 100,
     height: 24,
+    flex: 1,
+    bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  actionWave: {
+    width: 60,
+    height: 34,
     bgcolor: "rgba(255,255,255,0.1)"
   },
 
@@ -168,11 +191,17 @@ const style = {
     "&:hover": {
       bgcolor: "rgba(255,255,255,0.02)",
     },
+    gap: 2
   },
 
   avatarName: {
     display: "flex",
     alignItems: "center",
+    flex: 1,
+    minWidth: 200
+  },
+
+  phoneName: {
     flex: 1,
     minWidth: 200
   },
@@ -187,6 +216,7 @@ const style = {
   nameRow: {
     width: 140,
     height: 20,
+    mb: 0.5,
     bgcolor: "rgba(255,255,255,0.1)"
   },
 
@@ -209,9 +239,15 @@ const style = {
   },
 
   roleRow: {
-    width: 100,
+    width: 120,
     height: 20,
     bgcolor: "rgba(255,255,255,0.1)"
+  },
+
+  roleName: {
+    flex: 0.5,
+    minWidth: 100,
+    ml: 2
   },
 
   actionBox: {
@@ -262,6 +298,37 @@ const style = {
     bgcolor: "rgba(255,255,255,0.1)"
   },
 
+  // icon styles
+  actionIcon: {
+    color: "#fff",
+    fontSize: 14,
+  },
+
+  accordionIcon: {
+    color: "#fff",
+    fontSize: 16,
+  },
+
+  editIcon: {
+    marginRight: 12,
+    color: "#fff",
+  },
+
+  deleteIcon: {
+    marginRight: 12,
+    color: "red",
+  },
+
+  searchIcon: {
+    color: "#9CA3AF",
+    fontSize: 18,
+  },
+
+  addIcon: {
+    fontSize: 16,
+    color: "#0f1115"
+  },
+
   // delete confirmation dialog styles
   deletTitle: {
     display: "flex",
@@ -274,7 +341,8 @@ const style = {
 
   warningIcon: {
     marginRight: 12,
-    color: "red"
+    color: "red",
+    fontSize: 28
   },
 
   deletSubTitle: {

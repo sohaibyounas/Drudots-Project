@@ -58,7 +58,7 @@ const style = {
 
   skeletonButton: {
     width: "7%",
-    height: 30,
+    height: 50,
     borderRadius: "10%",
     bgcolor: "#626365",
   },
@@ -197,6 +197,15 @@ const style = {
     color: "#fff",
   },
 
+  listItemTextStyles: {
+    primary: {
+      variant: "body1",
+      sx: {
+        color: "#fff",
+      },
+    },
+  },
+
   // popover
   popover: {
     paper: {
@@ -219,6 +228,35 @@ const style = {
           },
         },
       },
+    },
+  },
+
+  editIconMain: {
+    display: "flex", 
+    alignItems: "center"
+  },
+
+   deleteIconMain: {
+    display: "flex", 
+    alignItems: "center"
+  },
+
+  // edit icon
+  actionIconProps: {
+    size: 20,
+    style: {
+      marginRight: 12,
+      flexShrink: 0,
+    },
+  },
+
+  // delete icon
+  deleteIconProps: {
+    size: 20,
+    style: {
+      marginRight: 12,
+      flexShrink: 0,
+      color: "#d32f2f", // same as MUI error.main
     },
   },
 

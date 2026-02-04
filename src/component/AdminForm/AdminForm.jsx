@@ -6,14 +6,14 @@ import {
   CircularProgress,
   Drawer,
   FormControl,
-  IconButton,
   MenuItem,
   Select,
   TextField,
   Typography,
+  IconButton,
 } from "@mui/material";
-import style from "../../assets/css/style.js";
 import { RxCross2 } from "react-icons/rx";
+import style from "../../assets/css/style.js";
 
 const Adminform = ({
   showForm,
@@ -33,25 +33,20 @@ const Adminform = ({
     role: "",
     roleId: "",
   });
-
   const [loader, setLoader] = useState(false);
-  const [error, setError] = useState({
-    fullName: "",
-    email: "",
-    roleId: "",
-  });
+  const [error, setError] = useState({ fullName: "", email: "", roleId: "" });
   const [globalError, setGlobalError] = useState("");
   const [roles, setRoles] = useState([]);
   const [loadingRoles, setLoadingRoles] = useState(false);
   const [selectedAdminId, setSelectedAdminId] = useState(null);
 
-  // add admin api
+  // Add admin API
   const handleAddAdmin = async (payload) => {
     try {
       setLoader(true);
       // await AddAdminApi(payload);
-      if (fetchAdmins) fetchAdmins();
-      if (setSuccess) setSuccess("Admin added successfully");
+      fetchAdmins?.();
+      setSuccess?.("Admin added successfully");
     } catch (err) {
       console.error(err);
     } finally {
@@ -59,13 +54,13 @@ const Adminform = ({
     }
   };
 
-  // update admin api
+  // Update admin API
   const handleUpdateAdmin = async (id, payload) => {
     try {
       setLoader(true);
       // await UpdateAdminApi(id, payload);
-      if (fetchAdmins) fetchAdmins();
-      if (setSuccess) setSuccess("Admin updated successfully");
+      fetchAdmins?.();
+      setSuccess?.("Admin updated successfully");
     } catch (err) {
       console.error(err);
     } finally {
@@ -73,71 +68,43 @@ const Adminform = ({
     }
   };
 
-  // Handle form close
+  // Close form drawer
   const handleClose = () => {
     setShowForm(false);
     setShowEdit(false);
     resetForm();
   };
 
-  // input handler
+  // Handle input changes
   const handleInput = (e) => {
     const { name, value } = e.target;
 
     if (name === "roleId") {
       let roleName = value;
-      // If roles array is populated, find the role name
-      if (roles && roles.length > 0) {
-        const selectedRole = roles.find(
-          (r) => r.id === value || r._id === value,
-        );
-        if (selectedRole) roleName = selectedRole.name;
-      }
-      setFormData((prev) => ({
-        ...prev,
-        roleId: value,
-        role: roleName,
-      }));
+      const selectedRole = roles.find((r) => r.id === value || r._id === value);
+      if (selectedRole) roleName = selectedRole.name;
+
+      setFormData((prev) => ({ ...prev, roleId: value, role: roleName }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
 
-    setError((prev) => ({
-      ...prev,
-      [name]: "",
-    }));
+    setError((prev) => ({ ...prev, [name]: "" }));
   };
 
   // Reset form fields
   const resetForm = () => {
-    setFormData({
-      fullName: "",
-      email: "",
-      role: "",
-      roleId: "",
-    });
+    setFormData({ fullName: "", email: "", role: "", roleId: "" });
     setIsEditMode(false);
     setSelectedAdminId(null);
-    setError({
-      fullName: "",
-      email: "",
-      roleId: "",
-    });
+    setError({ fullName: "", email: "", roleId: "" });
     setGlobalError("");
   };
 
-  // Handle edit mode population
+  // Populate form in edit mode
   useEffect(() => {
     if (adminId && showEdit) {
-      let admin = selectedAdminData;
-
-      // Fallback to searching in admins array
-      if (!admin) {
-        admin = admins?.find?.((a) => a._id === adminId || a.id === adminId);
-      }
+      let admin = selectedAdminData || admins?.find((a) => a._id === adminId || a.id === adminId);
 
       if (admin) {
         setIsEditMode(true);
@@ -146,18 +113,9 @@ const Adminform = ({
           fullName: admin.fullName,
           email: admin.email || "",
           role: admin.role || "admin",
-          roleId:
-            admin.roleId ||
-            admin.role?._id ||
-            (typeof admin.role === "string"
-              ? admin.role.toLowerCase()
-              : "admin"),
+          roleId: admin.roleId || admin.role?._id || (typeof admin.role === "string" ? admin.role.toLowerCase() : "admin"),
         });
-        setError({
-          fullName: "",
-          email: "",
-          roleId: "",
-        });
+        setError({ fullName: "", email: "", roleId: "" });
         setShowForm(true);
       }
     } else {
@@ -165,43 +123,33 @@ const Adminform = ({
     }
   }, [adminId, admins, showEdit, selectedAdminData]);
 
-  // form submit handler
+  // Form submission
   const handleSubmit = async () => {
     setGlobalError("");
     let isValid = true;
-
-    const validateEmail = (value) => {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(value);
-    };
-
     const newError = { ...error };
 
-    // Full name validation
+    const validateEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+    // Validation name, email, role
     if (!formData.fullName.trim()) {
       newError.fullName = "Please enter full name";
       isValid = false;
-    } else {
-      newError.fullName = "";
     }
 
-    // Email validation
+    // email
     if (!formData.email.trim()) {
       newError.email = "The email field is required";
       isValid = false;
     } else if (!validateEmail(formData.email)) {
       newError.email = "The email field must be a valid email address";
       isValid = false;
-    } else {
-      newError.email = "";
     }
 
-    // Role validation
+    // role
     if (!formData.roleId) {
       newError.roleId = "Please select a role";
       isValid = false;
-    } else {
-      newError.roleId = "";
     }
 
     setError(newError);
@@ -209,17 +157,14 @@ const Adminform = ({
 
     setLoader(true);
 
-    // add or update admin api based on mode
     try {
-      if (isEditMode) {
-        // Call the update API
-        await handleUpdateAdmin(selectedAdminId, formData);
-      } else {
-        // Call the add API
-        await handleAddAdmin(formData);
-      }
+      // API calls commented for future use - working without backend for now
+      if (isEditMode) await handleUpdateAdmin(selectedAdminId, formData);
+      else await handleAddAdmin(formData);
+
+      // Close form after successful submission
+      handleClose();
     } catch (err) {
-      // Handle API errors
       setGlobalError(err.message || "Something went wrong");
     } finally {
       setLoader(false);
@@ -227,33 +172,20 @@ const Adminform = ({
   };
 
   return (
-    <Drawer
-      anchor="right"
-      open={showForm}
-      onClose={handleClose}
-      transitionDuration={300}
-      sx={style.drawer}
-    >
-      {/* title */}
+    <Drawer anchor="right" open={showForm} onClose={handleClose} transitionDuration={300} sx={style.drawer}>
+      {/* Header */}
       <Box sx={style.editDialog}>
-        <Typography sx={style.formHeading}>
-          {isEditMode ? "Edit Admin" : "Add New Admin"}
-        </Typography>
+        <Typography sx={style.formHeading}>{isEditMode ? "Edit Admin" : "Add New Admin"}</Typography>
         <IconButton onClick={handleClose} sx={style.formButton} disableRipple>
-          <RxCross2 size={25} color={"#fff"} />
+          <RxCross2 size={25} color="#fff" />
         </IconButton>
       </Box>
 
-      {/* form */}
+      {/* Form */}
       <Box sx={style.whiteDrawer}>
         <Box sx={{ p: "0px 20px" }}>
-          {/* Global error */}
           {globalError && (
-            <Alert
-              severity="error"
-              sx={style.drawerError}
-              onClose={() => setGlobalError("")}
-            >
+            <Alert severity="error" sx={style.drawerError} onClose={() => setGlobalError("")}>
               {globalError}
             </Alert>
           )}
@@ -261,61 +193,24 @@ const Adminform = ({
           {/* Full Name */}
           <Box sx={style.adminCont}>
             <Typography sx={style.formFieldText}>Full Name</Typography>
-            {error.fullName && (
-              <Typography
-                sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}
-              >
-                {error.fullName}
-              </Typography>
-            )}
+            {error.fullName && <Typography sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}>{error.fullName}</Typography>}
           </Box>
-
-          <TextField
-            fullWidth
-            id="fullName"
-            name="fullName"
-            value={formData.fullName}
-            placeholder="Enter full name"
-            onChange={handleInput}
-            sx={style.formField}
-          />
+          <TextField fullWidth id="fullName" name="fullName" value={formData.fullName} placeholder="Enter full name" onChange={handleInput} sx={style.formField} />
 
           {/* Email */}
           <Box sx={style.adminCont}>
             <Typography sx={style.formFieldText}>Email Address</Typography>
-            {error.email && (
-              <Typography
-                sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}
-              >
-                {error.email}
-              </Typography>
-            )}
+            {error.email && <Typography sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}>{error.email}</Typography>}
           </Box>
 
-          <TextField
-            fullWidth
-            id="email"
-            name="email"
-            autoComplete="email"
-            placeholder="Email Address"
-            value={formData.email}
-            onChange={handleInput}
-            sx={style.formField}
-          />
+          {/* email input */}
+          <TextField fullWidth id="email" name="email" autoComplete="email" placeholder="Email Address" value={formData.email} onChange={handleInput} sx={style.formField} />
 
           {/* Role */}
           <Box sx={style.adminCont}>
             <Typography sx={style.formFieldText}>Role</Typography>
-            {error.roleId && (
-              <Typography
-                sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}
-              >
-                {error.roleId}
-              </Typography>
-            )}
+            {error.roleId && <Typography sx={{ ...style.adminFieldText, color: "error.main", ml: 2 }}>{error.roleId}</Typography>}
           </Box>
-
-          {/* options */}
           <FormControl fullWidth sx={style.formField}>
             <Select
               fullWidth
@@ -324,21 +219,14 @@ const Adminform = ({
               value={formData.roleId || ""}
               MenuProps={style.selectMenuProps}
               displayEmpty
-              sx={{
-                color: formData.roleId ? "#fff" : "#999",
-                "& .MuiSelect-icon": { color: "#fff" },
-              }}
+              sx={{ color: formData.roleId ? "#fff" : "#999", "& .MuiSelect-icon": { color: "#fff" } }}
             >
+              {/* if roles are loading */}
               {loadingRoles ? (
                 <MenuItem disabled>Loading roles...</MenuItem>
               ) : roles.length === 0 ? (
                 [
-                  <MenuItem
-                    key="select-role"
-                    value=""
-                    disabled
-                    sx={{ color: "#fff" }}
-                  >
+                  <MenuItem key="select-role" value="" disabled sx={{ color: "#fff" }}>
                     Select Role
                   </MenuItem>,
                   <MenuItem key="admin" disableRipple value="admin">
@@ -350,21 +238,18 @@ const Adminform = ({
                 ]
               ) : (
                 roles.map((role) => (
-                  <MenuItem
-                    key={role.id || role._id}
-                    disableRipple
-                    value={role.id || role._id}
-                  >
+                  <MenuItem key={role.id || role._id} disableRipple value={role.id || role._id}>
                     {role.name}
                   </MenuItem>
                 ))
               )}
             </Select>
           </FormControl>
+
         </Box>
       </Box>
 
-      {/* Submit button */}
+      {/* Submit Button */}
       <Box sx={{ ...style.editActiondrawer, mt: 3 }}>
         <Button
           disableRipple
@@ -373,9 +258,9 @@ const Adminform = ({
           sx={style.formSubmitButton}
         >
           {loader ? (
-            <Box sx={style.adminAction}>
-              <CircularProgress size="20px" sx={{ color: "#000" }} />
-              <span>{isEditMode ? "Updating..." : "Adding..."}</span>
+            <Box sx={style.actionLoader}>
+              <CircularProgress size={18} thickness={4} sx={{ color: "#000" }} />
+              <span style={style.spanLoader}>{isEditMode ? "Updating Admin..." : "Adding Admin..."}</span>
             </Box>
           ) : isEditMode ? (
             "Update Admin"

@@ -20,26 +20,24 @@ import {
   CircularProgress,
   Skeleton,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircleIcon from "@mui/icons-material/Circle";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditPolicy from "../../component/AddEditPolicy";
 import Dialog from "../../component/Ui/Dialog";
 import { IoWarningOutline } from "react-icons/io5";
 import style from "../../assets/css/policy/policy.js";
 import { FaPlus } from "react-icons/fa";
 import { policiesData } from "../../policyData/policiesData";
+import { MdCircle, MdDelete, MdEdit, MdExpandMore } from "react-icons/md";
 
 // Header text details
 const CONSTANTS = {
   TITLE: "Company Policies",
   SUBTITLE: "At Drudots Technologies, we are committed to transparency, quality delivery...",
-  LAST_UPDATED: "Last updated: January 2026",
+  LAST_UPDATED: "Last updated: February 2026",
   ADD_BUTTON_TEXT: "Add New Policy",
   ADD_BUTTON_TEXT_MOBILE: "Policy",
-  SKELETON_COUNT: 6,
+  SKELETON_COUNT: 8,
 };
+
 
 const Policies = () => {
   const theme = useTheme();
@@ -48,7 +46,7 @@ const Policies = () => {
   const [loading, setLoading] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
-  const [policies, setPolicies] = useState(policiesData);
+  const [policies, setPolicies] = useState(policiesData); //policies data import here
 
   // add/edit policy states
   const [modalOpen, setModalOpen] = useState(false);
@@ -183,12 +181,14 @@ const Policies = () => {
         {/* Accordions */}
         <Box>
           {loading ? (
+            // policies shimmers
             <>
               {[...Array(CONSTANTS.SKELETON_COUNT)].map((_, i) => (
                 <SummarySkeleton key={i} />
               ))}
             </>
           ) : (
+            // policies data
             policies.map((section) => {
               const panelId = `panel-${section.id}`;
               return (
@@ -200,7 +200,7 @@ const Policies = () => {
                   sx={style.policyAccordion}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}
+                    expandIcon={<MdExpandMore size={22} color="#fff" />}
                     sx={style.policyAccordionSummary}
                   >
                     <Box sx={style.accordionSummaryInfo}>
@@ -219,20 +219,23 @@ const Policies = () => {
                       onFocus={(e) => e.stopPropagation()}
                       sx={style.summaryIcon}
                     >
-                      <EditIcon fontSize="small" sx={{ color: "#fff" }} />
+                      <MdEdit size={20} color="#fff" />
                     </Box>
                   </AccordionSummary>
 
                   <AccordionDetails sx={style.accordionDetail}>
+                    {/* description info */}
                     {section.description ? (
                       <Typography sx={style.accordionDescription}>
                         {section.description}
                       </Typography>
+                      // paragraph info
                     ) : section.paragraph ? (
                       <Typography sx={style.accordionDescription}>
                         {section.paragraph}
                       </Typography>
                     ) : (
+                      // list info
                       <List disablePadding sx={style.accordionList}>
                         {section.items?.map((text, idx) => (
                           <ListItem
@@ -241,16 +244,11 @@ const Policies = () => {
                             sx={{ alignItems: "center" }}
                           >
                             <ListItemIcon sx={style.accordionListIcon}>
-                              <CircleIcon fontSize="15px" />
+                              <MdCircle size={10} />
                             </ListItemIcon>
                             <ListItemText
                               primary={text}
-                              slotProps={{
-                                primary: {
-                                  variant: "body1",
-                                  sx: { color: "#fff" },
-                                },
-                              }}
+                              slotProps={style.listItemTextStyles}
                             />
                           </ListItem>
                         ))}
@@ -281,17 +279,19 @@ const Policies = () => {
       >
         <Box>
           {/* edit policy */}
-          <MenuItem onClick={() => handleEdit(selectedPolicyForActions)}>
-            <EditIcon style={{ marginRight: 12 }} />
+          <MenuItem onClick={() => handleEdit(selectedPolicyForActions)}
+            sx={style.editIconMain}
+          >
+            <MdEdit {...style.actionIconProps} />
             Edit Policy
           </MenuItem>
 
           {/* delete policy */}
           <MenuItem
             onClick={() => handleOpenDeleteDialog(selectedPolicyForActions)}
-            sx={{ color: "error.main" }}
+            sx={style.deleteIconMain}
           >
-            <DeleteIcon style={{ marginRight: 12, color: "red" }} />
+            <MdDelete {...style.deleteIconProps} />
             Delete Policy
           </MenuItem>
         </Box>
@@ -311,6 +311,7 @@ const Policies = () => {
       />
 
       {/* Delete confirmation dialog */}
+
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
         {/* header */}
         <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -320,6 +321,7 @@ const Policies = () => {
         {/* title */}
         <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
 
+        {/* subtitle */}
         <Typography sx={style.deletSubTitle}>
           Are you sure you want to delete this policy?
         </Typography>

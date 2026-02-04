@@ -11,111 +11,58 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  AccordionActions,
   useMediaQuery,
   useTheme,
   Paper,
-  Divider,
   Skeleton,
   Button,
   CircularProgress,
   DialogTitle,
-  AccordionActions,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
-  FaSearch,
-  FaEllipsisV,
   FaChevronDown,
-  FaUser,
-  FaEnvelope,
-  FaPhone,
-  FaCalendarAlt,
   FaEdit,
   FaTrash,
-  FaBan,
   FaUserShield,
   FaPlus,
 } from "react-icons/fa";
-import style from "../../assets/css/Admin/AdminDashboard.js";
 import { IoIosSearch } from "react-icons/io";
-import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
-import { darkDataGridSx } from "../../theme/surface,js";
-import Adminform from "../../component/AdminForm/AdminForm.jsx";
 import { IoWarningOutline } from "react-icons/io5";
 import { SlOptions } from "react-icons/sl";
+
+import style from "../../assets/css/Admin/AdminDashboard.js";
+import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
+import Adminform from "../../component/AdminForm/AdminForm.jsx";
+import { darkDataGridSx } from "../../theme/surface,js";
 
 // Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
   <Paper sx={style.dataGridShimmer}>
-    {/* Header Row */}
     <Box sx={style.shimmerHeader}>
-      {/* Name Header */}
-      <Skeleton
-        variant="text"
-        sx={style.waveColor}
-      />
-
-      {/* Email Header */}
-      <Skeleton
-        variant="text"
-        sx={style.waveColor}
-      />
-
-      {/* Role Header */}
-      <Skeleton
-        variant="text"
-        sx={style.roleWave}
-      />
-
-      {/* Action Header */}
-      <Skeleton
-        variant="text"
-        sx={style.waveColor}
-      />
+      <Skeleton variant="text" sx={style.nameWave} />
+      <Skeleton variant="text" sx={style.emailWave} />
+      <Skeleton variant="text" sx={style.roleWave} />
+      <Skeleton variant="text" sx={style.actionWave} />
     </Box>
 
-    {/* Data Rows */}
-    {Array.from({ length: 8 }, (_, index) => (
-      <Box
-        key={index}
-        sx={style.dataRows}
-      >
-        {/* Avatar + Name Column */}
+    {Array.from({ length: 8 }).map((_, index) => (
+      <Box key={index} sx={style.dataRows}>
         <Box sx={style.avatarName}>
-          <Skeleton
-            variant="circular"
-            sx={style.avatarRow}
-          />
+          <Skeleton variant="circular" sx={style.avatarRow} />
           <Box>
-            <Skeleton
-              variant="text"
-              sx={style.nameRow}
-            />
+            <Skeleton variant="text" sx={style.nameRow} />
           </Box>
         </Box>
-
-        {/* Email Column */}
         <Box sx={style.emailBox}>
-          <Skeleton
-            variant="text"
-            sx={style.emailRow}
-          />
+          <Skeleton variant="text" sx={style.emailRow} />
         </Box>
-
-        {/* Role Column */}
         <Box sx={style.roleBox}>
-          <Skeleton
-            variant="text"
-            sx={style.roleRow}
-          />
+          <Skeleton variant="text" sx={style.roleRow} />
         </Box>
-
-        {/* Action Column */}
         <Box sx={style.actionBox}>
-          <Skeleton
-            variant="circular"
-            sx={style.actionRow}
-          />
+          <Skeleton variant="circular" sx={style.actionRow} />
         </Box>
       </Box>
     ))}
@@ -125,28 +72,16 @@ const DataGridShimmer = () => (
 // Mobile Accordion Shimmer
 const AccordionShimmer = () => (
   <Box sx={{ width: "100%" }}>
-    {Array.from({ length: 5 }, (_, index) => (
-      <Accordion
-        key={index}
-        sx={style.accordionShimmer}
-      >
+    {Array.from({ length: 5 }).map((_, index) => (
+      <Accordion key={index} sx={style.accordionShimmer}>
         <AccordionSummary
-          expandIcon={<FaChevronDown color="rgba(255,255,255,0.3)" />}
+          expandIcon={<FaChevronDown style={style.accordionIcon} />}
           sx={style.accordionSummaryShimmer}
         >
           <Box sx={style.accordionSummayBox}>
-            {/* Avatar */}
-            <Skeleton
-              variant="circular"
-              sx={style.accordionSummaryAvatar}
-            />
-
-            {/* Name */}
+            <Skeleton variant="circular" sx={style.accordionSummaryAvatar} />
             <Box sx={{ flexGrow: 1 }}>
-              <Skeleton
-                variant="text"
-                sx={style.accordionSummaryName}
-              />
+              <Skeleton variant="text" sx={style.accordionSummaryName} />
             </Box>
           </Box>
         </AccordionSummary>
@@ -166,104 +101,27 @@ const AdminDashboard = () => {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const [success, setSuccess] = useState(null);
   const [selectedAdminId, setSelectedAdminId] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [loader, setLoader] = useState(false);
   const open = Boolean(anchorEl);
 
-  // fetch admins
-  const fetchAdmins = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Mocking response since FetchAdminsApi is currently commented out or not defined
-      // const res = await FetchAdminsApi();
-      // setAdmins(res?.data || []);
-      // If you have actual data in rows that you want to sync to admins:
-      // setAdmins(rows);
-    } catch (err) {
-      setError("Failed to load admins. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch admins calls
-  // useEffect(() => {
-  //   fetchAdmins();
-  // }, []);
-
-  // initial loading effect
-
-  // popover open
-  const handleMenuClick = (e, admin) => {
-    setAnchorEl(e.currentTarget);
-    setSelectedAdmin(admin);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleAction = async (action) => {
-    if (!selectedAdmin) return;
-
-    if (action === "edit") {
-      setSelectedAdminId(selectedAdmin.id);
-      setShowEdit(true);
-      setShowForm(true);
-    }
-    handleMenuClose();
-  };
-
-  // close popover
-  const handlePopClose = () => {
-    setAnchorEl(null);
-    setSelectedAdmin(null);
-  };
-
-  // Close delete confirmation dialog
-  const handleCloseDialog = () => setOpenDialog(null);
-
-  // datagrid rows data
+  // data grid row data
   const rows = [
     { id: 1, fullName: "Jon Snow", email: "jon.snow@example.com" },
-    {
-      id: 2,
-      fullName: "Cersei Lannister",
-      email: "cersei.lannister@example.com",
-    },
-    {
-      id: 3,
-      fullName: "Jaime Lannister",
-      email: "jaime.lannister@example.com",
-    },
+    { id: 2, fullName: "Cersei Lannister", email: "cersei.lannister@example.com" },
+    { id: 3, fullName: "Jaime Lannister", email: "jaime.lannister@example.com" },
     { id: 4, fullName: "Arya Stark", email: "arya.stark@example.com" },
-    {
-      id: 5,
-      fullName: "Daenerys Targaryen",
-      email: "daenerys.targaryen@example.com",
-    },
+    { id: 5, fullName: "Daenerys Targaryen", email: "daenerys.targaryen@example.com" },
     { id: 6, fullName: "Melisandre", email: "melisandre@example.com" },
-    {
-      id: 7,
-      fullName: "Ferrara Clifford",
-      email: "ferrara.clifford@example.com",
-    },
-    {
-      id: 8,
-      fullName: "Rossini Frances",
-      email: "rossini.frances@example.com",
-    },
+    { id: 7, fullName: "Ferrara Clifford", email: "ferrara.clifford@example.com" },
+    { id: 8, fullName: "Rossini Frances", email: "rossini.frances@example.com" },
     { id: 9, fullName: "Harvey Roxie", email: "harvey.roxie@example.com" },
   ];
 
-  // DataGrid columns data
+  // data grid columns data
   const columns = [
-    // user info
+    // full name
     {
       field: "fullName",
       headerName: "Name",
@@ -271,17 +129,9 @@ const AdminDashboard = () => {
       minWidth: 200,
       renderCell: (params) => (
         <Box sx={style.fullName}>
-          {/* user avatar */}
           <Avatar sx={style.avatar}>
-            {/* initials from fullName */}
-            {params.row.fullName
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase()}
+            {params.row.fullName?.split(" ").map((n) => n[0]).join("").toUpperCase()}
           </Avatar>
-
-          {/* user info */}
           <Box>
             <Typography variant="body2" sx={style.userInfo}>
               {params.row.fullName}
@@ -291,36 +141,29 @@ const AdminDashboard = () => {
       ),
     },
 
-    // email info
+    // email
     {
       field: "email",
       headerName: "Email",
       flex: 1,
       minWidth: 250,
       renderCell: (params) => (
-        <Box>
-          <Typography variant="body2" sx={style.userInfo}>
-            {params.row.email}
-          </Typography>
-        </Box>
+        <Typography variant="body2" sx={style.userInfo}>
+          {params.row.email}
+        </Typography>
       ),
     },
 
-    // role info
+    // role
     {
       field: "role",
       headerName: "Role",
       flex: 0.5,
       minWidth: 100,
       renderCell: (params) => (
-        <Box>
-          <Typography
-            variant="body2"
-            sx={{ ...style.userInfo, texttransform: "capitalize" }}
-          >
-            {params.row.role || "Admin"}
-          </Typography>
-        </Box>
+        <Typography variant="body2" sx={{ ...style.userInfo, textTransform: "capitalize" }}>
+          {params.row.role || "Admin"}
+        </Typography>
       ),
     },
 
@@ -337,10 +180,13 @@ const AdminDashboard = () => {
         <IconButton
           disableRipple
           size="small"
-          onClick={(e) => handleMenuClick(e, params.row)}
+          onClick={(e) => {
+            setAnchorEl(e.currentTarget);
+            setSelectedAdmin(params.row);
+          }}
           sx={style.actionIconButton}
         >
-          <FaEllipsisV size={14} color="#fff" />
+          <SlOptions style={style.actionIcon} />
         </IconButton>
       ),
     },
@@ -352,25 +198,22 @@ const AdminDashboard = () => {
     setExpanded(newExpanded ? panelId : false);
   };
 
-  // Error text if no data found
-  if (error && !loading) {
-    return (
-      <Box sx={{ p: 3, textAlign: "center" }}>
-        <Typography color="error" gutterBottom>
-          {error}
-        </Typography>
-        <IconButton onClick={fetchAdmins} color="primary">
-          <FaSearch /> Retry
-        </IconButton>
-      </Box>
-    );
-  }
+  const handleAction = (action) => {
+    if (!selectedAdmin) return;
+    if (action === "edit") {
+      setSelectedAdminId(selectedAdmin.id);
+      setShowEdit(true);
+      setShowForm(true);
+    }
+    setAnchorEl(null);
+  };
+
+  const handleCloseDialog = () => setOpenDialog(false);
 
   return (
     <Box sx={style.mainBox}>
-      {/* Header info */}
       <Box sx={style.pageContainer}>
-        {/* title info */}
+        {/* header */}
         <Box sx={style.pageHeaderContent}>
           <Typography sx={style.pageTitle}>
             <FaUserShield style={style.pageTitleIcon} />
@@ -381,11 +224,11 @@ const AdminDashboard = () => {
           </Typography>
         </Box>
 
-        {/* Add admin */}
+        {/* add admin button */}
         <Box sx={style.addAdmin}>
           <Button
             variant="contained"
-            startIcon={<FaPlus />}
+            startIcon={<FaPlus style={style.addIcon} />}
             onClick={() => setShowForm(true)}
             sx={style.addButton}
           >
@@ -393,71 +236,58 @@ const AdminDashboard = () => {
           </Button>
         </Box>
 
-        {/* Admin form */}
+        {/* admin form */}
         <Adminform
           setShowForm={setShowForm}
           showForm={showForm}
           admins={admins}
-          fetchAdmins={fetchAdmins}
           adminId={selectedAdminId}
           showEdit={showEdit}
           setShowEdit={setShowEdit}
-          setSuccess={setSuccess}
           selectedAdminData={selectedAdmin}
         />
       </Box>
 
-      {/* Search field */}
-      <Box>
-        <AppSearchField
-          fullWidth
-          placeholder="Search admin by name, email or phone..."
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            // fetchAdmins(e.target.value);
-          }}
-          sx={style.SEARCH_INPUT}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <IoIosSearch color="#9CA3AF" />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+      {/* search input */}
+      <AppSearchField
+        fullWidth
+        placeholder="Search admin by name, email or phone..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        sx={style.SEARCH_INPUT}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <IoIosSearch style={style.searchIcon} />
+            </InputAdornment>
+          ),
+        }}
+      />
 
-      {/* Loading State */}
       {loading ? (
-        <>{!isMobile ? <DataGridShimmer /> : <AccordionShimmer />}</>
+        !isMobile ? <DataGridShimmer /> : <AccordionShimmer />
       ) : (
         <>
-          {/* Desktop View - DataGrid */}
           {!isMobile ? (
-            <Box>
-              <DataGrid
-                getRowHeight={() => "auto"}
-                rows={rows}
-                columns={columns}
-                pageSizeOptions={[]}
-                hideFooter
-                sortingMode="server"
-                disableCheckboxSelection
-                disableColumnMenu
-                disableColumnResize
-                disableRowSelectionOnClick
-                disableColumnSorting
-                disableColumnSelector
-                sx={{ ...darkDataGridSx, minHeight: 400 }}
-              />
-            </Box>
+            <DataGrid
+              getRowHeight={() => "auto"}
+              rows={rows}
+              columns={columns}
+              pageSizeOptions={[]}
+              hideFooter
+              sortingMode="server"
+              disableCheckboxSelection
+              disableColumnMenu
+              disableColumnResize
+              disableRowSelectionOnClick
+              disableColumnSorting
+              disableColumnSelector
+              sx={{ ...darkDataGridSx, minHeight: 400 }}
+            />
           ) : (
-            /* Mobile View - Accordion */
             <Box sx={{ width: "100%" }}>
               {rows.map((admin) => {
                 const panelId = `panel-${admin.id}`;
-
                 return (
                   <Accordion
                     key={admin.id}
@@ -465,55 +295,31 @@ const AdminDashboard = () => {
                     onChange={handleAccordionChange(panelId)}
                     sx={style.accordion}
                   >
-                    <AccordionSummary
-                      expandIcon={<FaChevronDown color="#fff" />}
-                      sx={style.accordionSummary}
-                    >
+                    {/* summary */}
+                    <AccordionSummary expandIcon={<FaChevronDown style={style.accordionIcon} />} sx={style.accordionSummary}>
                       <Box sx={style.fullName}>
-                        <Avatar
-                          sx={style.avatar}
-                        >
-                          {/* initials banao */}
-                          {admin.fullName
-                            ?.split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase() || "AD"}
+                        <Avatar sx={style.avatar}>
+                          {admin.fullName?.split(" ").map((n) => n[0]).join("").toUpperCase() || "AD"}
                         </Avatar>
                         <Box sx={style.userInfo}>
-                          <Typography fontWeight="medium">
-                            {admin.fullName || "Admin Name"}
-                          </Typography>
+                          <Typography fontWeight="medium">{admin.fullName}</Typography>
                         </Box>
                       </Box>
                     </AccordionSummary>
-
                     <AccordionDetails sx={style.accordionDetail}>
-                      {/* email info  */}
                       <Box sx={style.accordionInner}>
                         <Typography>Email:</Typography>
-                        <Typography>{admin.email || "Email"}</Typography>
+                        <Typography>{admin.email}</Typography>
                       </Box>
-
-                      {/* role info */}
                       <Box sx={style.accordionInner}>
                         <Typography>Role:</Typography>
-                        <Typography sx={style.accordionText}>
-                          {admin.role || "Admin"}
-                        </Typography>
+                        <Typography sx={style.accordionText}>{admin.role || "Admin"}</Typography>
                       </Box>
                     </AccordionDetails>
-
-                    {/* action */}
-                    <AccordionActions
-                      sx={{ ...style.accordionDetail, ...style.accordionInner }}
-                    >
+                    <AccordionActions sx={{ ...style.accordionDetail, ...style.accordionInner }}>
                       <Typography>Action:</Typography>
-                      <IconButton
-                        size="small"
-                        onClick={(e) => handleMenuClick(e, admin)}
-                      >
-                        <SlOptions size={14} />
+                      <IconButton size="small" onClick={(e) => { setAnchorEl(e.currentTarget); setSelectedAdmin(admin); }}>
+                        <SlOptions style={style.actionIcon} />
                       </IconButton>
                     </AccordionActions>
                   </Accordion>
@@ -522,80 +328,53 @@ const AdminDashboard = () => {
             </Box>
           )}
 
-          {/* Actions cell Popover */}
+          {/* action popover */}
           <Popover
             open={open}
             anchorEl={anchorEl}
-            onClose={handleMenuClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            slotProps={{
-              paper: {
-                sx: style.paper,
-              },
-            }}
+            onClose={() => setAnchorEl(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            slotProps={{ paper: { sx: style.paper } }}
           >
             <Box>
-              {/* edit admin */}
               <MenuItem onClick={() => handleAction("edit")}>
-                <FaEdit style={{ marginRight: 12 }} />
+                <FaEdit style={style.editIcon} />
                 Edit Admin
               </MenuItem>
-              
-              {/* delete admin */}
-              <MenuItem
-                onClick={() => {
-                  setOpenDialog(true);
-                  handlePopClose();
-                  // handleDeleteAdmin();
-                }}
-                sx={{ color: "error.main" }}
-              >
-                <FaTrash style={style.warningIcon} />
+              <MenuItem onClick={() => setOpenDialog(true)} sx={{ color: "error.main" }}>
+                <FaTrash style={style.deleteIcon} />
                 Delete Admin
               </MenuItem>
             </Box>
           </Popover>
+
+
+          {/* delete confirmation dialog */}
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            {/* header */}
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <IoWarningOutline style={style.warningIcon} />
+            </Box>
+
+            {/* title */}
+            <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
+
+            {/* subtitle */}
+            <Typography sx={style.deletSubTitle}>
+              Are you sure you want to delete this admin?
+            </Typography>
+
+            {/* cancel, delete button */}
+            <Box sx={style.cancelBox}>
+              <Button disableRipple onClick={handleCloseDialog} sx={style.cancelTitle}>Cancel</Button>
+              <Button sx={style.deleteButton} disabled={loader} disableRipple>
+                {loader ? <CircularProgress size={20} sx={{ color: "#fff" }} /> : "Delete"}
+              </Button>
+            </Box>
+          </Dialog>
         </>
       )}
-
-      {/* Delete confirmation dialog */}
-
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <IoWarningOutline color="red" size={28} />
-        </Box>
-        <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
-        <Typography sx={style.deletSubTitle}>
-          Are you sure you want to delete this admin?
-        </Typography>
-
-        {/* cancel, delete button */}
-        <Box sx={style.cancelBox}>
-          <Button
-            disableRipple
-            onClick={handleCloseDialog}
-            sx={style.cancelTitle}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            sx={style.deleteButton}
-            disabled={loader}
-            disableRipple
-          // onClick={handleDeleteAdmin}
-          >
-            {loader ? <CircularProgress size="20px" color="#fff" /> : "Delete"}
-          </Button>
-        </Box>
-      </Dialog>
     </Box>
   );
 };
