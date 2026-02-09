@@ -49,7 +49,6 @@ const style = {
 
   // add button styles
   addButton: {
-    textTransform: "none",
     fontWeight: 700,
     color: "#0f1115",
     backgroundColor: "#fff",
@@ -62,7 +61,7 @@ const style = {
 
   // search input
   SEARCH_INPUT: {
-    minWidth: { xs: "100%", sm: "100%" },
+    minWidth: "100%",
     maxWidth: 420,
     backgroundColor: "#1f2024",
     borderRadius: 28,
@@ -459,6 +458,7 @@ const style = {
     mt: 1,
 
     "& .MuiMenuItem-root": {
+      minWidth: "100px",
       color: "#e0e0e0",
       minHeight: 42,
       px: 2,

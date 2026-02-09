@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Dialog from "../../component/Ui/Dialog.jsx";
 import {
   Box,
   Typography,
@@ -17,8 +16,6 @@ import {
   Paper,
   Skeleton,
   Button,
-  CircularProgress,
-  DialogTitle,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
@@ -29,13 +26,13 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import { IoWarningOutline } from "react-icons/io5";
 import { SlOptions } from "react-icons/sl";
-
 import style from "../../assets/css/Admin/AdminDashboard.js";
 import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
 import Adminform from "../../component/AdminForm/AdminForm.jsx";
 import { darkDataGridSx } from "../../theme/surface,js";
+import ConfirmDialog from "../../component/ConfirmDialog.jsx";
+import ActionPopover from "../../component/ActionPopover.jsx";
 
 // Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
@@ -208,7 +205,18 @@ const AdminDashboard = () => {
     setAnchorEl(null);
   };
 
-  const handleCloseDialog = () => setOpenDialog(false);
+  // delete api hanlder
+  const handleDeleteAdmin = async () => {
+    setLoader(true);
+    try {
+      // delete API call here
+    } finally {
+      setLoader(false);
+      setOpenDialog(false);
+      setAnchorEl(null);
+      setSelectedAdmin(null);
+    }
+  };
 
   return (
     <Box sx={style.mainBox}>
@@ -232,7 +240,7 @@ const AdminDashboard = () => {
             onClick={() => setShowForm(true)}
             sx={style.addButton}
           >
-            Add New Admin
+            {isMobile ? "Add New Admin" : "Add Admin"}
           </Button>
         </Box>
 
@@ -316,6 +324,8 @@ const AdminDashboard = () => {
                         <Typography sx={style.accordionText}>{admin.role || "Admin"}</Typography>
                       </Box>
                     </AccordionDetails>
+
+                    {/* action */}
                     <AccordionActions sx={{ ...style.accordionDetail, ...style.accordionInner }}>
                       <Typography>Action:</Typography>
                       <IconButton size="small" onClick={(e) => { setAnchorEl(e.currentTarget); setSelectedAdmin(admin); }}>
@@ -327,54 +337,34 @@ const AdminDashboard = () => {
               })}
             </Box>
           )}
-
-          {/* action popover */}
-          <Popover
-            open={open}
-            anchorEl={anchorEl}
-            onClose={() => setAnchorEl(null)}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-            slotProps={{ paper: { sx: style.paper } }}
-          >
-            <Box>
-              <MenuItem onClick={() => handleAction("edit")}>
-                <FaEdit style={style.editIcon} />
-                Edit Admin
-              </MenuItem>
-              <MenuItem onClick={() => setOpenDialog(true)} sx={{ color: "error.main" }}>
-                <FaTrash style={style.deleteIcon} />
-                Delete Admin
-              </MenuItem>
-            </Box>
-          </Popover>
-
-
-          {/* delete confirmation dialog */}
-          <Dialog open={openDialog} onClose={handleCloseDialog}>
-            {/* header */}
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <IoWarningOutline style={style.warningIcon} />
-            </Box>
-
-            {/* title */}
-            <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
-
-            {/* subtitle */}
-            <Typography sx={style.deletSubTitle}>
-              Are you sure you want to delete this admin?
-            </Typography>
-
-            {/* cancel, delete button */}
-            <Box sx={style.cancelBox}>
-              <Button disableRipple onClick={handleCloseDialog} sx={style.cancelTitle}>Cancel</Button>
-              <Button sx={style.deleteButton} disabled={loader} disableRipple>
-                {loader ? <CircularProgress size={20} sx={{ color: "#fff" }} /> : "Delete"}
-              </Button>
-            </Box>
-          </Dialog>
         </>
       )}
+
+      {/* action popover */}
+      <ActionPopover
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        onEdit={() => {
+          setSelectedAdminId(selectedAdmin.id);
+          setShowEdit(true);
+          setShowForm(true);
+        }}
+        onDelete={() => setOpenDialog(true)}
+        editLabel="Edit Admin"
+        deleteLabel="Delete Admin"
+      />
+
+
+      {/* delete confirmation dialog */}
+      <ConfirmDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onConfirm={handleDeleteAdmin}
+        loading={loader}
+        message="Are you sure you want to delete this admin?"
+      />
+
     </Box>
   );
 };

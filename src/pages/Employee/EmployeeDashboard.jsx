@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Dialog from "../../component/Ui/Dialog.jsx";
 import {
   Box,
   Typography,
@@ -17,13 +16,10 @@ import {
   Paper,
   Skeleton,
   Button,
-  CircularProgress,
-  DialogTitle,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   FaSearch,
-  FaEllipsisV,
   FaChevronDown,
   FaEdit,
   FaTrash,
@@ -31,12 +27,13 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import { IoWarningOutline } from "react-icons/io5";
 import { SlOptions } from "react-icons/sl";
 import style from "../../assets/css/Admin/AdminDashboard.js";
 import AppSearchField from "../../component/designSystem/AppSearchField.jsx";
 import Employeeform from "../../component/EmployeeForm/EmployeeForm.jsx";
 import { darkDataGridSx } from "../../theme/surface,js";
+import ConfirmDialog from "../../component/ConfirmDialog.jsx";
+import ActionPopover from "../../component/ActionPopover.jsx";
 
 // Desktop DataGrid Shimmer
 const DataGridShimmer = () => (
@@ -150,8 +147,16 @@ const EmployeeDashboard = () => {
     setSelectedEmployee(null);
   };
 
-  // Close delete confirmation dialog
-  const handleCloseDialog = () => setOpenDialog(null);
+  // delete Api hanlder
+  const handleDeleteEmployee = async () => {
+    setLoader(true);
+    try {
+      // delete API call here
+    } finally {
+      setLoader(false);
+      setOpenDialog(false);
+    }
+  };
 
   // Dummy rows data
   const rows = [
@@ -236,7 +241,7 @@ const EmployeeDashboard = () => {
       headerAlign: "center",
       renderCell: (params) => (
         <IconButton disableRipple size="small" onClick={(e) => handleMenuClick(e, params.row)} sx={style.actionIconButton}>
-          <FaEllipsisV size={14} />
+          <SlOptions style={style.actionIcon} />
         </IconButton>
       ),
     },
@@ -349,38 +354,30 @@ const EmployeeDashboard = () => {
       )}
 
       {/* Actions Popover */}
-      <Popover
-        open={open}
+      <ActionPopover
         anchorEl={anchorEl}
-        onClose={handleMenuClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{ paper: { sx: style.paper } }}
-      >
-        <Box>
-          <MenuItem onClick={() => handleAction("edit")}><FaEdit style={{ marginRight: 12 }} /> Edit Employee</MenuItem>
-          <MenuItem onClick={() => { setOpenDialog(true); handlePopClose(); }} sx={{ color: "error.main" }}>
-            <FaTrash style={{ marginRight: 12, color: "red" }} /> Delete Employee
-          </MenuItem>
-        </Box>
-      </Popover>
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        onEdit={() => {
+          setSelectedEmployeeId(selectedEmployee.id);
+          setShowEdit(true);
+          setShowForm(true);
+        }}
+        onDelete={() => setOpenDialog(true)}
+        editLabel="Edit Employee"
+        deleteLabel="Delete Employee"
+      />
+
 
       {/* Delete confirmation Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        {/* header */}
-        <Box sx={{ display: "flex", justifyContent: "center" }}><IoWarningOutline color="red" size={28} /></Box>
-        {/* title */}
-        <DialogTitle sx={style.deletTitle}>Confirm Deletion</DialogTitle>
-        {/* subtitle */}
-        <Typography sx={style.deletSubTitle}>Are you sure you want to delete this employee?</Typography>
-        {/* cancel, delete button */}
-        <Box sx={style.cancelBox}>
-          <Button disableRipple onClick={handleCloseDialog} sx={style.cancelTitle}>Cancel</Button>
-          <Button sx={style.deleteButton} disabled={loader} disableRipple>
-            {loader ? <CircularProgress size="20px" sx={{ color: "#fff" }} /> : "Delete"}
-          </Button>
-        </Box>
-      </Dialog>
+      <ConfirmDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onConfirm={handleDeleteEmployee}
+        loading={loader}
+        message="Are you sure you want to delete this employee?"
+      />
+
     </Box>
   );
 };
